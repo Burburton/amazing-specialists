@@ -74,6 +74,27 @@ Priority order for feature work:
 - If changing package behavior, update governance docs first.
 - Keep package responsibilities explicit and narrow.
 
+## Governance Sync Rule（治理文档同步规则）
+
+### Scope
+以下类型的 feature 变更必须在完成前同步到公共文档：
+- package governance（包治理规则、接口契约）
+- role model semantics（角色定义、角色边界、角色映射）
+- workflow ordering（工作流程、阶段顺序）
+- command semantics（命令行为、输入输出格式）
+- migration strategy（迁移策略、过渡方案）
+
+### Required Action
+在判定 feature 完成之前，必须：
+1. 检查 `README.md` 是否需要更新
+2. 检查 `package-spec.md` 是否需要更新
+3. 检查 `role-definition.md` 是否需要更新
+4. 检查 `AGENTS.md` 是否需要更新
+5. 确保所有 governance 文档之间的一致性
+
+### Completion Criteria
+> 如果 feature 改变了上述 scope 中的任何一项，而公共文档（特别是 `README.md`）未同步更新，则该 feature **不能视为完成**。
+
 ## Feature Rules
 - Do not implement a feature unless `spec.md` and `plan.md` exist.
 - Every code change must map to at least one task in `tasks.md`.

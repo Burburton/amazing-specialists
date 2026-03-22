@@ -613,3 +613,133 @@ architect
 - developer 不应决定验收通过
 - tester 主要改测试资产，不主导业务实现
 - docs 不应改业务逻辑
+
+---
+
+# Appendix: Role Model Evolution (角色模型演进说明)
+
+## 概述
+
+本文档定义了 **6-role 执行层模型**作为 OpenCode 专家包的**正式角色体系**。然而，当前技术实现中仍保留早期的 **3-skill 过渡骨架**。本附录说明两者的关系和迁移策略。
+
+## 正式模型 vs 过渡骨架
+
+### 6-Role 正式模型（Formal Model）
+
+| 角色 | 定位 |
+|------|------|
+| architect | 正式执行角色 |
+| developer | 正式执行角色 |
+| tester | 正式执行角色 |
+| reviewer | 正式执行角色 |
+| docs | 正式执行角色 |
+| security | 正式执行角色 |
+
+**地位**：所有 governance 文档、feature 规划、职责定义均以此为准。
+
+### 3-Skill 过渡骨架（Transition Skeleton）
+
+| Skill | 定位 | 未来映射 |
+|-------|------|----------|
+| spec-writer | 过渡 / bootstrap | upstream-spec-assist（非执行角色） |
+| architect-auditor | 过渡 / bootstrap | architect + reviewer |
+| task-executor | 过渡 / bootstrap | developer + tester + docs + security |
+
+**地位**：用于支撑早期 bootstrap 流程，不是最终角色体系。
+
+## 映射关系详解
+
+```
+3-Skill（.opencode/skills/）    6-Role（正式模型）
+├─ spec-writer              →   bootstrap / upstream-spec-assist
+├─ architect-auditor        →   architect + reviewer  
+└─ task-executor            →   developer + tester + docs + security
+```
+
+### spec-writer → Bootstrap
+
+- **当前功能**：编写 spec.md，澄清 scope
+- **未来归属**：非 6-role 执行层角色，属于流程初始化阶段
+- **说明**：spec 编写可能由上游需求分析工具或专门的 bootstrap 流程处理
+
+### architect-auditor → Architect + Reviewer
+
+- **当前功能**：架构审计、生成 plan、识别风险
+- **未来拆分**：
+  - **architect**：技术方案设计、模块边界、接口契约
+  - **reviewer**：独立审查 design note、识别风险
+
+### task-executor → Developer + Tester + Docs + Security
+
+- **当前功能**：执行任务、实现变更、验证结果
+- **未来拆分**：
+  - **developer**：代码实现、自检
+  - **tester**：测试设计与执行
+  - **docs**：文档同步
+  - **security**：安全审查（高风险场景）
+
+## 迁移策略
+
+### Phase 1: 语义对齐（当前）✅
+
+**目标**：统一治理文档中的角色语义
+
+**交付物**：
+- 本文档（role-definition.md）的 Appendix
+- `docs/architecture/role-model-evolution.md`
+- `docs/infra/migration/skill-to-role-migration.md`
+
+**原则**：
+- 先语义对齐，后物理重构
+- 3-skill 目录暂时保留
+- 不破坏现有 bootstrap 流程
+
+### Phase 2: 核心角色实现（后续 Feature 003-008）
+
+**目标**：实现 6 个正式角色的核心能力
+
+**规划**：
+- `003-architect-core`：architect 角色核心技能
+- `004-developer-core`：developer 角色核心技能
+- `005-tester-core`：tester 角色核心技能
+- `006-reviewer-core`：reviewer 角色核心技能
+- `007-docs-core`：docs 角色核心技能
+- `008-security-core`：security 角色核心技能
+
+### Phase 3: 物理重构（未来）
+
+**目标**：重构 `.opencode/skills/` 目录
+
+**待定事项**：
+- 是否移除 3-skill 目录？
+- 是否保留兼容层？
+- 如何平滑迁移？
+
+预计不早于 2026-Q4。
+
+## 使用指南
+
+### Feature 开发者
+
+- 使用 **6-role** 术语描述 actors（architect, developer, tester, reviewer, docs, security）
+- 不使用 3-skill 术语作为正式角色名
+- 在 spec 中明确每个 task 的目标角色
+
+### Skill 开发者
+
+- 将新 skill 归属到正确的 **6-role** 目录
+- 不添加到 3-skill 目录（spec-writer, architect-auditor, task-executor）
+- 在 skill 文档中注明所属角色
+
+### Command 开发者
+
+- 优先调用 **6-role** skills（如果已存在）
+- 如需调用 3-skill，添加注释说明是 "legacy compatibility"
+- 保持 command 接口的向后兼容
+
+## 参考文档
+
+- `docs/architecture/role-model-evolution.md` - 演进策略和时间线
+- `docs/infra/migration/skill-to-role-migration.md` - 详细映射说明
+- `package-spec.md` - 专家包规格中的角色定义
+- `specs/002-role-model-alignment/` - 本迁移 feature 的 spec/plan/tasks

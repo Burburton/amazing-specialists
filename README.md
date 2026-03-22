@@ -128,11 +128,23 @@ User Input
 - 固化 5 个核心命令的输入输出格式
 - 建立统一的 artifact 模板（design_note, implementation_summary, test_report, review_report 等）
 - 建立规则文件（coding-rules, testing-rules, review-rules）
+- **明确 6-role 正式模型，3-skill 过渡骨架定位**（见 [docs/architecture/role-model-evolution.md](docs/architecture/role-model-evolution.md)）
 
 ### 阶段 5：验证与审计（下一阶段）
 - 跑通 specs/001-bootstrap 验证闭环
 - 实现 quality gate 自动化检查
 - 建立 traceability 追溯链
+
+### 阶段 6：正式核心角色 Feature（主线推荐）
+基于 6-role 正式模型，逐步实现各角色的核心能力：
+- `003-architect-core` - architect 角色核心技能实现
+- `004-developer-core` - developer 角色核心技能实现  
+- `005-tester-core` - tester 角色核心技能实现
+- `006-reviewer-core` - reviewer 角色核心技能实现
+- `007-docs-core` - docs 角色核心技能实现
+- `008-security-core` - security 角色核心技能实现
+
+> **注意**：当前 `.opencode/skills/` 中的 `spec-writer`、`architect-auditor`、`task-executor` 是**过渡骨架**，用于 bootstrap 流程。详见 [docs/infra/migration/skill-to-role-migration.md](docs/infra/migration/skill-to-role-migration.md)。
 
 ## Quick Start
 
@@ -148,19 +160,25 @@ User Input
 - [specs/m3-skills-integration-verification-report.md](specs/m3-skills-integration-verification-report.md) - Security/Docs 集成验证
 
 ### Skills 目录结构
+
 ```
 .opencode/skills/
 ├── common/              # 5个通用技能
-├── architect/           # 3个架构师技能
-├── developer/           # 3个开发者技能
-├── tester/              # 3个测试员技能
-├── reviewer/            # 3个审查员技能
-├── docs/                # 2个文档员技能
-├── security/            # 2个安全员技能
-├── spec-writer/         # 规格编写技能
-├── architect-auditor/   # 架构审计技能
-└── task-executor/       # 任务执行技能
+├── architect/           # 3个架构师技能（6-role 正式模型）
+├── developer/           # 3个开发者技能（6-role 正式模型）
+├── tester/              # 3个测试员技能（6-role 正式模型）
+├── reviewer/            # 3个审查员技能（6-role 正式模型）
+├── docs/                # 2个文档员技能（6-role 正式模型）
+├── security/            # 2个安全员技能（6-role 正式模型）
+├── spec-writer/         # 规格编写技能（⚠️ 过渡骨架）
+├── architect-auditor/   # 架构审计技能（⚠️ 过渡骨架）
+└── task-executor/       # 任务执行技能（⚠️ 过渡骨架）
 ```
+
+**关于 3-Skill 过渡骨架**：
+- `spec-writer`、`architect-auditor`、`task-executor` 是早期 bootstrap 使用的过渡技能
+- 它们将逐渐迁移到 6-role 正式模型（详见 [docs/architecture/role-model-evolution.md](docs/architecture/role-model-evolution.md)）
+- 当前阶段保留以保证现有流程可运行
 
 ## System Position
 

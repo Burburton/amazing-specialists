@@ -44,7 +44,8 @@ OpenCode 专家包 - 全自动产品研发闭环执行层
    - 作为下游角色接收上游的交付物
 
 ## Supported Roles
-本专家包包含 6 个核心角色：
+
+本专家包包含 **6 个核心角色**作为**正式执行层模型**：
 
 ### 1. architect（架构师）
 负责技术方案设计，输出 design note、interface contract、implementation plan。
@@ -99,43 +100,46 @@ OpenCode 专家包 - 全自动产品研发闭环执行层
 - secret-handling-review
 - dependency-risk-review
 
-## Supported Commands
-本专家包暴露 5 个核心命令：
-
-1. **/spec-start <feature>**
-   - 创建或完善功能规格
-   - 输出 spec.md
-
-2. **/spec-plan <feature>**
-   - 从规格生成实现计划
-   - 输出 plan.md、data-model.md、research.md
-
-3. **/spec-tasks <feature>**
-   - 生成可执行任务列表
-   - 输出 tasks.md
-
-4. **/spec-implement <feature> <task-id>**
-   - 实现单个任务
-   - 执行代码变更并输出结果
-
-5. **/spec-audit <feature>**
-   - 审计规格、计划、任务、代码的一致性
-   - 输出审计报告
-
 ## Supported Skills
-本专家包包含 3 个核心 skill 目录：
 
-1. **spec-writer**
-   - 负责将产品意图转为结构化 spec.md
-   - 澄清 scope 边界，记录假设与开放问题
+本专家包的技能分为两类：
 
-2. **architect-auditor**
-   - 负责将 spec 转为技术 plan
-   - 审计设计一致性，识别风险与 trade-off
+### 1. 6-Role 正式 Skills（按角色组织）
 
-3. **task-executor**
-   - 负责执行具体任务
-   - 读取 spec/plan/tasks，实现变更，验证结果
+| 角色 | Skills |
+|------|--------|
+| architect | requirement-to-design, module-boundary-design, tradeoff-analysis |
+| developer | feature-implementation, bugfix-workflow, code-change-selfcheck |
+| tester | unit-test-design, regression-analysis, edge-case-matrix |
+| reviewer | code-review-checklist, spec-implementation-diff, reject-with-actionable-feedback |
+| docs | readme-sync, changelog-writing |
+| security | auth-and-permission-review, input-validation-review |
+
+### 2. 3-Skill 过渡骨架（Bootstrap 用）
+
+> **注意**：以下 skills 是**过渡实现**，用于支撑早期 bootstrap 流程，不是最终角色体系。详见 [docs/architecture/role-model-evolution.md](docs/architecture/role-model-evolution.md)。
+
+| Skill | 用途 | 未来映射 |
+|-------|------|----------|
+| **spec-writer** | 将产品意图转为结构化 spec.md | bootstrap / upstream-spec-assist |
+| **architect-auditor** | 将 spec 转为技术 plan，审计设计一致性 | architect + reviewer |
+| **task-executor** | 执行具体任务 | developer + tester + docs + security |
+
+### 3-Skill 与 6-Role 的关系
+
+```
+3-Skill（过渡骨架）          6-Role（正式模型）
+├── spec-writer      →      bootstrap / upstream（非执行角色）
+├── architect-auditor →     architect + reviewer
+└── task-executor    →      developer + tester + docs + security
+```
+
+迁移策略：
+- **当前阶段（002-role-model-alignment）**：语义对齐，物理保留 3-skill
+- **后续阶段（003-008）**：实现 6-role 核心能力，逐步替代 3-skill
+- **未来阶段**：物理重构 skills 目录，移除 3-skill
+
+详细映射关系见：[docs/infra/migration/skill-to-role-migration.md](docs/infra/migration/skill-to-role-migration.md)
 
 ## Expected Inputs
 专家包统一接收 Dispatch Payload，包含以下字段：

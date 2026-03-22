@@ -395,7 +395,64 @@ Security Output Quality Gate
 
 ---
 
-## 5. Review Checklist（人工审查清单）
+## 5. 项目级文档同步检查 (Project-Level Documentation Sync Gate)
+
+### Gate Name
+Project Documentation Sync Gate
+
+### Objective
+确保影响 package governance 的 feature 完成时，公共文档与治理文档保持一致，避免 governance drift。
+
+### Trigger Conditions（触发条件）
+
+以下任一条件满足时，必须执行文档同步检查：
+
+- [ ] feature 影响 **role model**（角色定义、角色边界、角色映射）
+- [ ] feature 影响 **workflow / stage order**（工作流程、阶段顺序、执行流程）
+- [ ] feature 影响 **commands behavior**（命令行为、输入输出契约、command 接口）
+- [ ] feature 影响 **skills behavior**（skill 职责、skill 接口、skill 分类）
+- [ ] feature 影响 **migration strategy**（迁移策略、过渡方案、弃用计划）
+- [ ] feature 影响 **package-level usage expectations**（使用方式、集成点、对外契约）
+
+### Required Documentation Checks（必须检查的文档）
+
+#### Governance Documents（治理文档）
+- [ ] `README.md` - 项目概览、Quick Start、Workflow、Skills 目录结构
+- [ ] `AGENTS.md` - 开发规则、角色语义优先规则、全局约束
+- [ ] `package-spec.md` - 包规格、角色定义、skill 分类、I/O 契约
+- [ ] `role-definition.md` - 角色详细定义、角色边界、协作关系
+
+#### Check Items（检查项）
+- [ ] 所有治理文档中的术语一致（role、skill、command、stage 等）
+- [ ] feature 引入的变更在所有相关文档中都有体现
+- [ ] 无矛盾的描述（一个文档说 X，另一个文档说 Y）
+- [ ] 迁移/过渡相关的说明在各文档中一致
+- [ ] 指向其他文档的链接有效
+
+### Pass Criteria（通过条件）
+
+- 如果 feature **不影响** package governance：无需额外检查，通过
+- 如果 feature **影响** package governance：
+  - [ ] 所有 Required Documentation Checks 通过
+  - [ ] 无 S2/S3 级别的不一致问题
+  - [ ] reviewer 确认文档同步完成
+
+### Fail Criteria（失败条件）
+
+存在以下任一情况，视为未通过：
+- S3（Critical）： governance 文档之间存在根本性矛盾
+- S2（Major）： feature 影响的变更未同步到某份 governance 文档
+- S2（Major）： 术语混用导致理解偏差
+
+### Completion Rule（完成规则）
+
+> **重要**：对 package governance 有影响的 feature，如果公共文档和治理文档不一致，**不能视为完成**。
+>
+> 即使代码实现、测试、审查都已通过，文档不一致仍阻塞 milestone 验收。
+
+---
+
+## 6. Review Checklist（人工审查清单）
 
 供 human/operator 或 auditor 审阅时使用：
 
@@ -416,9 +473,9 @@ Security Output Quality Gate
 
 ---
 
-## 6. Remediation Rules（修复规则）
+## 7. Remediation Rules（修复规则）
 
-### 6.1 返工 (Rework)
+### 7.1 返工 (Rework)
 
 **适用场景：**
 - S2 级别问题（影响下游）
@@ -431,7 +488,7 @@ Security Output Quality Gate
 - 明确 non-goals（返工范围限制）
 - 记录 retry_count
 
-### 6.2 冲突解决 (Conflict Resolution)
+### 7.2 冲突解决 (Conflict Resolution)
 
 **适用场景：**
 - 输出与上游 spec/plan 冲突
@@ -443,7 +500,7 @@ Security Output Quality Gate
 - 提出解决方案选项
 - 升级给管理层或用户决策
 
-### 6.3 升级人工审阅 (Escalation)
+### 7.3 升级人工审阅 (Escalation)
 
 **适用场景：**
 - S3 级别问题中的结构性问题
@@ -458,16 +515,16 @@ Security Output Quality Gate
 
 ---
 
-## 7. 质量度量指标
+## 8. 质量度量指标
 
-### 7.1 全局指标
+### 8.1 全局指标
 - **task 一次通过率**: 首次执行即通过 gate 的比例
 - **milestone 一次通过率**: milestone 首次验收通过的比例
 - **自动返工收敛率**: 返工后通过的比例
 - **escalation 触发率**: 需要升级处理的比例
 - **artifact 完整率**: 输出包含所有必需 artifact 的比例
 
-### 7.2 角色指标
+### 8.2 角色指标
 
 #### architect
 - design adopted rate（设计被直接采用率）

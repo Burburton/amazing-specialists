@@ -793,6 +793,7 @@ followup_suggestions:
 | Skill | 用途 | 必需 |
 |-------|------|------|
 | artifact-reading | 读取bug信息 | ✅ |
+| context-summarization | 裁剪上下文 | ✅ |
 | bugfix-workflow | bug修复流程 | ✅ |
 | code-change-selfcheck | 代码自检 | ✅ |
 | failure-analysis | 失败分析（如有历史） | ⬜ |
@@ -993,6 +994,7 @@ followup_suggestions:
 | Skill | 用途 | 必需 |
 |-------|------|------|
 | artifact-reading | 读取实现总结 | ✅ |
+| context-summarization | 裁剪上下文 | ✅ |
 | unit-test-design | 单测设计 | ✅ |
 | regression-analysis | 回归分析 | ✅ |
 | edge-case-matrix | 边界条件 | ⬜ |
@@ -1189,6 +1191,7 @@ followup_suggestions:
 | Skill | 用途 | 必需 |
 |-------|------|------|
 | artifact-reading | 读取工件 | ✅ |
+| context-summarization | 裁剪上下文 | ✅ |
 | code-review-checklist | 代码审查 | ✅ |
 | spec-implementation-diff | spec对比 | ✅ |
 | reject-with-actionable-feedback | 拒绝反馈 | ✅ |
@@ -1559,11 +1562,11 @@ escalation:
 | architect/design-task | artifact-reading, context-summarization, requirement-to-design, interface-contract-design, tradeoff-analysis, execution-reporting | artifact-reading, requirement-to-design, execution-reporting |
 | architect/evaluate-tradeoff | tradeoff-analysis, execution-reporting | tradeoff-analysis, execution-reporting |
 | developer/implement-task | artifact-reading, context-summarization, feature-implementation, code-change-selfcheck, execution-reporting | artifact-reading, feature-implementation, code-change-selfcheck, execution-reporting |
-| developer/fix-task | artifact-reading, bugfix-workflow, code-change-selfcheck, failure-analysis, execution-reporting | artifact-reading, bugfix-workflow, code-change-selfcheck, execution-reporting |
+| developer/fix-task | artifact-reading, context-summarization, bugfix-workflow, code-change-selfcheck, failure-analysis, execution-reporting | artifact-reading, bugfix-workflow, code-change-selfcheck, execution-reporting |
 | developer/refactor-task | refactor-safely, code-change-selfcheck, execution-reporting | refactor-safely, code-change-selfcheck, execution-reporting |
-| tester/test-task | artifact-reading, unit-test-design, regression-analysis, edge-case-matrix, execution-reporting | artifact-reading, unit-test-design, execution-reporting |
+| tester/test-task | artifact-reading, context-summarization, unit-test-design, regression-analysis, edge-case-matrix, execution-reporting | artifact-reading, unit-test-design, execution-reporting |
 | tester/regression-task | regression-analysis, execution-reporting | regression-analysis, execution-reporting |
-| reviewer/review-task | artifact-reading, code-review-checklist, spec-implementation-diff, reject-with-actionable-feedback, execution-reporting | artifact-reading, code-review-checklist, spec-implementation-diff, execution-reporting |
+| reviewer/review-task | artifact-reading, context-summarization, code-review-checklist, spec-implementation-diff, reject-with-actionable-feedback, execution-reporting | artifact-reading, code-review-checklist, spec-implementation-diff, execution-reporting |
 | reviewer/compare-spec-vs-code | spec-implementation-diff, execution-reporting | spec-implementation-diff, execution-reporting |
 | docs/update-docs | readme-sync, changelog-writing, execution-reporting | readme-sync, execution-reporting |
 | security/security-check | auth-and-permission-review, input-validation-review, execution-reporting | auth-and-permission-review, execution-reporting |
@@ -1574,7 +1577,7 @@ escalation:
 |-------|------------|----------------|
 | artifact-reading | 7 | design-task, implement-task, fix-task, test-task, review-task, compare-spec-vs-code, security-check |
 | execution-reporting | 11 | 所有commands |
-| context-summarization | 2 | design-task, implement-task |
+| context-summarization | 5 | design-task, implement-task, fix-task, test-task, review-task |
 | code-change-selfcheck | 3 | implement-task, fix-task, refactor-task |
 | failure-analysis | 1 | fix-task |
 | unit-test-design | 1 | test-task |
@@ -1675,6 +1678,7 @@ commands/tester/test-task.md
 | Recommendation | 含义 |
 |---------------|------|
 | CONTINUE | 继续下一阶段 |
+| SEND_TO_DEVELOPER | 发送给developer |
 | SEND_TO_TEST | 发送给tester |
 | SEND_TO_REVIEW | 发送给reviewer |
 | REWORK | 返工 |

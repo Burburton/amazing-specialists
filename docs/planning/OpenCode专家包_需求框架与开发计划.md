@@ -475,7 +475,7 @@ properties:
       type: string
   recommendation:
     type: string
-    enum: [CONTINUE, SEND_TO_TEST, SEND_TO_REVIEW, REWORK, REPLAN, ESCALATE]
+    enum: [CONTINUE, SEND_TO_DEVELOPER, SEND_TO_TEST, SEND_TO_REVIEW, REWORK, REPLAN, ESCALATE]
   needs_followup:
     type: boolean
   followup_suggestions:
@@ -530,7 +530,7 @@ definitions:
         type: string
       reason_type:
         type: string
-        enum: [MISSING_CONTEXT, CONFLICTING_CONSTRAINTS, HIGH_RISK_CHANGE, REPEATED_FAILURE, OUT_OF_SCOPE_REQUEST, TOOLING_BLOCKER]
+        enum: [MISSING_CONTEXT, CONFLICTING_CONSTRAINTS, HIGH_RISK_CHANGE, REPEATED_FAILURE, OUT_OF_SCOPE_REQUEST, TOOLING_BLOCKER, UNRESOLVED_TRADEOFF]
       summary:
         type: string
       blocking_points:
@@ -874,15 +874,15 @@ Phase 8: Examples与文档 (2天)
 #### 9.2 依赖关系
 
 ```
-M1 (骨架) ──→ M2 (角色定义)
-    │
-    └──→ M5 (schemas) ──→ M6 (templates)
-              │
-              └──→ M8 (examples)
+M1 (骨架+Schemas) ──→ M2 (角色定义)
+     │
+     ├──→ M6 (templates) ←── [可与M3-M5并行]
+     │
+     └──→ M5 (commands) ──→ M8 (examples)
 
 M2 (角色定义) ──→ M3 (common skills)
-    │
-    └──→ M4 (角色skills) ──→ M5 (commands)
+     │
+     └──→ M4 (角色skills) ──→ M5 (commands)
 
 M3 (common skills) ──→ M4 (角色skills)
 
@@ -891,6 +891,11 @@ M4 (角色skills) ──→ M7 (rules)
 M5 (commands) ──→ M8 (examples)
 M6 (templates) ──→ M8 (examples)
 M7 (rules) ──→ M8 (文档)
+
+注：
+- Phase 6 (Templates) 依赖 Phase 1 的 Schemas，可与 Phase 3-5 并行
+- Phase 7 (Rules) 依赖 Phase 4 (角色Skills)，可与 Phase 5-6 部分并行
+- Phase 8 依赖所有前置Phase完成
 ```
 
 ---

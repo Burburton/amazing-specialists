@@ -179,6 +179,35 @@
 
 ---
 
+## Post-Completion Note
+
+### 后续治理修补（2026-03-22）
+
+本 feature 在语义设计层面已完成，建立了 6-role 正式模型与 3-skill 过渡骨架的映射关系，并创建了相关架构文档。
+
+然而，后续审查发现以下文档未完全落盘或发生漂移：
+
+1. **README.md**：对 `.opencode/skills/` 的描述未明确区分正式角色目录与 legacy 过渡目录
+2. **AGENTS.md**：缺少明确的 "Role Semantics Priority" 规则
+3. **package-spec.md**：对 3-skill 的定位表述不够明确
+4. **高风险流程顺序冲突**：m3-skills-integration-verification-report.md 中的流程顺序与 role-definition.md 不一致
+
+### 修补措施
+
+上述问题由后续 feature **002b-governance-repair** 统一修复：
+- Feature ID: `002b-governance-repair`
+- Location: `specs/002b-governance-repair/`
+- Scope: 治理文档一致性修补，不涉及新功能实现
+- Status: 进行中
+
+### 影响评估
+
+- **002-role-model-alignment** 的核心目标（建立角色模型映射）已达成
+- **002b-governance-repair** 负责将映射关系完整落盘到所有治理文档
+- 两者分工明确，可追溯
+
+---
+
 ## 参考文档
 
 - [docs/architecture/role-model-evolution.md](../architecture/role-model-evolution.md) - 演进策略

@@ -125,16 +125,30 @@ OpenCode 专家包 - 全自动产品研发闭环执行层
 | **architect-auditor** | 将 spec 转为技术 plan，审计设计一致性 | architect + reviewer |
 | **task-executor** | 执行具体任务 | developer + tester + docs + security |
 
-### 3-Skill 与 6-Role 的关系
+### 3-Skill 与 6-Role 的映射关系
 
 ```
-3-Skill（过渡骨架）          6-Role（正式模型）
-├── spec-writer      →      bootstrap / upstream（非执行角色）
+3-Skill（过渡骨架）               6-Role（正式模型）
+├── spec-writer      →      bootstrap / upstream-spec-assist（非执行角色）
+│                           主要覆盖 architect 的前置规格化能力
+│                           部分承接需求结构化职责
 ├── architect-auditor →     architect + reviewer
+│                           覆盖 architect 的设计职责
+│                           覆盖 reviewer 的部分审计职责
 └── task-executor    →      developer + tester + docs + security
+                            覆盖 developer 的实现职责
+                            覆盖 tester 的测试职责
+                            覆盖 docs 的文档职责
+                            覆盖 security 的安全审查职责
 ```
 
-迁移策略：
+### 定位声明
+
+- **6-role 是正式执行层模型**：所有 feature 命名、流程描述、角色工件都应围绕 6-role 展开
+- **3-skill 是 bootstrap/transition implementation**：短期保留以兼容现有 bootstrap 流程，不代表最终角色边界
+- **治理主线**：package-spec.md 和 role-definition.md 中的 6-role 定义是权威来源
+
+### 迁移策略
 - **当前阶段（002-role-model-alignment）**：语义对齐，物理保留 3-skill
 - **后续阶段（003-008）**：实现 6-role 核心能力，逐步替代 3-skill
 - **未来阶段**：物理重构 skills 目录，移除 3-skill

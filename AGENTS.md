@@ -34,7 +34,7 @@ Priority order for feature work:
 
 ### 正式模型优先
 
-本专家包采用 **6-role 正式执行层模型**：
+本仓库采用 **6-role 正式执行层语义**：
 - `architect`（架构师）
 - `developer`（开发者）
 - `tester`（测试员）
@@ -42,29 +42,43 @@ Priority order for feature work:
 - `docs`（文档员）
 - `security`（安全员）
 
-当提及角色时，**优先使用 6-role 术语**，避免使用 3-skill 过渡术语（spec-writer, architect-auditor, task-executor）。
+当提及角色、actor、执行者时，**优先使用 6-role 术语**。
 
-### 3-Skill 过渡骨架
+### 3-Skill 过渡骨架定位
 
-当前 `.opencode/skills/` 中保留的 3-skill 是**过渡实现**：
-- `spec-writer` → bootstrap / upstream-spec-assist（非执行角色）
-- `architect-auditor` → architect + reviewer
-- `task-executor` → developer + tester + docs + security
+`.opencode/skills/` 中的 **3-skill 是 legacy transition/bootstrap 兼容层**：
+- `spec-writer` - legacy，将迁移到 architect（前置规格化）+ docs（文档规范）
+- `architect-auditor` - legacy，将迁移到 architect + reviewer
+- `task-executor` - legacy，将迁移到 developer/tester/docs/security
 
-使用 3-skill 时，应：
-1. 在文档中标记为 "(transition)" 或 "(bootstrap)"
-2. 优先调用 6-role skills（如果已存在）
-3. 在 comments 中注明 legacy compatibility 原因
+**使用 3-skill 时必须标注**：
+1. 在文档中标记为 "(transition)"、"(legacy)" 或 "(bootstrap)"
+2. 在 comments 中注明 "legacy compatibility"
+3. 优先调用 6-role skills（如果已存在）
 
 ### Feature 命名规范
 
-后续 feature 应围绕 **6-role 正式模型**命名：
+后续 feature、artifact、actor 描述**必须使用 6-role 术语**：
 - ✅ 推荐：`003-architect-core`, `004-developer-core`, `005-tester-core`, ...
-- ❌ 避免：`003-spec-writer-core`, `004-architect-auditor-v2`, ...
+- ❌ 避免：`003-spec-writer-core`, `004-architect-auditor-v2`, `005-task-executor-enhancement`, ...
+
+### 语义冲突解决
+
+若不同文档间出现角色语义冲突：
+- **以 `package-spec.md` + `role-definition.md` 中的 6-role 定义为准**
+- 3-skill 相关表述应理解为 "legacy compatibility" 而非正式语义
+- 冲突应通过 governance repair feature 解决，而非 silent reinterpretation
+
+### Completion Report Consistency
+
+- completion-report 声称已完成的治理更新，必须与仓库当前内容一致
+- 若不一致，应通过后续 feature（如 002b-governance-repair）修复并建立可追溯关系
+- 不允许长期漂移（drift）
 
 ### 参考文档
 
 - `role-definition.md` - 6-role 详细定义
+- `package-spec.md` - 正式模型与过渡骨架说明
 - `docs/architecture/role-model-evolution.md` - 演进策略
 - `docs/infra/migration/skill-to-role-migration.md` - 详细映射说明
 

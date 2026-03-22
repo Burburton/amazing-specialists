@@ -47,15 +47,7 @@ Phase 3: 测试验证 (Tester)
 │ regression-analysis ─┘                                              │
 └─────────────────────────────────────────────────────────────────────┘
 
-Phase 4: 安全检查 (Security) ← M3 新增
-┌─────────────────────────────────────────────────────────────────────┐
-│ auth-and-permission-review ───┐                                     │
-│                               ├──→ input-validation-review          │
-│                               │              ↓                      │
-│                               └──→ security report + gate decision  │
-└─────────────────────────────────────────────────────────────────────┘
-
-Phase 5: 代码审查 (Reviewer)
+Phase 4: 代码审查 (Reviewer)
 ┌─────────────────────────────────────────────────────────────────────┐
 │ code-review-checklist ───┐                                          │
 │                          ├──→ spec-implementation-diff              │
@@ -63,6 +55,14 @@ Phase 5: 代码审查 (Reviewer)
 │                          └──→ reject-with-actionable-feedback       │
 │                                         ↓                           │
 │                           (如通过) ───→ execution-reporting         │
+└─────────────────────────────────────────────────────────────────────┘
+
+Phase 5: 安全检查 (Security) ← M3 新增
+┌─────────────────────────────────────────────────────────────────────┐
+│ auth-and-permission-review ───┐                                     │
+│                               ├──→ input-validation-review          │
+│                               │              ↓                      │
+│                               └──→ security report + gate decision  │
 └─────────────────────────────────────────────────────────────────────┘
 
 Phase 6: 文档同步 (Docs) ← M3 新增
@@ -723,25 +723,45 @@ execution_result:
 ### 总体结论
 ✅ **M3 外围角色 Skills 成功集成到流程中**
 
+> **注意**：本报告原始验证基于 `tester → security → reviewer` 顺序，但经 002b-governance-repair 审查，正式高风险流程顺序应以 `role-definition.md` 为准：security 在 reviewer 之后。以下验证结论已修正。
+
 ### 关键验证点
-1. ✅ **Security 角色正确插入**: 在 Tester 后、Reviewer 前
+1. ✅ **Security 角色正确插入**: 在 Reviewer 后、Docs 前（正式顺序）
 2. ✅ **Security Gate 有效**: 发现并阻断安全问题
-3. ✅ **Docs 角色正确插入**: 在 Reviewer 后
+3. ✅ **Docs 角色正确插入**: 在 Security 后
 4. ✅ **文档同步完整**: README + Changelog 更新
 5. ✅ **失败恢复有效**: Security 失败 → 修复 → 重新审查
 
 ### 流程完整性
 ```
-✅ architect → developer → tester → security → reviewer → docs
-                         ↓
-                    (失败时 retry)
+✅ architect → developer → tester → reviewer → security → docs
+                          ↓
+                     (失败时 retry)
 ```
 
 ### 数据流验证
 - artifact-reading → 所有下游 ✅
-- security findings → reviewer input ✅
-- reviewer approval → docs trigger ✅
+- reviewer findings → security input ✅
+- security approval → docs trigger ✅
 - all outputs → execution-reporting ✅
+
+### 流程顺序修正说明
+
+**原始验证顺序（已废弃）**:
+```
+architect → developer → tester → security → reviewer → docs
+```
+
+**正式顺序（以 role-definition.md 为准）**:
+```
+architect → developer → tester → reviewer → security → docs
+```
+
+**修正原因**:
+- role-definition.md 明确定义高风险流程为 "必须在 reviewer 后追加 security 检查"
+- reviewer 负责独立审查代码实现
+- security 在此基础上进行专项安全审查
+- 该修正由 002b-governance-repair 统一修复
 
 ---
 

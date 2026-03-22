@@ -124,16 +124,22 @@ User Input
 - ✅ 验证 Core Roles 协同（验证报告）
 - ✅ 验证 Security/Docs 集成（验证报告）
 
-### 阶段 4：命令与模板固化（下一阶段）
+### 阶段 4：角色模型对齐 ✅ 已完成（002-role-model-alignment）
+- 明确 6-role 正式执行层模型（architect, developer, tester, reviewer, docs, security）
+- 明确 3-skill 过渡骨架定位（spec-writer, architect-auditor, task-executor）
+- 建立 3-skill → 6-role 映射关系
+- 更新治理文档（package-spec.md, role-definition.md, AGENTS.md, README.md）
+- 创建迁移说明文档（role-model-evolution.md, skill-to-role-migration.md）
+
+### 阶段 5：命令固化与 Bootstrap 验证（下一阶段）
 - 固化 5 个核心命令的输入输出格式
 - 建立统一的 artifact 模板（design_note, implementation_summary, test_report, review_report 等）
 - 建立规则文件（coding-rules, testing-rules, review-rules）
-- **明确 6-role 正式模型，3-skill 过渡骨架定位**（见 [docs/architecture/role-model-evolution.md](docs/architecture/role-model-evolution.md)）
-
-### 阶段 5：验证与审计（下一阶段）
 - 跑通 specs/001-bootstrap 验证闭环
 - 实现 quality gate 自动化检查
 - 建立 traceability 追溯链
+
+> **注意**：当前 `.opencode/skills/` 中的 `spec-writer`、`architect-auditor`、`task-executor` 是**过渡骨架**（transition skeleton），用于支撑早期 bootstrap 流程。它们将在 003-008 feature 中逐步被 6-role 正式能力替代。详见 [docs/architecture/role-model-evolution.md](docs/architecture/role-model-evolution.md) 和 [docs/infra/migration/skill-to-role-migration.md](docs/infra/migration/skill-to-role-migration.md)。
 
 ### 阶段 6：正式核心角色 Feature（主线推荐）
 基于 6-role 正式模型，逐步实现各角色的核心能力：
@@ -144,7 +150,7 @@ User Input
 - `007-docs-core` - docs 角色核心技能实现
 - `008-security-core` - security 角色核心技能实现
 
-> **注意**：当前 `.opencode/skills/` 中的 `spec-writer`、`architect-auditor`、`task-executor` 是**过渡骨架**，用于 bootstrap 流程。详见 [docs/infra/migration/skill-to-role-migration.md](docs/infra/migration/skill-to-role-migration.md)。
+> **命名规范**：后续 feature 应围绕 **6-role 正式模型**命名，避免使用 3-skill 过渡术语（如 `spec-writer-core`, `architect-auditor-v2` 等）。
 
 ## Quick Start
 

@@ -1,0 +1,23 @@
+# Infrastructure design docs (external reference)
+docs/infra/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Node
+node_modules/
+
+# Build
+dist/
+build/

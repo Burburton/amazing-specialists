@@ -2,141 +2,166 @@
 
 ## Purpose
 
-明确模块边界划分，定义模块职责、接口和依赖关系，确保模块高内聚低耦合。
+Define module boundaries, responsibility divisions, dependencies, and integration seams to ensure high cohesion and low coupling.
 
-解决的核心问题：
-- 模块职责不清导致代码混乱
-- 循环依赖导致维护困难
-- 模块粒度过大或过小
-- 接口设计不合理
+Core problems solved:
+- Unclear module responsibilities leading to code chaos
+- Circular dependencies causing maintenance difficulties
+- Module granularity too large or too small
+- Unreasonable interface design
+- Missing extension points for future evolution
 
 ## When to Use
 
-必须使用时：
-- 架构设计需要细化模块划分
-- 重构前重新划分模块边界
-- 新增模块需要明确边界
-- 解决循环依赖问题
+**Must use when:**
+- Architecture design requires module refinement
+- Before refactoring to redivide module boundaries
+- Adding new modules requiring boundary definition
+- Resolving circular dependency problems
 
-推荐使用时：
-- 代码 review 发现模块边界问题
-- 性能优化需要调整模块边界
-- 团队分工需要模块边界对齐
+**Recommended when:**
+- Code review reveals module boundary issues
+- Performance optimization requires boundary adjustment
+- Team division of labor requires boundary alignment
 
 ## When Not to Use
 
-不适用场景：
-- 模块边界已清晰（直接实现）
-- 纯脚本或工具类代码
-- 单一功能无需拆分
-- 紧急修复场景
+**Not applicable when:**
+- Module boundaries are already clear (implement directly)
+- Pure scripts or utility code
+- Single functionality requiring no split
+- Emergency fix scenarios
 
 ## Module Design Principles
 
-### 1. 单一职责 (SRP)
-每个模块只负责一件事。
+### 1. Single Responsibility (SRP)
+Each module should have one and only one reason to change.
 
-### 2. 依赖倒置 (DIP)
-依赖抽象，不依赖具体实现。
+### 2. Dependency Inversion (DIP)
+Depend on abstractions, not concrete implementations.
 
-### 3. 接口隔离 (ISP)
-接口应小而专，不应强迫依赖不需要的接口。
+### 3. Interface Segregation (ISP)
+Interfaces should be small and specialized, not forcing dependence on unnecessary interfaces.
 
-### 4. 最小知识原则
-模块只应了解直接依赖的模块。
+### 4. Least Knowledge Principle
+Modules should only know about their direct dependencies.
 
-### 5. 稳定依赖原则
-依赖应指向更稳定的模块。
+### 5. Stable Dependencies Principle
+Dependencies should point toward more stable modules.
 
 ## Steps
 
-### Step 1: 识别功能职责
-1. 列出所有功能点
-2. 按职责相似性分组
-3. 识别核心 vs 辅助功能
-4. 识别通用 vs 专用功能
+### Step 1: Identify Functional Responsibilities
+1. List all functional points
+2. Group by responsibility similarity
+3. Identify core vs. auxiliary functions
+4. Identify common vs. specialized functions
 
-### Step 2: 初步划分模块
-1. 每个职责组对应一个模块候选
-2. 评估模块粒度（过大/过小）
-3. 检查模块间依赖关系
-4. 识别循环依赖
+### Step 2: Preliminary Module Division
+1. Map each responsibility group to a module candidate
+2. Evaluate module granularity (too large/too small)
+3. Check inter-module dependencies
+4. Identify circular dependencies
 
-### Step 3: 定义模块接口
-1. 确定每个模块的 public API
-2. 定义接口签名和数据结构
-3. 明确错误处理约定
-4. 确定版本兼容性策略
+### Step 3: Define Module Interfaces
+1. Determine public API for each module
+2. Define interface signatures and data structures
+3. Clarify error handling conventions
+4. Determine version compatibility strategy
 
-### Step 4: 优化依赖关系
-1. 消除循环依赖
-- 提取共同依赖
-- 使用接口/抽象
-- 重新划分边界
+### Step 4: Optimize Dependencies
+1. Eliminate circular dependencies:
+   - Extract common dependencies
+   - Use interfaces/abstractions
+   - Redivide boundaries
 
-2. 减少依赖数量
-- 合并高度耦合的模块
-- 提取通用基础设施
-- 使用依赖注入
+2. Reduce dependency count:
+   - Merge highly coupled modules
+   - Extract common infrastructure
+   - Use dependency injection
 
-### Step 5: 验证边界合理性
-1. 可测试性：模块能否独立测试？
-2. 可替换性：模块能否被替换？
-3. 可理解性：模块职责是否清晰？
-4. 可维护性：修改影响范围是否可控？
+### Step 5: Verify Boundary Reasonableness
+1. **Testability**: Can the module be independently tested?
+2. **Replaceability**: Can the module be replaced?
+3. **Understandability**: Is the module responsibility clear?
+4. **Maintainability**: Is the modification impact scope controllable?
 
-### Step 6: 文档化
-输出模块边界定义文档。
+### Step 6: Document
+Output module boundary definition document.
 
 ## Output Format
 
+The output must follow the `module-boundaries` artifact contract (AC-002) with these exact fields:
+
 ```yaml
-module_design:
-  modules:
+module_boundaries:
+  # AC-002 Field 1: Module list with names and descriptions
+  module_list:
     - name: string
+      description: string
       
-      # 职责定义
-      responsibility: string
+  # AC-002 Field 2: Each module's responsibilities
+  module_responsibilities:
+    - module: string
+      primary_responsibility: string
       scope:
-        - string  # 包含的功能
-      
-      # 接口定义
-      public_interface:
+        - string  # included functionalities
+      non_responsibilities:
+        - string  # explicit exclusions
+        
+  # AC-002 Field 3: Input/output for each module
+  inputs_outputs:
+    - module: string
+      inputs:
         - name: string
-          type: class | function | api
-          signature: string
+          type: string
+          source: string
           description: string
-      
-      # 依赖关系
-      dependencies:
-        - module: string
-          type: required | optional
-          reason: string
-      
-      # 被依赖关系
-      dependents:
-        - module: string
-          reason: string
-      
-      # 实现约束
-      constraints:
-        - string
+      outputs:
+        - name: string
+          type: string
+          destination: string
+          description: string
         
-      # 测试策略
-      test_strategy:
-        - string
+  # AC-002 Field 4: How modules depend on each other
+  dependency_directions:
+    - from: string
+      to: string
+      type: required | optional
+      reason: string
+      direction: downstream | upstream
         
+  # AC-002 Field 5: Points where modules connect
+  integration_seams:
+    - seam_id: string
+      modules_involved:
+        - string
+      integration_type: api | event | data | protocol
+      description: string
+      stability: stable | evolving
+        
+  # AC-002 Field 6: Where extension is allowed (NEW - required by spec)
+  future_extension_boundary:
+    - extension_point: string
+      module: string
+      what_can_extend: string
+      what_must_remain_stable: string
+      extension_mechanism: plugin | inheritance | composition | configuration
+        
+  # AC-002 Field 7: What each module does NOT do (NEW - required by spec)
+  explicit_non_responsibilities:
+    - module: string
+      does_not_do:
+        - string
+      rationale: string
+
+  # Dependency graph (text format)
   dependency_graph: |
-    # 文本形式的依赖图
     ModuleA -> ModuleB
     ModuleB -> ModuleC
     ModuleD -> ModuleB
     
-  boundaries:
-    - boundary: string
-      modules: string[]
-      description: string
-      
+  # Cross-cutting concerns
   cross_cutting_concerns:
     - concern: string
       modules: string[]
@@ -145,88 +170,190 @@ module_design:
 
 ## Examples
 
-### 示例 1：认证系统模块划分
+### Example 1: Authentication System Module Division
 
 ```yaml
-module_design:
-  modules:
+module_boundaries:
+  module_list:
     - name: AuthController
-      responsibility: "处理 HTTP 认证请求"
-      scope:
-        - "登录接口"
-        - "登出接口"
-        - "Token 刷新接口"
-      public_interface:
-        - name: login
-          type: function
-          signature: "login(req: LoginRequest): Promise<LoginResponse>"
-          description: "处理用户登录请求"
-      dependencies:
-        - module: AuthService
-          type: required
-          reason: "业务逻辑委托"
-      constraints:
-        - "不直接访问数据库"
-        - "所有响应通过统一格式封装"
-        
+      description: "Handle HTTP authentication requests"
     - name: AuthService
-      responsibility: "认证业务逻辑"
-      scope:
-        - "用户验证"
-        - "Token 管理"
-        - "会话管理"
-      public_interface:
-        - name: validateUser
-          type: function
-          signature: "validateUser(credentials: Credentials): Promise<AuthResult>"
-      dependencies:
-        - module: UserRepository
-          type: required
-          reason: "用户数据查询"
-        - module: TokenService
-          type: required
-          reason: "Token 生成"
-        - module: PasswordHasher
-          type: required
-          reason: "密码验证"
-          
+      description: "Authentication business logic"
     - name: UserRepository
-      responsibility: "用户数据访问"
-      scope:
-        - "用户查询"
-        - "用户创建"
-        - "用户更新"
-      public_interface:
-        - name: findByUsername
-          type: function
-          signature: "findByUsername(username: string): Promise<User | null>"
-      dependencies: []
-      constraints:
-        - "不依赖业务逻辑"
-        - "只处理数据持久化"
-        
+      description: "User data access layer"
     - name: TokenService
-      responsibility: "JWT Token 管理"
-      scope:
-        - "Token 生成"
-        - "Token 验证"
-        - "Token 刷新"
-      public_interface:
-        - name: generate
-          type: function
-          signature: "generate(payload: TokenPayload): string"
-      dependencies: []
-      
+      description: "JWT token management"
     - name: PasswordHasher
-      responsibility: "密码哈希与验证"
+      description: "Password hashing and verification"
+      
+  module_responsibilities:
+    - module: AuthController
+      primary_responsibility: "Process HTTP authentication requests"
       scope:
-        - "密码哈希"
-        - "密码验证"
-      public_interface:
-        - name: verify
-          type: function
-          signature: "verify(password: string, hash: string): Promise<boolean>"
-      dependencies: []
+        - "Login endpoint"
+        - "Logout endpoint"
+        - "Token refresh endpoint"
+      non_responsibilities:
+        - "Business logic delegation"
+        - "Direct database access"
+        
+    - module: AuthService
+      primary_responsibility: "Authentication business logic"
+      scope:
+        - "User validation"
+        - "Token management"
+        - "Session management"
+      non_responsibilities:
+        - "HTTP request handling"
+        - "Direct data persistence"
+        
+    - module: UserRepository
+      primary_responsibility: "User data access"
+      scope:
+        - "User queries"
+        - "User creation"
+        - "User updates"
+      non_responsibilities:
+        - "Business logic"
+        - "Password hashing"
+        
+    - module: TokenService
+      primary_responsibility: "JWT token management"
+      scope:
+        - "Token generation"
+        - "Token validation"
+        - "Token refresh"
+      non_responsibilities:
+        - "User validation"
+        - "Session storage"
+        
+    - module: PasswordHasher
+      primary_responsibility: "Password hashing and verification"
+      scope:
+        - "Password hashing"
+        - "Password verification"
+      non_responsibilities:
+        - "User data access"
+        - "Token generation"
+        
+  inputs_outputs:
+    - module: AuthController
+      inputs:
+        - name: LoginRequest
+          type: HTTP POST body
+          source: Client
+          description: "User credentials"
+      outputs:
+        - name: LoginResponse
+          type: HTTP Response
+          destination: Client
+          description: "Authentication result with token"
+          
+    - module: AuthService
+      inputs:
+        - name: Credentials
+          type: Object
+          source: AuthController
+          description: "Username and password"
+      outputs:
+        - name: AuthResult
+          type: Object
+          destination: AuthController
+          description: "Authentication success/failure with user info"
+          
+    - module: UserRepository
+      inputs:
+        - name: Username
+          type: String
+          source: AuthService
+          description: "Username to query"
+      outputs:
+        - name: User
+          type: Object | null
+          destination: AuthService
+          description: "User entity or null if not found"
+          
+  dependency_directions:
+    - from: AuthController
+      to: AuthService
+      type: required
+      reason: "Delegate business logic"
+      direction: downstream
+    - from: AuthService
+      to: UserRepository
+      type: required
+      reason: "User data queries"
+      direction: downstream
+    - from: AuthService
+      to: TokenService
+      type: required
+      reason: "Token generation"
+      direction: downstream
+    - from: AuthService
+      to: PasswordHasher
+      type: required
+      reason: "Password verification"
+      direction: downstream
+      
+  integration_seams:
+    - seam_id: IS-001
+      modules_involved:
+        - AuthController
+        - AuthService
+      integration_type: api
+      description: "Synchronous method calls for authentication flow"
+      stability: stable
+    - seam_id: IS-002
+      modules_involved:
+        - AuthService
+        - UserRepository
+      integration_type: api
+      description: "Repository pattern for data access"
+      stability: stable
+    - seam_id: IS-003
+      modules_involved:
+        - AuthService
+        - TokenService
+      integration_type: api
+      description: "Token generation and validation interface"
+      stability: stable
+      
+  future_extension_boundary:
+    - extension_point: "Multi-factor authentication"
+      module: AuthService
+      what_can_extend: "Add additional authentication factors"
+      what_must_remain_stable: "Interface with AuthController"
+      extension_mechanism: composition
+    - extension_point: "Custom token providers"
+      module: TokenService
+      what_can_extend: "Support OAuth, SAML, custom tokens"
+      what_must_remain_stable: "Token generation interface"
+      extension_mechanism: inheritance
+    - extension_point: "Alternative user stores"
+      module: UserRepository
+      what_can_extend: "LDAP, OAuth providers, custom databases"
+      what_must_remain_stable: "Repository interface"
+      extension_mechanism: inheritance
+      
+  explicit_non_responsibilities:
+    - module: AuthController
+      does_not_do:
+        - "Business logic implementation"
+        - "Direct database queries"
+        - "Token generation logic"
+      rationale: "Separation of concerns - controller only handles HTTP layer"
+    - module: AuthService
+      does_not_do:
+        - "HTTP request parsing"
+        - "Raw SQL execution"
+        - "Cryptographic operations"
+      rationale: "Service layer coordinates but does not implement low-level operations"
+    - module: UserRepository
+      does_not_do:
+        - "Password hashing"
+        - "Business rule validation"
+        - "Session management"
+      rationale: "Repository only handles data persistence"
       
   dependency_graph: |
     AuthController -> AuthService
@@ -234,81 +361,482 @@ module_design:
     AuthService -> TokenService
     AuthService -> PasswordHasher
     
-  # 无循环依赖，良好
+  cross_cutting_concerns:
+    - concern: "Logging"
+      modules:
+        - AuthController
+        - AuthService
+      solution: "Use dependency injection for logger interface"
+    - concern: "Error handling"
+      modules:
+        - AuthController
+        - AuthService
+        - UserRepository
+      solution: "Unified exception hierarchy with error codes"
 ```
 
-### 示例 2：发现循环依赖
+### Example 2: E-commerce Order Processing
 
 ```yaml
-# 问题场景
-original_modules:
-  - OrderService 依赖 PaymentService
-  - PaymentService 依赖 NotificationService
-  - NotificationService 依赖 OrderService  # 循环！
-
-# 解决方案
-solution:
-  action: "提取事件机制"
-  new_modules:
-    - name: EventBus
-      responsibility: "模块间异步通信"
+module_boundaries:
+  module_list:
+    - name: OrderController
+      description: "Handle order-related HTTP requests"
+    - name: OrderService
+      description: "Order business logic and workflow"
+    - name: PaymentService
+      description: "Payment processing"
+    - name: InventoryService
+      description: "Inventory management"
+    - name: NotificationService
+      description: "Send order notifications"
+    - name: OrderRepository
+      description: "Order data persistence"
       
-  changes:
-    - "NotificationService 不再依赖 OrderService"
-    - "OrderService 发布 OrderCompleted 事件"
-    - "NotificationService 订阅事件"
-    
-  result:
-    dependency_graph: |
-      OrderService -> PaymentService
-      OrderService -> EventBus
-      PaymentService -> EventBus
-      NotificationService -> EventBus
-    # 循环已消除
+  module_responsibilities:
+    - module: OrderService
+      primary_responsibility: "Orchestrate order workflow"
+      scope:
+        - "Order creation"
+        - "Order status transitions"
+        - "Inventory reservation"
+        - "Payment coordination"
+      non_responsibilities:
+        - "HTTP handling"
+        - "Direct payment processing"
+        - "Notification sending"
+        
+  inputs_outputs:
+    - module: OrderService
+      inputs:
+        - name: CreateOrderCommand
+          type: Command object
+          source: OrderController
+          description: "Order creation request"
+      outputs:
+        - name: OrderResult
+          type: Result object
+          destination: OrderController
+          description: "Order creation result with order ID"
+          
+  dependency_directions:
+    - from: OrderService
+      to: PaymentService
+      type: required
+      reason: "Process payment"
+      direction: downstream
+    - from: OrderService
+      to: InventoryService
+      type: required
+      reason: "Reserve inventory"
+      direction: downstream
+    - from: OrderService
+      to: NotificationService
+      type: optional
+      reason: "Send notifications"
+      direction: downstream
+      
+  integration_seams:
+    - seam_id: IS-001
+      modules_involved:
+        - OrderService
+        - PaymentService
+      integration_type: event
+      description: "PaymentCompleted/ PaymentFailed events"
+      stability: stable
+    - seam_id: IS-002
+      modules_involved:
+        - OrderService
+        - InventoryService
+      integration_type: api
+      description: "Synchronous inventory reservation"
+      stability: stable
+      
+  future_extension_boundary:
+    - extension_point: "Multiple payment providers"
+      module: PaymentService
+      what_can_extend: "Add Stripe, PayPal, Alipay providers"
+      what_must_remain_stable: "Payment interface"
+      extension_mechanism: inheritance
+    - extension_point: "Notification channels"
+      module: NotificationService
+      what_can_extend: "Email, SMS, push notifications"
+      what_must_remain_stable: "Notification interface"
+      extension_mechanism: composition
+      
+  explicit_non_responsibilities:
+    - module: OrderService
+      does_not_do:
+        - "Direct payment API calls"
+        - "Email/SMS sending"
+        - "Database queries"
+      rationale: "Orchestrator pattern - coordinates but delegates implementation"
+      
+  dependency_graph: |
+    OrderController -> OrderService
+    OrderService -> PaymentService
+    OrderService -> InventoryService
+    OrderService -> NotificationService
+    OrderService -> OrderRepository
 ```
+
+### Example 3: Plugin Architecture
+
+```yaml
+module_boundaries:
+  module_list:
+    - name: PluginHost
+      description: "Load and manage plugin lifecycle"
+    - name: PluginManager
+      description: "Plugin registration and discovery"
+    - name: CoreAPI
+      description: "Core functionality exposed to plugins"
+    - name: PluginSDK
+      description: "SDK for plugin developers"
+      
+  module_responsibilities:
+    - module: PluginHost
+      primary_responsibility: "Plugin lifecycle management"
+      scope:
+        - "Plugin loading"
+        - "Plugin initialization"
+        - "Plugin unloading"
+      non_responsibilities:
+        - "Plugin business logic"
+        - "Core functionality implementation"
+        
+  inputs_outputs:
+    - module: PluginHost
+      inputs:
+        - name: PluginDescriptor
+          type: Configuration
+          source: Plugin registry
+          description: "Plugin metadata"
+      outputs:
+        - name: PluginInstance
+          type: Object
+          destination: PluginManager
+          description: "Initialized plugin instance"
+          
+  dependency_directions:
+    - from: PluginHost
+      to: CoreAPI
+      type: required
+      reason: "Access core functionality"
+      direction: downstream
+    - from: PluginManager
+      to: PluginHost
+      type: required
+      reason: "Manage loaded plugins"
+      direction: upstream
+      
+  integration_seams:
+    - seam_id: IS-001
+      modules_involved:
+        - PluginHost
+        - CoreAPI
+      integration_type: protocol
+      description: "Plugin API contract"
+      stability: stable
+    - seam_id: IS-002
+      modules_involved:
+        - PluginSDK
+        - CoreAPI
+      integration_type: api
+      description: "SDK wraps core API for plugin developers"
+      stability: evolving
+      
+  future_extension_boundary:
+    - extension_point: "Plugin types"
+      module: PluginSDK
+      what_can_extend: "New plugin categories and hooks"
+      what_must_remain_stable: "Plugin interface contract"
+      extension_mechanism: inheritance
+    - extension_point: "Loading mechanisms"
+      module: PluginHost
+      what_can_extend: "Remote loading, hot reload"
+      what_must_remain_stable: "Plugin lifecycle interface"
+      extension_mechanism: composition
+      
+  explicit_non_responsibilities:
+    - module: PluginHost
+      does_not_do:
+        - "Plugin business logic"
+        - "Plugin validation rules"
+        - "Core feature implementation"
+      rationale: "Host only manages lifecycle, not plugin functionality"
+      
+  dependency_graph: |
+    PluginManager -> PluginHost
+    PluginHost -> CoreAPI
+    PluginSDK -> CoreAPI
+```
+
+## Anti-Examples
+
+### Anti-Example 1: Folder-Driven Architecture
+
+**Mistake**: Defining modules based solely on directory structure without considering responsibilities.
+
+```yaml
+# WRONG: Just listing folders
+module_boundaries:
+  module_list:
+    - name: src/api
+      description: "API folder"
+    - name: src/core
+      description: "Core folder"
+    - name: src/utils
+      description: "Utils folder"
+    - name: src/models
+      description: "Models folder"
+      
+  # Missing: module_responsibilities
+  # Missing: inputs_outputs  
+  # Missing: dependency_directions
+  # Missing: integration_seams
+  # Missing: future_extension_boundary
+  # Missing: explicit_non_responsibilities
+```
+
+**Why it's wrong:**
+- Directory structure doesn't define responsibilities
+- No clarity on what each module should/shouldn't do
+- Dependencies are implicit, not explicit
+- No integration points defined
+- No extension boundaries specified
+
+**How to fix:**
+- Define modules by responsibility, not location
+- Explicitly state what each module does and doesn't do
+- Map all dependencies and integration seams
+- Define extension points for future evolution
+
+---
+
+### Anti-Example 2: No Future Boundary
+
+**Mistake**: Design that assumes current scope is final, blocking future evolution.
+
+```yaml
+# WRONG: No extension points defined
+module_boundaries:
+  module_list:
+    - name: UserService
+      description: "Handle all user operations"
+      
+  module_responsibilities:
+    - module: UserService
+      primary_responsibility: "Everything about users"
+      scope:
+        - "CRUD operations"
+        - "Authentication"
+        - "Authorization"
+        - "Profile management"
+        - "Session management"
+        - "Password reset"
+        - "Email verification"
+        # ... grows without bound
+      non_responsibilities: []  # Everything is responsibility!
+      
+  # Missing: future_extension_boundary entirely
+  # Missing: explicit_non_responsibilities
+```
+
+**Why it's wrong:**
+- No clear boundary for what can be extended
+- Module becomes a god class over time
+- No stable interfaces for extension
+- Future changes require modifying core logic
+
+**How to fix:**
+- Define explicit extension points
+- Separate core stable logic from extensible logic
+- Use composition/inheritance for extension
+- Document what must remain stable
+
+---
+
+### Anti-Example 3: Overlapping Responsibilities
+
+**Mistake**: Modules with unclear or overlapping responsibility boundaries.
+
+```yaml
+# WRONG: Unclear who does what
+module_boundaries:
+  module_list:
+    - name: UserService
+      description: "User operations"
+    - name: UserManager
+      description: "User management"
+    - name: UserHandler
+      description: "User handling"
+      
+  module_responsibilities:
+    - module: UserService
+      primary_responsibility: "Handle user operations"
+      scope:
+        - "User validation"
+        - "User queries"
+        - "User updates"
+        
+    - module: UserManager
+      primary_responsibility: "Manage users"
+      scope:
+        - "User validation"  # OVERLAP!
+        - "User queries"     # OVERLAP!
+        - "User creation"
+        
+    - module: UserHandler
+      primary_responsibility: "Process users"
+      scope:
+        - "User validation"  # OVERLAP!
+        - "User updates"     # OVERLAP!
+        - "User deletion"
+        
+  # Missing: explicit_non_responsibilities
+  # Dependencies would be circular or unclear
+```
+
+**Why it's wrong:**
+- Multiple modules doing the same thing
+- No clear ownership of functionality
+- Leads to code duplication or confusion
+- Makes testing and maintenance difficult
+
+**How to fix:**
+- Define exclusive responsibilities
+- Use explicit_non_responsibilities to clarify boundaries
+- Ensure each responsibility has exactly one owner
+- Document delegation patterns clearly
+
+---
+
+### Anti-Example 4: Missing Integration Seams
+
+**Mistake**: Not defining how modules actually connect and communicate.
+
+```yaml
+# WRONG: Dependencies listed but no integration details
+module_boundaries:
+  dependency_directions:
+    - from: OrderService
+      to: PaymentService
+      type: required
+      reason: "Process payments"
+    - from: OrderService
+      to: NotificationService
+      type: required
+      reason: "Send notifications"
+      
+  # Missing: integration_seams section entirely
+  # How do they communicate? HTTP? Events? Direct calls?
+  # What are the message formats?
+  # What happens on failure?
+```
+
+**Why it's wrong:**
+- Implementation details left ambiguous
+- Teams may implement incompatible interfaces
+- Error handling not considered
+- Synchronous vs. asynchronous not specified
+
+**How to fix:**
+- Define integration type (api/event/data/protocol)
+- Specify stability (stable/evolving)
+- Document message/request formats
+- Consider failure modes in seam definition
+
+---
+
+### Anti-Example 5: Circular Dependencies
+
+**Mistake**: Allowing circular dependencies that create tight coupling.
+
+```yaml
+# WRONG: Circular dependency chain
+module_boundaries:
+  dependency_graph: |
+    OrderService -> PaymentService
+    PaymentService -> NotificationService
+    NotificationService -> OrderService  # CIRCULAR!
+    
+  # No strategy to break the cycle
+```
+
+**Why it's wrong:**
+- Creates tight coupling between modules
+- Makes independent testing impossible
+- Leads to spaghetti architecture
+- Changes cascade unpredictably
+
+**How to fix:**
+- Introduce event bus for decoupled communication
+- Extract shared interface to dependency inversion
+- Redivide responsibilities to eliminate cycle
+- Use dependency injection for flexibility
 
 ## Checklists
 
-### 前置检查
-- [ ] 需求已明确
-- [ ] 已有模块结构已梳理
-- [ ] 约束条件已了解
+### Pre-condition Checklist
+- [ ] Requirements are clear
+- [ ] Existing module structure has been reviewed
+- [ ] Constraints are understood
+- [ ] Stakeholders identified
 
-### 过程检查
-- [ ] 每个模块有单一职责
-- [ ] 无循环依赖
-- [ ] 接口清晰定义
-- [ ] 依赖关系合理
+### Process Checklist
+- [ ] Each module has a single responsibility
+- [ ] No circular dependencies exist
+- [ ] Interfaces are clearly defined
+- [ ] Dependencies are reasonable
+- [ ] Integration seams are documented
+- [ ] Future extension boundaries are defined
+- [ ] Explicit non-responsibilities are stated
 
-### 后置检查
-- [ ] 模块可独立测试
-- [ ] 模块可被替换
-- [ ] 修改影响范围可控
-- [ ] 边界已文档化
+### Post-condition Checklist
+- [ ] Modules can be independently tested
+- [ ] Modules can be replaced
+- [ ] Modification impact scope is controllable
+- [ ] Boundaries are documented
+- [ ] Downstream roles can consume the output
 
 ## Common Failure Modes
 
-| 失败模式 | 表现 | 处理建议 |
-|----------|------|----------|
-| 神类/神模块 | 一个模块做太多事 | 拆分为多个小模块 |
-| 循环依赖 | A->B->C->A | 提取接口或事件机制 |
-| 过度拆分 | 模块粒度过细 | 合并相关模块 |
-| 接口不稳定 | 频繁修改接口 | 抽象稳定接口层 |
-| 隐式依赖 | 通过全局状态依赖 | 显式化依赖关系 |
+| Failure Mode | Symptoms | Recommended Action |
+|--------------|----------|-------------------|
+| God Module | One module does too much | Split into multiple smaller modules |
+| Circular Dependencies | A->b->c->a | Extract interface or event mechanism |
+| Over-division | Module granularity too fine | Merge related modules |
+| Unstable Interfaces | Frequent interface changes | Abstract stable interface layer |
+| Implicit Dependencies | Dependencies through global state | Make dependencies explicit |
+| Folder-Driven | Modules mirror directory structure | Redefine by responsibility |
+| No Extension Points | Design assumes final state | Add future_extension_boundary |
+| Overlapping Responsibilities | Unclear module ownership | Define explicit_non_responsibilities |
 
 ## Notes
 
-### 模块粒度建议
-- **过小**: 维护成本高，应合并
-- **适中**: 200-500 行代码，职责单一
-- **过大**: 应拆分，保持高内聚
+### Module Granularity Guidelines
+- **Too small**: High maintenance cost, should merge
+- **Appropriate**: 200-500 lines of code, single responsibility
+- **Too large**: Should split to maintain high cohesion
 
-### 接口稳定性
-- 频繁变化的实现细节应封装在模块内部
-- 公共接口应尽量稳定
-- 必要时引入适配器层隔离变化
+### Interface Stability
+- Frequently changing implementation details should be encapsulated inside the module
+- Public interfaces should be as stable as possible
+- Introduce adapter layer to isolate changes when necessary
 
-### 与 requirement-to-design 的关系
-- requirement-to-design 输出总体架构
-- module-boundary-design 细化模块划分
-- 可独立使用，也可作为设计的一部分
+### Relationship with requirement-to-design
+- requirement-to-design outputs overall architecture
+- module-boundary-design refines module division
+- Can be used independently or as part of design flow
+
+### Downstream Consumption
+- **Developer**: Uses module boundaries to organize implementation
+- **Tester**: Uses boundaries to design integration tests
+- **Reviewer**: Uses boundaries to verify architecture consistency
+- **Docs**: Uses responsibilities to structure documentation
+- **Security**: Uses seams to identify trust boundaries
+
+## Legacy Compatibility Note
+
+This skill was originally part of the 3-skill transition skeleton (architect-auditor). It has been migrated to the 6-role formal execution model under `architect`. The core methodology remains the same, but the output format now aligns with the AC-002 artifact contract from `specs/003-architect-core/spec.md`.

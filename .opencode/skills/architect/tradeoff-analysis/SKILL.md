@@ -2,335 +2,523 @@
 
 ## Purpose
 
-对多个技术方案做结构化对比分析，帮助在 conflicting goals 中做出理性决策。
+Provide explicit trade-off analysis for key architecture decisions, including alternative evaluations, rationale, and revisit conditions.
 
-解决的核心问题：
-- 多个方案各有利弊，难以选择
-- 决策缺乏系统性评估
-- 后期后悔当初的选择
-- 团队成员对方案有分歧
+Core problems solved:
+- Multiple technical approaches with unclear best choice
+- Decisions made without systematic evaluation
+- Future regret from poorly documented choices
+- Team disagreements on technical direction
+- Missing context for why a decision was made
 
 ## When to Use
 
-必须使用时：
-- 存在多个技术方案需要选择
-- 重大架构决策需要记录理由
-- 团队对方案有争议
-- 需要向管理层汇报决策依据
+**Required when:**
+- Multiple viable technical approaches exist
+- Major architecture decisions need documented rationale
+- Team has conflicting opinions on approach
+- Stakeholders need decision justification
+- Decision has long-term maintenance implications
 
-推荐使用时：
-- 技术选型（框架/库/数据库）
-- 架构风格选择
-- 性能 vs 可维护性权衡
-- 短期速度 vs 长期质量权衡
+**Recommended when:**
+- Technology selection (frameworks/libraries/databases)
+- Architecture style choices
+- Performance vs. maintainability trade-offs
+- Short-term speed vs. long-term quality trade-offs
+- Building new systems from scratch
+- Refactoring critical components
 
 ## When Not to Use
 
-不适用场景：
-- 只有一个可行方案
-- 决策已做出且不可更改
-- 纯个人偏好选择
-- 时间紧迫无法分析
+**Not applicable when:**
+- Only one feasible approach exists
+- Decision is already made and irreversible
+- Pure personal preference choice
+- Time-critical decisions without analysis bandwidth
+- Trivial decisions with no long-term impact
 
 ## Tradeoff Analysis Framework
 
-### 1. 明确决策目标
-- 主要目标是什么？
-- 次要目标是什么？
-- 约束条件是什么？
-- 成功标准是什么？
+### 1. Define Decision Point
+- What specific decision needs to be made?
+- Why does this decision matter?
+- What constraints affect this decision?
+- What are the success criteria?
 
-### 2. 识别备选方案
-- 列出所有可行方案
-- 包括"保持现状"
-- 包括"混合方案"
-- 不预设立场
+### 2. Identify Alternatives
+- List all feasible approaches
+- Include "status quo" as an option
+- Include hybrid approaches
+- Avoid premature elimination
 
-### 3. 定义评估维度
-常见维度：
-- **性能**: 延迟、吞吐量、资源使用
-- **可维护性**: 代码复杂度、学习曲线、文档
-- **开发速度**: 实现时间、团队熟悉度
-- **可靠性**: 稳定性、容错性、恢复能力
-- **可扩展性**: 水平扩展、功能扩展
-- **安全性**: 攻击面、安全特性
-- **成本**: 开发成本、运维成本、许可费用
-- **风险**: 技术风险、团队风险、供应商风险
+### 3. Define Evaluation Criteria
+Common dimensions:
+- **Performance**: latency, throughput, resource usage
+- **Maintainability**: code complexity, learning curve, documentation
+- **Development Velocity**: implementation time, team familiarity
+- **Reliability**: stability, fault tolerance, recovery capability
+- **Scalability**: horizontal scaling, feature extension
+- **Security**: attack surface, security properties
+- **Cost**: development cost, operational cost, licensing
+- **Risk**: technical risk, team risk, vendor risk
 
-### 4. 评估每个方案
-为每个方案在每个维度上评分：
-- 使用相对评分（高/中/低 或 1-5分）
-- 记录评分理由
-- 识别关键差异
+### 4. Evaluate Each Alternative
+For each alternative across each dimension:
+- Use relative scoring (high/medium/low or 1-5)
+- Document scoring rationale
+- Identify key differentiators
 
-### 5. 权重分配
-- 不同维度重要性不同
-- 与利益相关者对齐权重
-- 记录权重理由
+### 5. Assign Weights
+- Different dimensions have different importance
+- Align weights with stakeholders
+- Document weight rationale
 
-### 6. 综合评估
-- 加权计算总分
-- 识别 tradeoffs（牺牲的方面）
-- 检查是否符合约束
+### 6. Synthesize Evaluation
+- Calculate weighted scores
+- Identify trade-offs (what is sacrificed)
+- Verify constraints are satisfied
 
-### 7. 做出决策
-- 选择最优方案
-- 记录决策理由
-- 定义成功指标
-- 制定回退计划
+### 7. Make Decision
+- Select the preferred approach
+- Document decision rationale
+- Define success metrics
+- Create fallback plan
 
 ## Output Format
 
+The skill produces a `risks-and-tradeoffs` artifact with the following required fields:
+
 ```yaml
-tradeoff_analysis:
-  decision_id: string
-  decision_title: string
-  timestamp: string
-  
-  context:
-    problem_statement: string
-    goals:
-      - string
-    constraints:
-      - string
-      
-  alternatives:
+risks-and-tradeoffs:
+  decision_point: string          # The decision being analyzed
+  alternatives_considered:        # Other options evaluated
     - name: string
       description: string
-      
-  evaluation_criteria:
-    - criterion: string
-      weight: number  # 0-1
-      description: string
-      
-  evaluation_matrix:
-    - alternative: string
-      scores:
-        - criterion: string
-          score: number  # 1-5
-          reasoning: string
-      total_score: number
-      
-  tradeoffs:
-    - selected: string
-      sacrificed: string
-      explanation: string
-      
-  recommendation:
-    selected_alternative: string
-    reasoning: string
-    
-  implementation_notes:
-    - string
-    
-  monitoring_plan:
-    - metric: string
-      threshold: string
-      action: string
-      
-  rollback_plan:
-    trigger: string
-    steps: string[]
+      pros: string[]
+      cons: string[]
+  selected_approach: string       # The chosen approach
+  rejected_approaches:            # Approaches not taken and why
+    - name: string
+      reason: string
+  tradeoff_rationale: string      # Reasoning for the selection
+  risks_introduced:               # New risks from this decision
+    - risk: string
+      severity: low|medium|high
+      mitigation: string
+  revisit_trigger: string         # Conditions that should trigger re-evaluation
 ```
+
+### Field Descriptions
+
+| Field | Description | Required |
+|-------|-------------|----------|
+| `decision_point` | Clear statement of what decision is being made | Yes |
+| `alternatives_considered` | List of options that were evaluated | Yes |
+| `selected_approach` | The approach that was chosen | Yes |
+| `rejected_approaches` | Approaches that were not selected with reasons | Yes |
+| `tradeoff_rationale` | Explanation of why this choice was made, including what was sacrificed | Yes |
+| `risks_introduced` | New risks created by this decision | Yes |
+| `revisit_trigger` | Specific conditions under which this decision should be re-evaluated | **CRITICAL** |
 
 ## Examples
 
-### 示例 1：API 风格选择
+### Example 1: API Style Selection
 
 ```yaml
-tradeoff_analysis:
-  decision_title: "REST vs GraphQL vs gRPC"
+risks-and-tradeoffs:
+  decision_point: "Select API style for mobile and web clients"
   
-  context:
-    problem_statement: "选择新的 API 风格用于移动端和 Web 端"
-    goals:
-      - "减少网络请求次数"
-      - "降低客户端复杂度"
-      - "支持快速迭代"
-    constraints:
-      - "团队熟悉 REST"
-      - "需要支持缓存"
-      
-  alternatives:
+  alternatives_considered:
     - name: REST
-      description: "传统 RESTful API"
+      description: Traditional RESTful API design
+      pros:
+        - Team familiarity
+        - Mature tooling
+        - HTTP caching support
+      cons:
+        - Potential over-fetching
+        - Multiple round trips for complex data
+      
     - name: GraphQL
-      description: "查询语言，客户端指定返回字段"
+      description: Query language with client-specified fields
+      pros:
+        - Reduced over-fetching
+        - Single round trip
+        - Strong typing
+      cons:
+        - Learning curve
+        - Complex caching
+        - Additional infrastructure
+      
     - name: gRPC
-      description: "二进制协议，高性能"
-      
-  evaluation_criteria:
-    - criterion: 开发速度
-      weight: 0.3
-    - criterion: 性能
-      weight: 0.25
-    - criterion: 学习曲线
-      weight: 0.2
-    - criterion: 工具生态
-      weight: 0.15
-    - criterion: 缓存支持
-      weight: 0.1
-      
-  evaluation_matrix:
-    - alternative: REST
-      scores:
-        - criterion: 开发速度
-          score: 4
-          reasoning: "团队熟悉，开发快"
-        - criterion: 性能
-          score: 3
-          reasoning: "可能有多余数据传输"
-        - criterion: 学习曲线
-          score: 5
-          reasoning: "全员熟悉"
-        - criterion: 工具生态
-          score: 5
-          reasoning: "成熟完善"
-        - criterion: 缓存支持
-          score: 5
-          reasoning: "HTTP 缓存成熟"
-      total_score: 4.1
-      
-    - alternative: GraphQL
-      scores:
-        - criterion: 开发速度
-          score: 3
-          reasoning: "初期学习成本，后期收益"
-        - criterion: 性能
-          score: 4
-          reasoning: "减少请求和数据"
-        - criterion: 学习曲线
-          score: 2
-          reasoning: "团队需学习"
-        - criterion: 工具生态
-          score: 3
-          reasoning: "生态发展中"
-        - criterion: 缓存支持
-          score: 2
-          reasoning: "缓存较复杂"
-      total_score: 3.15
-      
-    - alternative: gRPC
-      scores:
-        - criterion: 开发速度
-          score: 2
-          reasoning: "学习曲线陡峭"
-        - criterion: 性能
-          score: 5
-          reasoning: "二进制高效"
-        - criterion: 学习曲线
-          score: 1
-          reasoning: "Protobuf 学习成本"
-        - criterion: 工具生态
-          score: 3
-          reasoning: "后端工具好，前端弱"
-        - criterion: 缓存支持
-          score: 2
-          reasoning: "HTTP/2 缓存有限"
-      total_score: 2.55
-      
-  tradeoffs:
-    - selected: REST
-      sacrificed: "减少请求次数的能力"
-      explanation: "为了团队效率和缓存优势"
-      
-  recommendation:
-    selected_alternative: REST
-    reasoning: "团队熟悉度高，开发速度快，缓存支持好。短期最优选择。"
-    
-  implementation_notes:
-    - "使用 REST 实现 MVP"
-    - "预留 GraphQL 迁移可能"
-    - "使用 BFF 模式优化移动端"
-    
-  monitoring_plan:
-    - metric: API 请求次数
-      threshold: "> 10 次/页面"
-      action: "评估 GraphQL 迁移"
+      description: Binary protocol for high performance
+      pros:
+        - Excellent performance
+        - Strong typing with Protobuf
+        - Streaming support
+      cons:
+        - Steep learning curve
+        - Limited browser support
+        - HTTP/2 caching challenges
+  
+  selected_approach: REST
+  
+  rejected_approaches:
+    - name: GraphQL
+      reason: Team learning curve and caching complexity outweigh benefits for current use case
+    - name: gRPC
+      reason: Browser support limitations and team unfamiliarity make it unsuitable for web-first product
+  
+  tradeoff_rationale: >
+    Selected REST for team velocity and mature caching support. 
+    Sacrificed the ability to reduce request count and over-fetching prevention.
+    This is acceptable given current traffic patterns and team expertise.
+    Can migrate to GraphQL later if over-fetching becomes a bottleneck.
+  
+  risks_introduced:
+    - risk: Multiple API calls per page load
+      severity: medium
+      mitigation: Implement BFF pattern for mobile clients if needed
+    - risk: Over-fetching increases bandwidth usage
+      severity: low
+      mitigation: Monitor payload sizes and optimize endpoints proactively
+  
+  revisit_trigger: >
+    Re-evaluate when: API calls per page exceed 10, 
+    or mobile payload size exceeds 100KB, 
+    or team gains GraphQL expertise
 ```
 
-### 示例 2：简单决策
+### Example 2: Caching Layer Decision
 
 ```yaml
-# 只有一个备选方案明显更好时
-tradeoff_analysis:
-  decision_title: "是否引入 Redis 缓存"
+risks-and-tradeoffs:
+  decision_point: "Whether to introduce Redis caching layer"
   
-  context:
-    problem_statement: "数据库查询慢，需要缓存"
-    
-  alternatives:
-    - name: 不引入缓存
-      description: "保持现状，优化查询"
-    - name: 引入 Redis
-      description: "添加 Redis 缓存层"
+  alternatives_considered:
+    - name: No caching
+      description: Optimize database queries without adding cache layer
+      pros:
+        - Simpler architecture
+        - No cache invalidation complexity
+      cons:
+        - Database remains bottleneck
+        - Query optimization has limits
       
-  evaluation_matrix:
-    - alternative: 不引入缓存
-      scores:
-        - criterion: 复杂度
-          score: 2
-          reasoning: "虽然简单但问题无法解决"
-        - criterion: 效果
-          score: 2
-          reasoning: "查询依然慢"
-          
-    - alternative: 引入 Redis
-      scores:
-        - criterion: 复杂度
-          score: 4
-          reasoning: "增加运维复杂度，但可控"
-        - criterion: 效果
-          score: 5
-          reasoning: "显著降低查询时间"
-          
-  recommendation:
-    selected_alternative: 引入 Redis
-    reasoning: "效果明显，复杂度可接受，业界成熟方案"
+    - name: Redis caching
+      description: Add Redis as distributed cache layer
+      pros:
+        - Significant latency reduction
+        - Reduced database load
+        - Mature, battle-tested solution
+      cons:
+        - Additional operational complexity
+        - Cache invalidation challenges
+        - New failure mode (cache unavailability)
+  
+  selected_approach: Redis caching
+  
+  rejected_approaches:
+    - name: No caching
+      reason: Database query optimization insufficient to meet latency SLOs
+  
+  tradeoff_rationale: >
+    Selected Redis for significant performance gains. 
+    Sacrificed architectural simplicity for performance.
+    Operational complexity is acceptable given team's Redis experience.
+  
+  risks_introduced:
+    - risk: Cache invalidation bugs leading to stale data
+      severity: medium
+      mitigation: Implement TTL-based invalidation with conservative expiry
+    - risk: Redis unavailability causing cascade failures
+      severity: high
+      mitigation: Implement cache-aside pattern with database fallback
+  
+  revisit_trigger: >
+    Re-evaluate when: cache hit ratio drops below 70%,
+    or Redis operational overhead exceeds 10% of engineering time,
+    or data consistency requirements change
 ```
+
+### Example 3: Simple Decision
+
+```yaml
+risks-and-tradeoffs:
+  decision_point: "Use managed database service vs. self-hosted"
+  
+  alternatives_considered:
+    - name: Managed (RDS/Aurora)
+      description: Cloud provider managed database service
+      pros:
+        - Minimal operational overhead
+        - Built-in backups and HA
+        - Automatic patching
+      cons:
+        - Higher cost
+        - Less control over configuration
+      
+    - name: Self-hosted on EC2
+      description: Self-managed database on compute instances
+      pros:
+        - Lower cost at scale
+        - Full control over configuration
+      cons:
+        - Operational burden
+        - Manual backup management
+        - Manual patching and upgrades
+  
+  selected_approach: Managed (RDS/Aurora)
+  
+  rejected_approaches:
+    - name: Self-hosted on EC2
+      reason: Operational burden outweighs cost savings for team size and current scale
+  
+  tradeoff_rationale: >
+    Selected managed service to focus team on product development vs. operations.
+    Cost premium is acceptable given reduced operational risk and engineering time savings.
+  
+  risks_introduced:
+    - risk: Vendor lock-in
+      severity: medium
+      mitigation: Use standard SQL features, avoid provider-specific extensions
+    - risk: Cost increases with scale
+      severity: low
+      mitigation: Monitor costs monthly; re-evaluate at 10x current scale
+  
+  revisit_trigger: >
+    Re-evaluate when: monthly database costs exceed $10K,
+    or team grows dedicated DBA role,
+    or specific feature requirements cannot be met by managed service
+```
+
+## Anti-Examples
+
+### Anti-Example 1: Decision Without Alternatives
+
+**What not to do:**
+
+```yaml
+# WRONG: No alternatives considered
+risks-and-tradeoffs:
+  decision_point: "Database selection"
+  selected_approach: PostgreSQL
+  tradeoff_rationale: "PostgreSQL is the best choice"
+  # Missing: alternatives_considered
+  # Missing: rejected_approaches
+  # Missing: revisit_trigger
+```
+
+**Why this fails:**
+- No evidence that other options were evaluated
+- "Best" is subjective without comparison criteria
+- No way to understand what was sacrificed
+- Future team cannot understand the decision context
+
+**Correct approach:**
+Include at least 2-3 alternatives with explicit pros/cons and reasons for rejection.
+
+---
+
+### Anti-Example 2: No Revisit Trigger
+
+**What not to do:**
+
+```yaml
+# WRONG: Missing revisit trigger
+risks-and-tradeoffs:
+  decision_point: "Use monolithic architecture"
+  alternatives_considered:
+    - name: Monolith
+      pros: ["Simple deployment", "Easy testing"]
+      cons: ["Tight coupling"]
+    - name: Microservices
+      pros: ["Independent scaling", "Team autonomy"]
+      cons: ["Complex deployment", "Network latency"]
+  selected_approach: Monolith
+  tradeoff_rationale: "Simpler for current team size"
+  risks_introduced:
+    - risk: Coupling makes changes harder over time
+      severity: high
+      mitigation: Modular design
+  # Missing: revisit_trigger
+```
+
+**Why this fails:**
+- No indication of when to reconsider the decision
+- Decision may persist past its useful life
+- Team cannot proactively identify inflection points
+- Technical debt accumulates silently
+
+**Correct approach:**
+Always include specific, measurable conditions for re-evaluation (team size, traffic volume, cost thresholds, etc.).
+
+---
+
+### Anti-Example 3: Vague Trade-offs
+
+**What not to do:**
+
+```yaml
+# WRONG: Vague language without specifics
+risks-and-tradeoffs:
+  decision_point: "Framework selection"
+  alternatives_considered:
+    - name: React
+      pros: ["Good ecosystem"]
+      cons: ["Some issues"]
+    - name: Vue
+      pros: ["Easy to learn"]
+      cons: ["Smaller community"]
+  selected_approach: React
+  tradeoff_rationale: "Better for our needs"
+  risks_introduced:
+    - risk: "Some potential problems"
+      severity: medium
+      mitigation: "Be careful"
+  revisit_trigger: "When needed"
+```
+
+**Why this fails:**
+- "Good ecosystem" is meaningless without specifics
+- "Some issues" provides no actionable information
+- "Better for our needs" doesn't explain which needs
+- "When needed" is not a measurable trigger
+
+**Correct approach:**
+Use specific, quantifiable language: "2x larger npm ecosystem", "3-day learning curve vs 1-week", "revisit when monthly active users exceed 100K".
+
+---
+
+### Anti-Example 4: No Risks Documented
+
+**What not to do:**
+
+```yaml
+# WRONG: No risks identified
+risks-and-tradeoffs:
+  decision_point: "Introduce Kubernetes"
+  alternatives_considered:
+    - name: Kubernetes
+      pros: ["Auto-scaling", "Self-healing"]
+      cons: ["Complex"]
+    - name: Docker Swarm
+      pros: ["Simple"]
+      cons: ["Limited features"]
+  selected_approach: Kubernetes
+  tradeoff_rationale: "More powerful"
+  # Missing: risks_introduced
+  revisit_trigger: "When cluster grows"
+```
+
+**Why this fails:**
+- Every significant decision introduces new risks
+- Missing risks means they won't be mitigated
+- Future incidents could have been anticipated
+- Stakeholders cannot make informed decisions
+
+**Correct approach:**
+Explicitly identify at least 2-3 new risks introduced by the decision, with severity and mitigation strategies.
 
 ## Checklists
 
-### 前置检查
-- [ ] 决策问题已明确
-- [ ] 备选方案已识别
-- [ ] 评估维度已定义
+### Pre-Analysis Checklist
+- [ ] Decision point is clearly defined
+- [ ] At least 2-3 alternatives identified
+- [ ] Evaluation criteria are relevant to the decision
+- [ ] Constraints and success criteria are documented
 
-### 过程检查
-- [ ] 评分有理有据
-- [ ] 权重与利益相关者对齐
-- [ ] 记录了 tradeoffs
+### During Analysis Checklist
+- [ ] Each alternative scored against all criteria
+- [ ] Scoring rationale is documented
+- [ ] Weights reflect actual priorities
+- [ ] Trade-offs are explicit (what is gained vs. lost)
 
-### 后置检查
-- [ ] 决策理由清晰
-- [ ] 回退计划已定义
-- [ ] 监控指标已确定
+### Post-Analysis Checklist
+- [ ] Decision rationale is clear and specific
+- [ ] Rejected approaches have explicit reasons
+- [ ] At least 2-3 risks are identified with mitigations
+- [ ] Revisit trigger is specific and measurable
+- [ ] Downstream roles can understand the decision context
 
 ## Common Failure Modes
 
-| 失败模式 | 表现 | 处理建议 |
-|----------|------|----------|
-| 预设立场 | 分析前已决定 | 请第三方评审 |
-| 维度不全 | 遗漏关键维度 | 使用标准检查清单 |
-| 权重偏差 | 权重与实际不符 | 多利益相关者评审 |
-| 过度分析 | 分析成本 > 决策价值 | 设置分析时间上限 |
-| 忽视风险 | 低估方案风险 | 单独评估风险维度 |
+| Failure Mode | Symptoms | Mitigation |
+|--------------|----------|------------|
+| Pre-decision bias | Analysis done after decision made | Involve neutral third party in review |
+| Incomplete alternatives | Only one viable option presented | Require minimum 2 alternatives |
+| Vague criteria | Criteria like "better" without definition | Use measurable, specific criteria |
+| Missing revisit trigger | No conditions for re-evaluation | Require explicit trigger before approval |
+| Undocumented risks | Risk section empty or trivial | Independent risk review |
+| Over-analysis | Analysis paralysis on trivial decisions | Set time budget for analysis |
+
+## Templates
+
+### Minimal Tradeoff Analysis Template
+
+```yaml
+risks-and-tradeoffs:
+  decision_point: "[Clear statement of the decision]"
+  
+  alternatives_considered:
+    - name: "[Alternative 1]"
+      description: "[Brief description]"
+      pros: ["[pro 1]", "[pro 2]"]
+      cons: ["[con 1]", "[con 2]"]
+    - name: "[Alternative 2]"
+      description: "[Brief description]"
+      pros: ["[pro 1]", "[pro 2]"]
+      cons: ["[con 1]", "[con 2]"]
+  
+  selected_approach: "[Which alternative was chosen]"
+  
+  rejected_approaches:
+    - name: "[Rejected alternative]"
+      reason: "[Specific reason for rejection]"
+  
+  tradeoff_rationale: >
+    [Why this approach was selected, what was sacrificed,
+     and why the trade-off is acceptable]
+  
+  risks_introduced:
+    - risk: "[Specific risk]"
+      severity: low|medium|high
+      mitigation: "[How to reduce or handle this risk]"
+    - risk: "[Specific risk]"
+      severity: low|medium|high
+      mitigation: "[How to reduce or handle this risk]"
+  
+  revisit_trigger: >
+    [Specific, measurable conditions under which
+     this decision should be re-evaluated]
+```
 
 ## Notes
 
-### 决策记录价值
-- 后期回顾决策质量
-- 新成员了解历史决策
-- 避免重复讨论
-- 责任清晰
+### Decision Record Value
+- Enables future review of decision quality
+- Helps new team members understand historical context
+- Prevents re-litigating settled decisions
+- Creates accountability for decision makers
 
-### 何时重新评估
-- 新约束出现
-- 技术环境变化
-- 假设被证伪
-- 决策效果不佳
+### When to Re-evaluate
+- New constraints emerge (budget, timeline, regulations)
+- Technology landscape changes significantly
+- Original assumptions are proven false
+- Decision is not producing expected outcomes
+- Team capabilities change (growth or attrition)
 
-### 与 requirement-to-design 的关系
-- tradeoff-analysis 帮助选择方案
-- requirement-to-design 详细设计选定的方案
-- 复杂决策可先 tradeoff-analysis 再 requirement-to-design
+### Relationship to Other Architect Skills
+- `requirement-to-design`: Transforms requirements into design structure
+- `module-boundary-design`: Defines module divisions and dependencies
+- `tradeoff-analysis`: Documents decision rationale for key choices
+
+These skills work together: first design the structure, then analyze key decisions within that structure.
+
+### Downstream Consumption
+This skill's output is consumed by:
+- **developer**: Understands why certain approaches were chosen
+- **tester**: Identifies risk areas requiring additional test coverage
+- **reviewer**: Validates decision quality and rationale
+- **docs**: Documents architecture decisions for external audiences
+- **security**: Reviews security implications of technical choices

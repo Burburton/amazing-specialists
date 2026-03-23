@@ -65,7 +65,7 @@
 
 **Description**: Define handoff interfaces from architect to downstream roles.
 
-**Deliverable**: `specs/003-architect-core/contracts/downstream-interfaces.md`
+**Deliverable**: `specs/003-architect-core/downstream-interfaces.md`
 
 **Inputs**:
 - spec.md downstream consumers section

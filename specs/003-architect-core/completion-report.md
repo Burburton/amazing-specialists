@@ -27,9 +27,22 @@ Feature `003-architect-core` has been implemented, establishing the **architect*
 | **Role Definition** | role-scope.md, downstream-interfaces.md, de-legacy-mapping-note.md | ✅ Complete |
 | **Educational Materials** | Examples, anti-examples, templates, checklists | ⚠️ Partial (see Section 6) |
 
+### Known Gaps Summary
+
+| Gap ID | Description | AC Impact | Blocking? | Follow-up |
+|--------|-------------|-----------|-----------|-----------|
+| GAP-001 | Example count: 1/skill vs 3+/skill required | AC-003 PARTIAL | No | `003b-architect-examples` |
+| GAP-002 | Anti-example count: 4 total vs 3+/skill required | AC-003 PARTIAL | No | `003b-architect-examples` |
+
 ### Overall Assessment
 
-**Core functionality is complete** and ready for downstream feature development (004-008). Educational materials have a coverage gap that can be addressed in a follow-up enhancement.
+**Feature Status**: **COMPLETE with Known Gap** (AC-003 PARTIAL)
+
+Core functionality is delivered and usable for downstream feature development (004-008). However, AC-003 (Skill Assets Complete) remains **PARTIAL** due to educational material coverage gap:
+- **Examples**: 1 per skill delivered (spec requires 3+ per skill)
+- **Anti-examples**: 4 total delivered (spec requires 3+ per skill)
+
+This gap does not block downstream development but should be addressed in a follow-up enhancement (`003b-architect-examples`).
 
 ---
 

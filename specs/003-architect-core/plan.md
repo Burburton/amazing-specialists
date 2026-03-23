@@ -173,7 +173,7 @@ Phase 8: Consistency Review (2 days)
 **P1-2: Downstream Interface Definition**
 - 目标：定义 architect 与 developer/tester/reviewer/docs/security 的交付契约
 - 输入：role-definition.md, io-contract.md
-- 输出：architect-downstream-interfaces.md (in specs/003-architect-core/contracts/)
+- 输出：downstream-interfaces.md (in specs/003-architect-core/)
 - 验收：每个下游角色都有明确的消费指引
 
 **P1-3: De-legacy Mapping Notes**

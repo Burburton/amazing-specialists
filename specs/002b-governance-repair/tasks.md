@@ -27,7 +27,7 @@ Create the spec document defining the governance repair scope.
 
 ### T-002: Create plan.md
 
-**Status:** In Progress
+**Status:** Completed
 **Priority:** High
 **Assigned To:** architect
 **Estimated Effort:** 15 minutes
@@ -36,15 +36,15 @@ Create the spec document defining the governance repair scope.
 Create the implementation plan with phases and dependencies.
 
 **Acceptance Criteria:**
-- [ ] plan.md created with Overview, Architecture, Phases
-- [ ] File changes listed
-- [ ] Success criteria defined
+- [x] plan.md created with Overview, Architecture, Phases
+- [x] File changes listed
+- [x] Success criteria defined
 
 ---
 
 ### T-003: Create tasks.md
 
-**Status:** Pending
+**Status:** Completed
 **Priority:** High
 **Assigned To:** architect
 **Estimated Effort:** 15 minutes
@@ -53,9 +53,9 @@ Create the implementation plan with phases and dependencies.
 Create the detailed task list (this document).
 
 **Acceptance Criteria:**
-- [ ] tasks.md created with all tasks
-- [ ] Dependencies mapped
-- [ ] Estimates provided
+- [x] tasks.md created with all tasks
+- [x] Dependencies mapped
+- [x] Estimates provided
 
 ---
 
@@ -63,7 +63,7 @@ Create the detailed task list (this document).
 
 ### T-004: Add Post-Completion Note to 002 completion-report
 
-**Status:** Pending
+**Status:** Completed
 **Priority:** High
 **Assigned To:** docs
 **Estimated Effort:** 10 minutes
@@ -73,10 +73,10 @@ Create the detailed task list (this document).
 Update the 002-role-model-alignment completion report to add a follow-up repair note.
 
 **Acceptance Criteria:**
-- [ ] Post-Completion Note section added
-- [ ] References 002b-governance-repair
-- [ ] Explains why follow-up repair was needed
-- [ ] Does not delete original completion content
+- [x] Post-Completion Note section added
+- [x] References 002b-governance-repair
+- [x] Explains why follow-up repair was needed
+- [x] Does not delete original completion content
 
 **Changes:**
 - File: `specs/002-role-model-alignment/completion-report.md`
@@ -88,7 +88,7 @@ Update the 002-role-model-alignment completion report to add a follow-up repair 
 
 ### T-005: Fix README.md
 
-**Status:** Pending
+**Status:** Completed
 **Priority:** High
 **Assigned To:** docs
 **Estimated Effort:** 25 minutes
@@ -98,11 +98,11 @@ Update the 002-role-model-alignment completion report to add a follow-up repair 
 Fix README.md to clarify 6-role formal model vs 3-skill legacy.
 
 **Acceptance Criteria:**
-- [ ] Skills directory described as two-tier structure
-- [ ] 6-role explicitly called "formal execution model"
-- [ ] 3-skill explicitly called "legacy transition/bootstrap skeleton"
-- [ ] Workflow stages clarified
-- [ ] No mention of 003-architect-core creation
+- [x] Skills directory described as two-tier structure
+- [x] 6-role explicitly called "formal execution model"
+- [x] 3-skill explicitly called "legacy transition/bootstrap skeleton"
+- [x] Workflow stages clarified
+- [x] No mention of 003-architect-core creation
 
 **Changes:**
 - File: `README.md`
@@ -115,7 +115,7 @@ Fix README.md to clarify 6-role formal model vs 3-skill legacy.
 
 ### T-006: Fix AGENTS.md
 
-**Status:** Pending
+**Status:** Completed
 **Priority:** High
 **Assigned To:** architect
 **Estimated Effort:** 20 minutes
@@ -125,12 +125,12 @@ Fix README.md to clarify 6-role formal model vs 3-skill legacy.
 Add Role Semantics Priority section and completion-report consistency rule.
 
 **Acceptance Criteria:**
-- [ ] "Role Semantics Priority" section added
-- [ ] 6-role defined as formal execution semantics
-- [ ] 3-skill defined as transition/legacy
-- [ ] Feature naming rule: use 6-role terms
-- [ ] Completion-report consistency rule added
-- [ ] Semantic conflict resolution: package-spec + role-definition为准
+- [x] "Role Semantics Priority" section added
+- [x] 6-role defined as formal execution semantics
+- [x] 3-skill defined as transition/legacy
+- [x] Feature naming rule: use 6-role terms
+- [x] Completion-report consistency rule added
+- [x] Semantic conflict resolution: package-spec + role-definition为准
 
 **Changes:**
 - File: `AGENTS.md`
@@ -142,7 +142,7 @@ Add Role Semantics Priority section and completion-report consistency rule.
 
 ### T-007: Fix package-spec.md
 
-**Status:** Pending
+**Status:** Completed
 **Priority:** High
 **Assigned To:** architect
 **Estimated Effort:** 20 minutes
@@ -152,13 +152,13 @@ Add Role Semantics Priority section and completion-report consistency rule.
 Add 6-role vs 3-skill mapping and clarify positioning.
 
 **Acceptance Criteria:**
-- [ ] 6-role clearly stated as formal execution model
-- [ ] 3-skill clearly stated as bootstrap/transition
-- [ ] Mapping section added:
+- [x] 6-role clearly stated as formal execution model
+- [x] 3-skill clearly stated as bootstrap/transition
+- [x] Mapping section added:
   - spec-writer → architect (pre-spec) + docs
   - architect-auditor → architect + reviewer
   - task-executor → developer/tester/docs/security
-- [ ] Note: 3-skill retained for compatibility, not governance主线
+- [x] Note: 3-skill retained for compatibility, not governance主线
 
 **Changes:**
 - File: `package-spec.md`
@@ -170,7 +170,7 @@ Add 6-role vs 3-skill mapping and clarify positioning.
 
 ### T-008: Verify role-definition.md high-risk flow
 
-**Status:** Pending
+**Status:** Completed
 **Priority:** High
 **Assigned To:** reviewer
 **Estimated Effort:** 10 minutes
@@ -180,9 +180,9 @@ Add 6-role vs 3-skill mapping and clarify positioning.
 Verify the high-risk flow in role-definition.md is correct.
 
 **Acceptance Criteria:**
-- [ ] Flow order is: architect → developer → tester → reviewer → security → docs
-- [ ] Security explicitly noted as "after reviewer"
-- [ ] No changes needed, or fixes applied
+- [x] Flow order is: architect → developer → tester → reviewer → security → docs
+- [x] Security explicitly noted as "after reviewer"
+- [x] No changes needed, or fixes applied
 
 **Changes:**
 - File: `role-definition.md`
@@ -192,7 +192,7 @@ Verify the high-risk flow in role-definition.md is correct.
 
 ### T-009: Fix m3-skills-integration-verification-report.md
 
-**Status:** Pending
+**Status:** Completed
 **Priority:** High
 **Assigned To:** docs
 **Estimated Effort:** 20 minutes
@@ -202,11 +202,11 @@ Verify the high-risk flow in role-definition.md is correct.
 Fix the high-risk flow order in m3 verification report.
 
 **Acceptance Criteria:**
-- [ ] Flow order changed to: architect → developer → tester → reviewer → security → docs
-- [ ] Key verification point updated: "security after reviewer" not "after tester"
-- [ ] Diagram/ASCII art updated
-- [ ] Correction note added explaining the fix
-- [ ] Honest about original verification being based on wrong order
+- [x] Flow order changed to: architect → developer → tester → reviewer → security → docs
+- [x] Key verification point updated: "security after reviewer" not "after tester"
+- [x] Diagram/ASCII art updated
+- [x] Correction note added explaining the fix
+- [x] Honest about original verification being based on wrong order
 
 **Changes:**
 - File: `specs/m3-skills-integration-verification-report.md`
@@ -221,7 +221,7 @@ Fix the high-risk flow order in m3 verification report.
 
 ### T-010: Create completion-report.md
 
-**Status:** Pending
+**Status:** Completed
 **Priority:** High
 **Assigned To:** docs
 **Estimated Effort:** 15 minutes
@@ -231,12 +231,12 @@ Fix the high-risk flow order in m3 verification report.
 Create the completion report for 002b-governance-repair.
 
 **Acceptance Criteria:**
-- [ ] Background section explains why repair was needed
-- [ ] Problems list from spec
-- [ ] Fixes applied enumerated
-- [ ] Verification results (ACs satisfied)
-- [ ] Impact on 003 (none, not created)
-- [ ] Explicit statement: 003-architect-core not created
+- [x] Background section explains why repair was needed
+- [x] Problems list from spec
+- [x] Fixes applied enumerated
+- [x] Verification results (ACs satisfied)
+- [x] Impact on 003 (none, not created)
+- [x] Explicit statement: 003-architect-core not created
 
 **Changes:**
 - New file: `specs/002b-governance-repair/completion-report.md`
@@ -265,16 +265,16 @@ T-003 ──────────────┴── T-007 ──┴── 
 ## Completion Criteria
 
 All tasks completed:
-- [ ] T-001: spec.md created
-- [ ] T-002: plan.md created
-- [ ] T-003: tasks.md created
-- [ ] T-004: 002 completion report updated
-- [ ] T-005: README.md fixed
-- [ ] T-006: AGENTS.md fixed
-- [ ] T-007: package-spec.md fixed
-- [ ] T-008: role-definition.md verified
-- [ ] T-009: m3 report fixed
-- [ ] T-010: 002b completion report created
+- [x] T-001: spec.md created
+- [x] T-002: plan.md created
+- [x] T-003: tasks.md created
+- [x] T-004: 002 completion report updated
+- [x] T-005: README.md fixed
+- [x] T-006: AGENTS.md fixed
+- [x] T-007: package-spec.md fixed
+- [x] T-008: role-definition.md verified
+- [x] T-009: m3 report fixed
+- [x] T-010: 002b completion report created
 
 **Overall Success:**
 - AC-001 through AC-008 satisfied

@@ -236,4 +236,6 @@ Scope 仅限治理修补，没有越界到 003。
 **报告生成日期**：2026-03-22  
 **Feature ID**：002b-governance-repair  
 **状态**：✅ 已完成  
-**Git Commit**：待提交
+**Git Commits**：
+- `1493134` feat(002b-governance-repair): governance consistency fix
+- `2f9dc97` docs(governance): mark 3-skill as legacy in README skills section

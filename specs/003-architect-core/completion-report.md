@@ -267,12 +267,19 @@ The architect-core feature provides the following inputs for reviewer role imple
 
 | Document | Sync Required | Status |
 |----------|---------------|--------|
-| `README.md` | No | Architect skills already documented |
+| `README.md` | Yes | Feature status needed sync for known gap disclosure |
 | `package-spec.md` | No | Architect role already defined |
 | `role-definition.md` | No | Architect role already complete |
 | `AGENTS.md` | No | Role semantics already established |
 
-**Verification**: All governance documents remain consistent with 6-role formal model. No semantic drift detected.
+### Sync Actions Performed
+
+**README.md Update (2026-03-24)**:
+- Updated feature status table: `✅ 已完成` → `✅ 主体完成 (已知 gap)`
+- Added known gap disclosure: AC-003 PARTIAL (examples/anti-examples 数量不足)
+- Status narrative now accurately reflects "Substantially Complete with Known Gaps"
+
+**Verification**: All governance documents now consistent with 6-role formal model. README accurately reflects feature completion status with known gaps disclosure.
 
 ---
 

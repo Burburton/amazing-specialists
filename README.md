@@ -169,14 +169,14 @@ User Input
 
 | Feature ID | Feature Name | Status | Description |
 |------------|--------------|--------|-------------|
-| `003-architect-core` | architect 角色核心技能 | ✅ 已完成 | 3 core skills, 4 artifact contracts, validation layer |
+| `003-architect-core` | architect 角色核心技能 | ✅ 主体完成 (已知 gap) | 3 core skills, 4 artifact contracts, validation layer |
 | `004-developer-core` | developer 角色核心技能 | 待实现 | 代码实现核心能力 |
 | `005-tester-core` | tester 角色核心技能 | 待实现 | 测试验证核心能力 |
 | `006-reviewer-core` | reviewer 角色核心技能 | 待实现 | 独立审查核心能力 |
 | `007-docs-core` | docs 角色核心技能 | 待实现 | 文档同步核心能力 |
 | `008-security-core` | security 角色核心技能 | 待实现 | 安全审查核心能力 |
 
-> **当前进度**: `003-architect-core` 已完成，architect 角色成为首个拥有完整核心能力的 6-role 正式角色。详见 [specs/003-architect-core/completion-report.md](specs/003-architect-core/completion-report.md)。
+> **当前进度**: `003-architect-core` 主体完成。AC-003 (Skill Assets Complete) 为 PARTIAL：examples/anti-examples 数量低于 spec 要求（详见 [completion-report.md](specs/003-architect-core/completion-report.md)）。architect 角色已成为首个拥有核心能力的 6-role 正式角色。
 
 > **命名规范**：后续 feature 应围绕 **6-role 正式模型**命名，避免使用 3-skill 过渡术语（如 `spec-writer-core`, `architect-auditor-v2` 等）。
 

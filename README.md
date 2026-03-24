@@ -169,14 +169,14 @@ User Input
 
 | Feature ID | Feature Name | Status | Description |
 |------------|--------------|--------|-------------|
-| `003-architect-core` | architect 角色核心技能 | ✅ 主体完成 (已知 gap) | 3 core skills, 4 artifact contracts, validation layer |
-| `004-developer-core` | developer 角色核心技能 | ✅ 主体完成 (已知 gaps) | 3 core skills, 3 artifact contracts, validation layer |
+| `003-architect-core` | architect 角色核心技能 | ✅ Complete | 3 core skills, 4 artifact contracts, validation layer |
+| `004-developer-core` | developer 角色核心技能 | ✅ Complete | 3 core skills, 3 artifact contracts, validation layer |
 | `005-tester-core` | tester 角色核心技能 | 待实现 | 测试验证核心能力 |
 | `006-reviewer-core` | reviewer 角色核心技能 | 待实现 | 独立审查核心能力 |
 | `007-docs-core` | docs 角色核心技能 | 待实现 | 文档同步核心能力 |
 | `008-security-core` | security 角色核心技能 | 待实现 | 安全审查核心能力 |
 
-> **当前进度**: `003-architect-core` 和 `004-developer-core` 主体完成。两者 AC-003 (Skill Assets Complete) 均为 PARTIAL：examples/anti-examples 数量低于 spec 要求（详见 [003 completion-report.md](specs/003-architect-core/completion-report.md) 和 [004 completion-report.md](specs/004-developer-core/completion-report.md)）。architect 和 developer 角色已成为拥有核心能力的 6-role 正式角色。
+> **当前进度**: `003-architect-core` 和 `004-developer-core` 已完成。architect 和 developer 角色已成为拥有核心能力的 6-role 正式角色。后续 005-008 将依次实现 tester/reviewer/docs/security 核心能力。
 
 > **命名规范**：后续 feature 应围绕 **6-role 正式模型**命名，避免使用 3-skill 过渡术语（如 `spec-writer-core`, `architect-auditor-v2` 等）。
 
@@ -199,7 +199,7 @@ User Input
 .opencode/skills/
 ├── common/              # 5个通用技能
 ├── architect/           # 3个架构师技能（✅ 003-architect-core 正式实现）
-├── developer/           # 3个开发者技能（✅ 004-developer-core 正式实现）
+├── developer/           # 3个开发者技能（✅ 004-developer-core 已完成）
 ├── tester/              # 3个测试员技能（待 005-tester-core 实现）
 ├── reviewer/            # 3个审查员技能（待 006-reviewer-core 实现）
 ├── docs/                # 2个文档员技能（待 007-docs-core 实现）

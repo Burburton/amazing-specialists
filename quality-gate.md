@@ -66,7 +66,11 @@ Universal Quality Gate
 
 ## 2. 严重程度分级 (Severity Levels)
 
-### S0 - Trivial（可忽略）
+### 2.1 执行层严重级别 (Execution Severity - S0~S3)
+
+用于角色执行输出的质量评估。
+
+#### S0 - Trivial（可忽略）
 **定义：** 不影响功能、不阻塞下游、用户不可见的微小问题。
 
 **示例：**
@@ -76,7 +80,7 @@ Universal Quality Gate
 
 **处理：** 可忽略，或在后续迭代中顺带修复。
 
-### S1 - Minor（建议修复）
+#### S1 - Minor（建议修复）
 **定义：** 对下游影响较小，但有改进空间的问题。
 
 **示例：**
@@ -86,7 +90,7 @@ Universal Quality Gate
 
 **处理：** 建议修复，但不阻塞流程。可在 rework 时顺带处理。
 
-### S2 - Major（影响下游）
+#### S2 - Major（影响下游）
 **定义：** 影响下游角色正常工作，或可能导致理解偏差的问题。
 
 **示例：**
@@ -97,7 +101,7 @@ Universal Quality Gate
 
 **处理：** 必须修复，阻塞下游交接。触发返工（REWORK）。
 
-### S3 - Critical（必须阻塞）
+#### S3 - Critical（必须阻塞）
 **定义：** 严重错误，必须阻塞，无法继续流程的问题。
 
 **示例：**
@@ -108,6 +112,73 @@ Universal Quality Gate
 - 超出约束范围执行
 
 **处理：** 立即阻塞，触发返工或升级（ESCALATE）。
+
+---
+
+### 2.2 审计层严重级别 (Audit Severity - blocker/major/minor/note)
+
+用于审计发现问题的分级（`docs/audit-hardening.md` 定义）。
+
+#### blocker
+**定义：** 必须修复，否则会阻塞 milestone 验收的问题。
+
+**示例：**
+- 关键 spec 与实现偏离
+- 伪造验证结果
+- 隐瞒 critical 风险
+- 关键安全漏洞
+- 治理文档根本性矛盾
+
+**处理：** 必须修复后才能继续。不接受妥协。
+
+#### major
+**定义：** 影响下游工作，或造成理解偏差，或损害治理一致性的问题。
+
+**示例：**
+- 与 canonical 文档冲突（如 `role-definition.md`）
+- README 状态误导（partial 报成 complete）
+- 路径声明错误（文件存在但路径写错）
+- partial gap 未同步披露
+- 术语混用导致理解偏差
+- feature 影响的变更未同步到 governance 文档
+
+**处理：** 必须修复或有明确接受理由。通常触发 REWORK。
+
+#### minor
+**定义：** 轻微问题，有改进空间，但不影响核心功能或理解。
+
+**示例：**
+- 轻微术语不统一但不影响事实判断
+- 格式建议
+- 非关键字段缺失
+- 文档可改进之处
+
+**处理：** 建议修复，但不阻塞流程。
+
+#### note
+**定义：** 信息性备注，供参考，不强制处理。
+
+**示例：**
+- 观察性建议
+- 可选改进方案
+- 背景信息补充
+
+**处理：** 记录但不强制处理。
+
+---
+
+### 2.3 严重级别映射关系
+
+| 执行层 (S0-S3) | 审计层 (blocker/note) | 说明 |
+|----------------|----------------------|------|
+| S3 - Critical | blocker | 立即阻塞 |
+| S2 - Major | major | 必须修复 |
+| S1 - Minor | minor | 建议修复 |
+| S0 - Trivial | note/minor | 可选处理 |
+
+**使用场景**：
+- **角色执行输出评估**：使用 S0-S3（quality-gate.md Section 2.1）
+- **审计发现问题**：使用 blocker/note（quality-gate.md Section 2.2 + audit-hardening.md Section 8）
 
 ---
 

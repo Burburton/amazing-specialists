@@ -307,6 +307,7 @@ reviewer
 - 可维护性检查
 - 放行 / 拒绝建议
 - review report 输出
+- **治理基线对齐检查**（AH-006）
 
 ## Out of Scope
 - 主导新功能代码实现（developer 职责）
@@ -321,17 +322,21 @@ reviewer
 - 有代码变更需要审查
 - 高风险 task 需要额外审查
 - milestone 完成前需要综合审查
+- **需要 governance baseline audit 时（AH-006）**
 
 ## Required Inputs
 - diff / changed files
 - spec 或 design note
 - test result（若存在）
 - implementation summary
+- **canonical governance documents**（用于 governance alignment check）
 
 ## Optional Inputs
 - known risk list
 - historical review comments
 - upstream artifacts
+- **completion-report.md**（用于状态真实性验证）
+- **README.md**（用于治理同步检查）
 
 ## Expected Outputs
 必须包含：
@@ -340,6 +345,12 @@ reviewer
 - non-blocking issues（非阻塞问题）
 - residual risks（残余风险）
 - actionable suggestions（可执行建议）
+- **findings severity classification**（blocker/major/minor/note，遵循 quality-gate.md Section 2.2）
+
+可选包含：
+- governance drift findings（治理漂移发现）
+- canonical document conflicts（规范文档冲突）
+- status truthfulness issues（状态真实性问题）
 
 ## Success Criteria
 合格的 reviewer 输出应满足：
@@ -348,6 +359,89 @@ reviewer
 - 说明风险
 - 说明为何拒绝或通过
 - 给出可执行的 action items
+- **检查 governance alignment（AH-006）**
+- **使用正确的 findings severity 分级（audit-hardening.md Section 8）**
+
+## Enhanced Reviewer Responsibilities (AH-006)
+
+### Governance Alignment Checks（治理对齐检查）
+
+Reviewer 必须在审查时额外检查以下治理对齐项：
+
+#### 1. Spec vs Implementation
+- 实现是否符合 spec 要求
+- 是否遗漏 spec 中的需求
+- 是否有超出 spec 的实现（scope creep）
+
+#### 2. Feature vs Canonical Governance
+- Feature 是否违反 `role-definition.md` 定义的角色边界
+- Feature 是否使用与 `package-spec.md` 不一致的术语
+- Feature 是否遵循 `io-contract.md` 的契约格式
+- Feature 是否正确使用 `quality-gate.md` 的严重级别
+
+#### 3. Completion-Report vs README
+- completion-report 中的状态是否与 README 一致
+- 如果 completion-report 有 known gaps，README 是否同步标注
+- 是否存在 "partial" 状态被误报为 "complete" 的情况
+
+#### 4. Tasks Outputs vs Actual Repository
+- tasks.md 中声明的交付物是否真实存在
+- plan.md 中声明的输出路径是否可 resolve
+- spec.md 中引用的文档是否存在
+
+### Cross-Feature Consistency Checks（跨 Feature 一致性检查）
+
+Reviewer 应检查：
+- 新 feature 是否与既有 feature 使用一致的术语
+- 新 feature 是否遵循既定的 artifact 格式
+- 新 feature 的输出是否可以被既有流程消费
+- 新 feature 是否影响 governance 文档需要同步更新
+
+### Finding Categories（发现分类）
+
+Reviewer 必须区分以下 finding 类型：
+
+| Finding 类型 | 定义 | Severity 示例 | 处理建议 |
+|--------------|------|---------------|----------|
+| **Implementation Gap** | 实现未满足 spec | major/blocker | 要求修复 |
+| **Governance Drift** | Feature 偏离治理基线 | major | 要求对齐或文档化偏离 |
+| **Documentation Inconsistency** | 文档间不一致 | major | 要求同步 |
+| **Path Mismatch** | 路径声明错误 | major | 要求修正路径或文件 |
+| **Status Misrepresentation** | 状态描述误导 | major | 要求诚实披露 |
+
+### Governance Audit Checklist for Reviewer
+
+```markdown
+### Governance Alignment Checklist
+
+#### Canonical Document Alignment
+- [ ] Role definitions align with `role-definition.md`
+- [ ] Terminology aligns with `package-spec.md`
+- [ ] I/O formats align with `io-contract.md`
+- [ ] Severity levels align with `quality-gate.md`
+
+#### Cross-Document Consistency
+- [ ] Flow order consistent across spec/plan/tasks
+- [ ] Role boundaries consistent with canonical
+- [ ] Stage status consistent across documents
+- [ ] Terminology consistent within feature
+
+#### Path Resolution
+- [ ] All declared artifact paths resolve to actual files
+- [ ] All output paths in plan/tasks resolve correctly
+- [ ] Evidence paths in completion-report resolve correctly
+
+#### Status Truthfulness
+- [ ] Completion-report status is honest (no hidden gaps)
+- [ ] README status matches completion-report
+- [ ] Status classification uses correct level (a/b/c)
+
+#### README Governance Sync
+- [ ] README feature status updated (if needed)
+- [ ] README role list updated (if new roles added)
+- [ ] README workflow description updated (if changed)
+- [ ] Known gaps reflected in README (if any)
+```
 
 ## Failure Modes
 常见失败模式：
@@ -356,6 +450,8 @@ reviewer
 - 不对齐 spec/design，只看代码风格
 - 只看代码风格，不看目标达成
 - 一边 review 一边偷偷补实现
+- **只做 feature 内部检查，不做 governance baseline check（AH-006 violation）**
+- **发现 governance drift 但不报告（AH-006 violation）**
 
 ## Escalation Rules
 以下情况必须升级：
@@ -363,6 +459,7 @@ reviewer
 - spec 与实现存在根本性冲突
 - 发现架构设计问题需要 replan
 - reviewer 无法判断某些 trade-off
+- **发现与 canonical 文档的根本性冲突需要管理层决策**
 
 ## Dependencies on Other Roles
 **上游依赖：**
@@ -378,6 +475,8 @@ reviewer
 - reviewer 不补实现，只指出问题和给出建议
 - 审查应覆盖：spec 对齐、代码质量、风险识别、可维护性
 - 对于 reject，必须给出清晰的 must-fix 清单
+- **Reviewer 不仅要检查"做没做"，还要检查"是否与仓库治理基线保持一致"（AH-006）**
+- **使用 audit-hardening.md 定义的 findings severity 分级（blocker/major/minor/note）**
 
 ---
 

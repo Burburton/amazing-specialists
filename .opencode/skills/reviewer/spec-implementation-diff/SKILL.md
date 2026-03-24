@@ -4,11 +4,15 @@
 
 检查 spec / design 与 implementation 是否一致，识别偏离和遗漏，确保实现符合原始需求。
 
+**增强职责（AH-006）**：同时检查 feature 与仓库级治理基线（canonical documents）的一致性，确保 governance alignment。
+
 解决的核心问题：
 - 实现偏离 spec 不自知
 - 需求遗漏未被发现
 - design 与实现不一致
 - 变更未同步更新文档
+- **feature 与治理基线漂移不自知（新增）**
+- **跨文档状态不一致未被发现（新增）**
 
 ## When to Use
 
@@ -16,6 +20,7 @@
 - reviewer 审查实现时
 - 验收前验证一致性
 - 发现实现与预期不符时
+- **需要 governance baseline audit 时（新增）**
 
 推荐使用时：
 - 任何代码审查时
@@ -28,6 +33,7 @@
 - 无 spec 的快速原型
 - 纯技术重构
 - 已明确是设计变更
+- **已明确是 governance 变更且已文档化**
 
 ## Diff Categories
 
@@ -98,6 +104,40 @@
 - 兼容性要求是否满足？
 - 向后兼容是否保持？
 
+### 6. 治理对齐 (Governance Alignment) - NEW
+
+#### 6.1 Canonical Document Alignment
+| 检查项 | 来源文档 | 检查内容 |
+|--------|----------|----------|
+| 角色定义 | `role-definition.md` | Feature 中使用的角色与 canonical 一致 |
+| 术语定义 | `package-spec.md` | Feature 中使用的术语与 canonical 一致 |
+| 契约格式 | `io-contract.md` | Artifact/payload 格式符合 canonical |
+| 严重级别 | `quality-gate.md` | 使用的 severity 与 canonical 一致 |
+
+#### 6.2 Cross-Document Consistency
+| 检查项 | 检查内容 |
+|--------|----------|
+| 流程顺序 | Spec → Plan → Tasks 流程一致 |
+| 角色边界 | Feature 内角色描述与 canonical 一致 |
+| 阶段状态 | 各文档中的 feature 状态一致 |
+| 术语一致 | 同一术语在各文档中含义一致 |
+
+#### 6.3 Path Resolution
+| 检查项 | 检查内容 |
+|--------|----------|
+| Artifact 路径 | 声明的 artifact 路径可 resolve |
+| 输出路径 | 声明的输出路径可 resolve |
+| 证据路径 | 声明的证据路径可 resolve |
+
+#### 6.4 Status Truthfulness
+| 检查项 | 检查内容 |
+|--------|----------|
+| Completion vs README | completion-report 与 README 状态一致 |
+| Gap 披露 | known gaps 在各文档中同步披露 |
+| 状态分类 | 使用正确的状态分类（a/b/c） |
+
+**References**: See `docs/audit-hardening.md` for complete governance alignment rules.
+
 ## Steps
 
 ### Step 1: 收集文档
@@ -105,8 +145,16 @@
 2. 读取 design note
 3. 读取 implementation summary
 4. 读取 changed_files
+5. **读取 canonical governance documents（新增）**：
+   - `role-definition.md`
+   - `package-spec.md`
+   - `io-contract.md`
+   - `quality-gate.md`
+6. **读取状态文档（新增）**：
+   - `completion-report.md`
+   - `README.md`
 
-### Step 2: 逐条对比
+### Step 2: 逐条对比 (Spec vs Implementation)
 对 spec 中的每条需求：
 1. 在实现中查找对应
 2. 对比预期 vs 实际
@@ -127,8 +175,17 @@
 3. 确定是否可接受
 4. 记录理由
 
-### Step 5: 生成 Diff Report
-输出 spec-implementation diff report
+### Step 5: Governance Alignment Check (NEW)
+检查 feature 与治理基线的一致性：
+1. **Canonical Comparison**: Feature 与 `role-definition.md`, `package-spec.md` 等是否冲突
+2. **Cross-Document Consistency**: Feature 内部各文档是否一致
+3. **Path Resolution**: 所有声明路径是否可 resolve
+4. **Status Truthfulness**: completion-report 与 README 是否一致
+
+**Severity**: Governance drift findings use blocker/major/minor/note (see audit-hardening.md Section 8).
+
+### Step 6: 生成 Diff Report
+输出 spec-implementation diff report with governance findings.
 
 ## Output Format
 
@@ -140,6 +197,7 @@ spec_implementation_diff:
   summary:
     overall_status: aligned | partial_aligned | not_aligned
     alignment_percentage: number
+    governance_status: aligned | drift_detected  # NEW
     
   spec_reference:
     spec_version: string
@@ -158,7 +216,7 @@ spec_implementation_diff:
             type: omission | addition | modification
             description: string
             reason: string
-            severity: high | medium | low
+            severity: blocker | major | minor | note  # UPDATED: use audit severity
             acceptable: boolean
             
           verification:
@@ -189,22 +247,69 @@ spec_implementation_diff:
     test_coverage: number
     untested_items: string[]
     
+  # NEW: Governance Alignment Section
+  governance_alignment:
+    canonical_documents_checked:
+      - role-definition.md
+      - package-spec.md
+      - io-contract.md
+      - quality-gate.md
+    
+    conflicts:
+      - document: string
+        conflict_type: role_boundary | terminology | io_contract | severity_level
+        feature_value: string
+        canonical_value: string
+        severity: blocker | major | minor | note
+        recommendation: string
+    
+    cross_document_consistency:
+      flow_order_aligned: boolean
+      role_boundaries_aligned: boolean
+      stage_status_aligned: boolean
+      terminology_consistent: boolean
+      issues: []
+    
+    path_resolution:
+      paths_checked: number
+      paths_resolved: number
+      failures:
+        - declared_path: string
+          expected_location: string
+          actual_location: string | null
+          severity: major | minor
+    
+    status_truthfulness:
+      completion_report_status: string
+      readme_status: string
+      aligned: boolean
+      gaps_disclosed: boolean
+      issues: []
+  
+  # UPDATED: Use audit severity levels
   recommendation:
     action: approve | reject | request_changes | escalate
-    must_fix: string[]
-    should_fix: string[]
-    acceptable_deviations: string[]
+    must_fix:  # blocker/major
+      - string
+    should_fix:  # minor
+      - string
+    acceptable_deviations:  # note
+      - string
+    governance_actions:  # NEW
+      - action: sync_canonical | update_readme | document_drift
+        description: string
 ```
 
 ## Examples
 
-### 示例 1：完全对齐
+### 示例 1：完全对齐（含治理检查）
 
 ```yaml
 spec_implementation_diff:
   summary:
     overall_status: aligned
     alignment_percentage: 100
+    governance_status: aligned  # NEW
     
   comparison:
     - category: 功能需求
@@ -218,29 +323,34 @@ spec_implementation_diff:
             method: "集成测试"
             result: pass
             
-        - spec_item: "FR-002: JWT Token"
-          spec_description: "登录成功返回 JWT Token"
-          implementation_status: implemented
-          implementation_location: "JwtTokenService.generate"
-          alignment: aligned
-          verification:
-            method: "单元测试"
-            result: pass
-            
-    - category: 错误处理
-      items:
-        - spec_item: "ERR-001: 密码错误"
-          spec_description: "密码错误返回 401"
-          implementation_status: implemented
-          implementation_location: "AuthService.validateUser"
-          alignment: aligned
-          verification:
-            method: "单元测试"
-            result: pass
-            
   gaps: []
   deviations: []
   additions: []
+  
+  # NEW: Governance Alignment
+  governance_alignment:
+    canonical_documents_checked:
+      - role-definition.md
+      - package-spec.md
+      - io-contract.md
+      - quality-gate.md
+    conflicts: []
+    cross_document_consistency:
+      flow_order_aligned: true
+      role_boundaries_aligned: true
+      stage_status_aligned: true
+      terminology_consistent: true
+      issues: []
+    path_resolution:
+      paths_checked: 5
+      paths_resolved: 5
+      failures: []
+    status_truthfulness:
+      completion_report_status: "COMPLETE"
+      readme_status: "COMPLETE"
+      aligned: true
+      gaps_disclosed: true
+      issues: []
   
   verification_coverage:
     test_coverage: 95
@@ -250,15 +360,17 @@ spec_implementation_diff:
     action: approve
     must_fix: []
     acceptable_deviations: []
+    governance_actions: []
 ```
 
-### 示例 2：存在偏离
+### 示例 2：治理漂移检测
 
 ```yaml
 spec_implementation_diff:
   summary:
     overall_status: partial_aligned
     alignment_percentage: 85
+    governance_status: drift_detected  # NEW
     
   comparison:
     - category: 功能需求
@@ -268,156 +380,116 @@ spec_implementation_diff:
           implementation_status: implemented
           alignment: aligned
           
-        - spec_item: "FR-002: JWT Token"
-          spec_description: "登录成功返回 JWT Token，有效期 24 小时"
-          implementation_status: partial
-          alignment: deviation
-          deviation:
-            type: modification
-            description: "Token 有效期为 1 小时而非 24 小时"
-            reason: "性能考虑，短 token 更安全"
-            severity: medium
-            acceptable: true
-            requires_approval: true
-            
-        - spec_item: "FR-003: 记住我功能"
-          spec_description: "支持记住我，延长 token 有效期"
-          implementation_status: not_implemented
-          alignment: gap
-          
-    - category: 错误处理
-      items:
-        - spec_item: "ERR-001: 密码错误"
-          spec_description: "密码错误返回 401"
-          implementation_status: implemented
-          alignment: aligned
-          
-        - spec_item: "ERR-002: 账号锁定"
-          spec_description: "连续 5 次失败锁定账号 30 分钟"
-          implementation_status: not_implemented
-          alignment: gap
-          
-  gaps:
-    - gap: "记住我功能未实现"
-      description: "FR-003 记住我功能不在实现中"
-      impact: "用户每次都需要重新登录"
-      mitigation: "计划在下一 milestone 实现"
-      
-    - gap: "账号锁定未实现"
-      description: "ERR-002 账号锁定功能未实现"
-      impact: "存在暴力破解风险"
-      mitigation: "security review 评估后决定"
-      
-  deviations:
-    - deviation: "Token 有效期改为 1 小时"
-      description: "spec 要求 24 小时，实现为 1 小时"
-      reason: "安全考虑，短 token 降低泄露风险"
-      impact: "用户需要更频繁重新登录"
-      acceptable: true
-      requires_approval: true
-      
-  additions:
-    - addition: "登录日志记录"
-      description: "记录了每次登录尝试"
-      reason: "安全审计需要"
-      in_scope: false
-      
+  gaps: []
+  deviations: []
+  additions: []
+  
+  # NEW: Governance Alignment with Issues
+  governance_alignment:
+    canonical_documents_checked:
+      - role-definition.md
+      - package-spec.md
+      - io-contract.md
+      - quality-gate.md
+    
+    conflicts:
+      - document: "role-definition.md"
+        conflict_type: "terminology"
+        feature_value: "spec-writer 是正式角色"
+        canonical_value: "spec-writer 是 legacy 过渡角色"
+        severity: major
+        recommendation: "Update feature docs to mark spec-writer as legacy"
+    
+    cross_document_consistency:
+      flow_order_aligned: true
+      role_boundaries_aligned: false  # Issue
+      stage_status_aligned: false  # Issue
+      terminology_consistent: true
+      issues:
+        - issue: "README says feature is COMPLETE, but completion-report shows PARTIAL"
+          severity: major
+          location: "README.md vs completion-report.md"
+    
+    path_resolution:
+      paths_checked: 5
+      paths_resolved: 4
+      failures:
+        - declared_path: "docs/example.md"
+          expected_location: "docs/example.md"
+          actual_location: null
+          severity: major
+    
+    status_truthfulness:
+      completion_report_status: "COMPLETE with known gaps (AC-003 PARTIAL)"
+      readme_status: "COMPLETE"
+      aligned: false
+      gaps_disclosed: false
+      issues:
+        - issue: "README shows COMPLETE but AC-003 is PARTIAL"
+          severity: major
+  
   recommendation:
     action: request_changes
     must_fix:
-      - "实现账号锁定功能（ERR-002）"
+      - "Fix README status to reflect PARTIAL (AC-003)"
+      - "Fix path: docs/example.md does not exist"
     should_fix:
-      - "评估记住我功能是否必须"
-    acceptable_deviations:
-      - "Token 有效期 1 小时（需产品确认）"
+      - "Mark spec-writer as legacy in feature docs"
+    acceptable_deviations: []
+    governance_actions:
+      - action: update_readme
+        description: "Sync README status with completion-report"
+      - action: sync_canonical
+        description: "Align terminology with role-definition.md"
 ```
 
-### 示例 3：严重偏离
+### 示例 3：严重治理冲突
 
 ```yaml
 spec_implementation_diff:
   summary:
     overall_status: not_aligned
     alignment_percentage: 60
+    governance_status: drift_detected
     
   comparison:
     - category: 架构
-      items:
-        - spec_item: "ARC-001: 分层架构"
-          spec_description: "Controller-Service-Repository 分层"
-          implementation_status: implemented
-          alignment: aligned
-          
-    - category: 接口
-      items:
-        - spec_item: "API-001: 登录端点"
-          spec_description: "POST /api/auth/login"
-          implementation_status: implemented
-          alignment: deviation
-          deviation:
-            type: modification
-            description: "实现为 POST /api/login（缺少 /auth 路径）"
-            reason: "未说明"
-            severity: high
-            acceptable: false
-            requires_approval: true
-            
-        - spec_item: "API-002: Token 响应"
-          spec_description: "返回 {token, user}"
-          implementation_status: implemented
-          alignment: deviation
-          deviation:
-            type: modification
-            description: "返回 {accessToken, refreshToken, userData}"
-            reason: "扩展了 token 机制"
-            severity: medium
-            acceptable: true
-            requires_approval: true
-            
-    - category: 数据结构
-      items:
-        - spec_item: "DATA-001: 用户模型"
-          spec_description: "User {id, username, email, created_at}"
-          implementation_status: exceeded
-          alignment: deviation
-          deviation:
-            type: addition
-            description: "添加了 roles, lastLogin 字段"
-            reason: "扩展需求"
-            severity: low
-            acceptable: true
-            requires_approval: false
-            
-  gaps:
-    - gap: "密码加密使用 bcrypt"
-      description: "spec 要求 bcrypt，实现使用 sha256"
-      impact: "安全性降低"
-      mitigation: "必须改为 bcrypt"
+      items: []
       
-  deviations:
-    - deviation: "API 路径改变"
-      description: "/api/login vs /api/auth/login"
-      reason: "未说明"
-      impact: "破坏 API 契约"
-      acceptable: false
-      requires_approval: false
+  governance_alignment:
+    conflicts:
+      - document: "role-definition.md"
+        conflict_type: "role_boundary"
+        feature_value: "developer 可以修改 role-definition.md"
+        canonical_value: "developer 不能修改治理文档"
+        severity: blocker
+        recommendation: "Revert changes to role-definition.md, use docs role"
       
-    - deviation: "响应格式改变"
-      description: "字段名不一致"
-      reason: "扩展需求"
-      impact: "前端需要适配"
-      acceptable: true
-      requires_approval: true
-      
+      - document: "package-spec.md"
+        conflict_type: "terminology"
+        feature_value: "引入新的 'auditor' 角色"
+        canonical_value: "6-role 模型: architect, developer, tester, reviewer, docs, security"
+        severity: blocker
+        recommendation: "Remove 'auditor' role, use existing reviewer + security"
+    
+    status_truthfulness:
+      completion_report_status: "COMPLETE"
+      readme_status: "COMPLETE"
+      aligned: true
+      gaps_disclosed: false
+      issues:
+        - issue: "Feature claims COMPLETE but introduces governance conflicts"
+          severity: blocker
+  
   recommendation:
     action: reject
     must_fix:
-      - "恢复 API 路径为 /api/auth/login"
-      - "密码加密改为 bcrypt"
-    should_fix:
-      - "文档化响应格式变更"
-    acceptable_deviations:
-      - "扩展字段（需文档更新）"
+      - "Remove unauthorized changes to role-definition.md"
+      - "Remove 'auditor' role, align with 6-role model"
+      - "Document known gaps in governance alignment"
+    governance_actions:
+      - action: document_drift
+        description: "Document governance conflicts and resolution plan"
 ```
 
 ## Checklists
@@ -426,18 +498,26 @@ spec_implementation_diff:
 - [ ] spec 已读取
 - [ ] design 已读取
 - [ ] implementation 已读取
+- [ ] **canonical documents 已读取（新增）**
+- [ ] **completion-report 已读取（新增）**
+- [ ] **README 已读取（新增）**
 
 ### 对比中
 - [ ] 每条需求已检查
 - [ ] 偏离已识别
 - [ ] 影响已评估
 - [ ] 偏离已分类
+- [ ] **governance alignment 已检查（新增）**
+- [ ] **cross-document consistency 已检查（新增）**
+- [ ] **path resolution 已验证（新增）**
 
 ### 对比后
 - [ ] gap 已记录
 - [ ] deviation 已评估
 - [ ] 建议已生成
 - [ ] 决策已明确
+- [ ] **governance findings 已分级（新增）**
+- [ ] **governance actions 已定义（新增）**
 
 ## Common Failure Modes
 
@@ -447,11 +527,14 @@ spec_implementation_diff:
 | 过度宽容 | 接受严重偏离 | 明确 blocker 标准 |
 | 文档滞后 | spec 未更新 | 同步更新文档 |
 | 沟通不足 | 偏离未沟通 | 要求文档化理由 |
+| **治理漂移漏检** | 只做 spec-implementation 对比，不做 governance check | **强制执行 AH-006 governance alignment check** |
+| **状态误导未识别** | completion-report 有 gaps 但 README 显示 complete | **强制执行 AH-004 status truthfulness check** |
+| **路径错误未验证** | 声明的路径不存在但未报告 | **强制执行 AH-003 path resolution check** |
 
 ## Notes
 
 ### 与 code-review-checklist 的关系
-- spec-implementation-diff 检查"做什么"对齐
+- spec-implementation-diff 检查"做什么"对齐 + governance alignment
 - code-review-checklist 检查"怎么做"质量
 - 两者互补
 
@@ -460,14 +543,23 @@ spec_implementation_diff:
 2. 技术偏离：评估合理性
 3. 扩展功能：评估 scope
 4. 简化功能：评估影响
+5. **governance drift：必须 report，severity >= major（新增）**
 
 ### 文档同步
 偏离必须文档化：
 - 偏离原因
 - 偏离影响
 - 批准状态
+- **governance drift 需要额外的同步计划（新增）**
 
 ### 工具支持
 - 需求跟踪工具
 - 代码覆盖率
 - API 对比工具
+- **governance document diff 工具（建议新增）**
+
+### References
+- `docs/audit-hardening.md` - Complete audit hardening specification
+- `quality-gate.md` Section 2.2 - Audit severity levels (blocker/major/minor/note)
+- `role-definition.md` Section 4 (reviewer) - Enhanced reviewer responsibilities (AH-006)
+

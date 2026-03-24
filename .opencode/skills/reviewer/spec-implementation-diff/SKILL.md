@@ -150,9 +150,9 @@
    - `package-spec.md`
    - `io-contract.md`
    - `quality-gate.md`
+   - `README.md`
 6. **读取状态文档（新增）**：
    - `completion-report.md`
-   - `README.md`
 
 ### Step 2: 逐条对比 (Spec vs Implementation)
 对 spec 中的每条需求：
@@ -254,6 +254,7 @@ spec_implementation_diff:
       - package-spec.md
       - io-contract.md
       - quality-gate.md
+      - README.md
     
     conflicts:
       - document: string
@@ -334,6 +335,7 @@ spec_implementation_diff:
       - package-spec.md
       - io-contract.md
       - quality-gate.md
+      - README.md
     conflicts: []
     cross_document_consistency:
       flow_order_aligned: true
@@ -391,6 +393,7 @@ spec_implementation_diff:
       - package-spec.md
       - io-contract.md
       - quality-gate.md
+      - README.md
     
     conflicts:
       - document: "role-definition.md"

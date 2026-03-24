@@ -196,8 +196,10 @@ fi
 | completion-report 状态 | README 允许状态 | README 禁止状态 | Severity if Violated |
 |------------------------|-----------------|-----------------|----------------------|
 | "COMPLETE with known gaps" | "COMPLETE with known gaps"<br>"主体完成，详见 gap 清单" | "✅ 已完成"<br>"全部完成"<br>"无遗留" | **major** |
-| "PARTIAL" | "进行中"<br>"PARTIAL" | "✅ 已完成"<br>"COMPLETE" | **blocker** |
+| "PARTIAL" | "进行中"<br>"PARTIAL" | "✅ 已完成"<br>"COMPLETE" | **major** |
 | "COMPLETE" | "✅ 已完成"<br>"COMPLETE" | "部分完成" | **minor** (过度谦虚) |
+
+> **注**: `blocker` 保留给更严重的问题，如伪造验证结果、根本性治理冲突、隐瞒已知问题等。PARTIAL→COMPLETE 误报属于状态不一致，但不属于故意隐瞒，因此定义为 `major`。
 
 ### 5.3 Required Disclosure
 

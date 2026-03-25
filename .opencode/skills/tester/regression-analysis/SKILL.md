@@ -10,6 +10,41 @@
 - 重复出现的 bug
 - 变更影响范围不清晰
 
+## Business Rules Compliance
+
+### BR-001: Tester Must Consume Developer Evidence
+This skill requires consuming developer artifacts:
+- `implementation-summary.changed_files` - Build dependency graph from actual changes
+- `implementation-summary.risks` - Understand developer-identified risks for regression focus
+- `bugfix-report.root_cause` (if bugfix) - Design root-cause-aware regression checks
+
+### BR-006: Regression Thinking Is Required
+**Mandatory Requirement**: Tester must evaluate impact beyond the immediate changed code path.
+- Passing targeted tests is NOT enough if adjacent surfaces remain unassessed
+- Adjacent impact assessment is required for all code changes
+- Risk ranking must consider indirect and potential impacts
+
+### BR-004: Failure Classification
+Regression analysis outputs must enable failure classification:
+- If regression found: classify as implementation issue or test gap
+- If historical issue recurring: classify as root cause misdiagnosis
+- If new area affected: classify as impact underestimation
+
+### BR-003: Coverage Boundaries
+Every regression analysis must document:
+- Tested regression surfaces
+- Untested regression areas (explicitly disclosed)
+- Rationale for exclusions
+
+## Upstream Artifact References
+- `specs/004-developer-core/contracts/implementation-summary-contract.md`
+- `specs/004-developer-core/contracts/bugfix-report-contract.md`
+- `specs/005-tester-core/upstream-consumption.md` Section 2.3 (bugfix-report consumption)
+
+## Downstream Artifact References
+- `specs/005-tester-core/contracts/regression-risk-report-contract.md` - This skill outputs feed into regression-risk-report
+- `specs/005-tester-core/contracts/verification-report-contract.md` - Regression tests feed into verification-report.tests_added_or_run
+
 ## When to Use
 
 必须使用时：

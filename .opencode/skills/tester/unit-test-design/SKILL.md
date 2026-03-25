@@ -10,6 +10,48 @@
 - 测试用例质量低
 - 缺乏系统性测试策略
 
+## Business Rules Compliance
+
+### BR-001: Tester Must Consume Developer Evidence
+This skill requires reading and consuming developer artifacts before test design:
+- `implementation-summary.goal_alignment` - Derive expected behavior
+- `implementation-summary.changed_files` - Establish test surface
+- `implementation-summary.risks` - Prioritize high-risk testing
+- `self-check-report` - Use as hints, NOT as evidence (see BR-002)
+
+### BR-002: Self-Check Is Not Independent Verification
+**Critical Distinction**: Developer self-check may inform testing but **cannot** replace tester evidence.
+- Self-check results are hints for test focus areas
+- All claims must be independently verified by tester
+- Test reports must explicitly distinguish "developer self-check" from "independent verification"
+- Prohibited language: "Developer verified this works" → Required: "Tester independently verified..."
+
+### BR-003: Coverage Boundaries Mandatory
+Every test design must document:
+- What is in scope (explicitly tested)
+- What is out of scope (intentionally excluded)
+- Why exclusions were made
+
+### BR-004: Failure Classification
+Test outputs must classify failures into:
+- **Implementation issue**: Code logic error
+- **Test issue**: Test design/execution problem
+- **Environment issue**: Test environment blocker
+- **Design/spec issue**: Ambiguous requirements
+- **Dependency/upstream issue**: External dependency failure
+
+### BR-005: Edge Cases Are Mandatory
+Happy-path-only testing is incomplete. This skill integrates with `edge-case-matrix` to ensure boundary conditions are covered.
+
+## Upstream Artifact References
+- `specs/004-developer-core/contracts/implementation-summary-contract.md`
+- `specs/004-developer-core/contracts/self-check-report-contract.md`
+- `specs/005-tester-core/upstream-consumption.md`
+
+## Downstream Artifact References
+- `specs/005-tester-core/contracts/verification-report-contract.md` - Test results feed into verification-report.tests_added_or_run
+- `specs/005-tester-core/contracts/regression-risk-report-contract.md` - Test coverage informs regression-risk-report.existing_tests_reused
+
 ## When to Use
 
 必须使用时：

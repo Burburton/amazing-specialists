@@ -10,6 +10,42 @@
 - 异常处理未测试
 - 缺乏系统性边界分析
 
+## Business Rules Compliance
+
+### BR-003: Every Verification Report Must State Coverage Boundaries
+This skill explicitly documents:
+- What boundaries were tested (in scope)
+- What boundaries were NOT tested (out of scope)
+- Why certain boundaries were excluded (rationale)
+
+### BR-005: Edge Cases Are Mandatory, Not Optional Polish
+**Critical Requirement**: Tester must assess edge and invalid scenarios appropriate to the change.
+- Happy-path-only testing is **incomplete by default**
+- Boundary coverage assessment is **mandatory**, not optional
+- P0 boundaries must have tests before verification can pass
+
+### BR-004: Failure Classification
+Edge case test failures must be classified:
+- **Implementation issue**: Boundary handling bug
+- **Test issue**: Incorrect boundary expectation
+- **Design/spec issue**: Unclear boundary requirements
+- **Environment issue**: Cannot test boundary (setup limitation)
+
+## Integration with Other Skills
+
+### With unit-test-design
+- **edge-case-matrix** generates boundary conditions
+- **unit-test-design** creates test cases for those boundaries
+- **Workflow**: Run edge-case-matrix FIRST, then unit-test-design
+
+### With regression-analysis
+- Edge cases identified here inform regression scope
+- Boundary-related historical bugs should be considered
+
+## Downstream Artifact References
+- `specs/005-tester-core/contracts/verification-report-contract.md` - edge_cases_checked field receives output from this skill
+- `specs/005-tester-core/contracts/test-scope-report-contract.md` - Boundary coverage informs test_strategy
+
 ## When to Use
 
 必须使用时：

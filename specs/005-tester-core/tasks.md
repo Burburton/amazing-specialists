@@ -114,10 +114,14 @@ This document breaks down the 005-tester-core implementation into small, executa
     - Role boundary clarifications
 - **Dependency / Ordering Notes**: Depends on T1.1, T1.2 (role boundaries and upstream interface defined)
 - **Acceptance Checks**:
-  - [ ] BR-002 explicitly addressed
-  - [ ] Upstream consumption from developer artifacts documented
-  - [ ] Role boundaries clear
-  - [ ] Workflow steps executable
+  - [x] BR-002 explicitly addressed
+  - [x] Upstream consumption from developer artifacts documented
+  - [x] Role boundaries clear
+  - [x] Workflow steps executable
+  - [x] At least 2 examples created
+  - [x] At least 2 anti-examples created
+  - [x] At least 1 checklist created
+- **Status**: ✅ COMPLETED (2026-03-25)
 
 ### Task 2.2: Formalize regression-analysis Skill [P]
 - **Task ID**: T2.2
@@ -135,10 +139,14 @@ This document breaks down the 005-tester-core implementation into small, executa
     - Risk surface identification methodology
 - **Dependency / Ordering Notes**: Depends on T1.1, T1.2
 - **Acceptance Checks**:
-  - [ ] BR-006 explicitly addressed
-  - [ ] Root-cause-aware testing workflow documented
-  - [ ] Risk prioritization methodology clear
-  - [ ] Adjacent impact assessment guidance present
+  - [x] BR-006 explicitly addressed
+  - [x] Root-cause-aware testing workflow documented
+  - [x] Risk prioritization methodology clear
+  - [x] Adjacent impact assessment guidance present
+  - [x] At least 2 examples created
+  - [x] At least 2 anti-examples created
+  - [x] At least 1 checklist created
+- **Status**: ✅ COMPLETED (2026-03-25)
 
 ### Task 2.3: Formalize edge-case-matrix Skill [P]
 - **Task ID**: T2.3
@@ -156,10 +164,14 @@ This document breaks down the 005-tester-core implementation into small, executa
     - Parameter-by-parameter boundary analysis
 - **Dependency / Ordering Notes**: Depends on T1.1, T1.2
 - **Acceptance Checks**:
-  - [ ] BR-005 explicitly addressed
-  - [ ] Happy-path-only detection guidance present
-  - [ ] Boundary analysis methodology clear
-  - [ ] Integration with unit-test-design documented
+  - [x] BR-005 explicitly addressed
+  - [x] Happy-path-only detection guidance present
+  - [x] Boundary analysis methodology clear
+  - [x] Integration with unit-test-design documented
+  - [x] At least 2 examples created
+  - [x] At least 2 anti-examples created
+  - [x] At least 1 checklist created
+- **Status**: ✅ COMPLETED (2026-03-25)
 
 ### Task 2.4: Create test-scope-report Contract [P]
 - **Task ID**: T2.4
@@ -177,10 +189,11 @@ This document breaks down the 005-tester-core implementation into small, executa
     - Consumer guidance
 - **Dependency / Ordering Notes**: Depends on T2.1, T2.2, T2.3 (skill formalization informs contract needs)
 - **Acceptance Checks**:
-  - [ ] All 10 fields from AC-001 present
-  - [ ] Upstream references to developer artifacts clear
-  - [ ] Example instances valid
-  - [ ] Consumer guidance for reviewer/acceptance present
+  - [x] All 10 fields from AC-001 present
+  - [x] Upstream references to developer artifacts clear
+  - [x] Example instances valid
+  - [x] Consumer guidance for reviewer/acceptance present
+- **Status**: ✅ COMPLETED (2026-03-26)
 
 ### Task 2.5: Create verification-report Contract [P]
 - **Task ID**: T2.5
@@ -198,10 +211,11 @@ This document breaks down the 005-tester-core implementation into small, executa
     - Recommendation vocabulary (PASS_TO_REVIEW/REWORK/RETEST/ESCALATE)
 - **Dependency / Ordering Notes**: Depends on T2.1, T2.3 (unit-test-design and edge-case-matrix inform verification)
 - **Acceptance Checks**:
-  - [ ] All 12 fields from AC-002 present
-  - [ ] BR-004 failure classification model defined
-  - [ ] BR-007 honest confidence reporting enabled
-  - [ ] Evidence format flexible but structured
+  - [x] All 12 fields from AC-002 present
+  - [x] BR-004 failure classification model defined
+  - [x] BR-007 honest confidence reporting enabled
+  - [x] Evidence format flexible but structured
+- **Status**: ✅ COMPLETED (2026-03-26)
 
 ### Task 2.6: Create regression-risk-report Contract [P]
 - **Task ID**: T2.6
@@ -218,10 +232,11 @@ This document breaks down the 005-tester-core implementation into small, executa
     - Follow-up action specifications
 - **Dependency / Ordering Notes**: Depends on T2.2 (regression-analysis skill)
 - **Acceptance Checks**:
-  - [ ] All 8 fields from AC-003 present
-  - [ ] Risk ranking methodology clear
-  - [ ] Regression surfaces identification guidance present
-  - [ ] Untested areas documentation enabled
+  - [x] All 8 fields from AC-003 present
+  - [x] Risk ranking methodology clear
+  - [x] Regression surfaces identification guidance present
+  - [x] Untested areas documentation enabled
+- **Status**: ✅ COMPLETED (2026-03-26)
 
 ---
 

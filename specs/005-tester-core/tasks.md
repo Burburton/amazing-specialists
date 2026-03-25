@@ -261,9 +261,11 @@ This document breaks down the 005-tester-core implementation into small, executa
     - bugfix-report.root_cause usage check
 - **Dependency / Ordering Notes**: Depends on T1.2, T2.4 (upstream interface and test-scope contract)
 - **Acceptance Checks**:
-  - [ ] All 6 upstream artifact fields have check items
-  - [ ] Checklist executable by tester
-  - [ ] BR-002 distinction verifiable
+  - [x] All 6 upstream artifact fields have check items
+  - [x] Checklist executable by tester
+  - [x] BR-002 distinction verifiable
+   
+- **Status**: ✅ COMPLETED (2026-03-26)
 
 ### Task 3.2: Create Downstream-Consumability Checklist
 - **Task ID**: T3.2
@@ -279,10 +281,12 @@ This document breaks down the 005-tester-core implementation into small, executa
     - Developer: actionable failures from classification
 - **Dependency / Ordering Notes**: Depends on T1.3, T2.5, T2.6 (downstream interface and artifact contracts)
 - **Acceptance Checks**:
-  - [ ] Reviewer consumption path verified
-  - [ ] Acceptance consumption path verified
-  - [ ] Developer feedback loop verified
-  - [ ] Evidence quality verifiable
+  - [x] Reviewer consumption path verified
+  - [x] Acceptance consumption path verified
+  - [x] Developer feedback loop verified
+  - [x] Evidence quality verifiable
+   
+- **Status**: ✅ COMPLETED (2026-03-26)
 
 ### Task 3.3: Create Failure-Mode Checklist
 - **Task ID**: T3.3
@@ -306,10 +310,12 @@ This document breaks down the 005-tester-core implementation into small, executa
   - Each pattern includes: detection method, early warning signals, remediation, prevention
 - **Dependency / Ordering Notes**: Depends on T2.1, T2.2, T2.3 (skills define failure modes)
 - **Acceptance Checks**:
-  - [ ] All 10 patterns from spec.md Section 11 covered
-  - [ ] Each pattern has detection method
-  - [ ] Each pattern has remediation strategy
-  - [ ] Each pattern has prevention measure
+  - [x] All 10 patterns from spec.md Section 11 covered
+  - [x] Each pattern has detection method
+  - [x] Each pattern has remediation strategy
+  - [x] Each pattern has prevention measure
+   
+- **Status**: ✅ COMPLETED (2026-03-26)
 
 ### Task 3.4: Create Anti-Pattern Guidance Document
 - **Task ID**: T3.4
@@ -327,10 +333,12 @@ This document breaks down the 005-tester-core implementation into small, executa
     - Remediation steps
 - **Dependency / Ordering Notes**: Depends on T3.3 (failure-mode checklist)
 - **Acceptance Checks**:
-  - [ ] Guidance actionable by tester role
-  - [ ] Examples realistic and educational
-  - [ ] Prevention strategies practical
-  - [ ] Remediation steps clear
+  - [x] Guidance actionable by tester role
+  - [x] Examples realistic and educational
+  - [x] Prevention strategies practical
+  - [x] Remediation steps clear
+   
+- **Status**: ✅ COMPLETED (2026-03-26)
 
 ### Task 3.5: Create Examples for unit-test-design [P]
 - **Task ID**: T3.5

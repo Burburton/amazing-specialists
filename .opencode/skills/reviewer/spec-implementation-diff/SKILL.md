@@ -35,6 +35,94 @@
 - 已明确是设计变更
 - **已明确是 governance 变更且已文档化**
 
+## Business Rules Compliance
+
+### BR-001: Evidence-Based Review
+This skill requires consuming structured upstream artifacts:
+- `design-note` (from architect) - Design baseline for comparison
+- `implementation-summary` (from developer) - Actual implementation claims
+- `verification-report` (from tester) - Verification evidence
+
+### BR-006: Governance Alignment Is Required
+**Mandatory Requirement**: Reviewer must check feature outputs against canonical governance documents.
+- Canonical documents: `role-definition.md`, `package-spec.md`, `io-contract.md`, `quality-gate.md`, `README.md`
+- Governance conflicts must be reported with severity >= major
+- Cross-document consistency must be verified
+
+### BR-008: Scope Creep Detection Is Required
+**Mandatory Requirement**: Reviewer must identify implementation beyond spec (scope creep) as a finding.
+- Unauthorized features added beyond spec = **major** finding
+- Implementation that modifies behavior not specified = **major** finding
+- "Gold-plating" implementations = **minor** to **major** depending on impact
+- Passing targeted functionality is NOT enough if unauthorized features were added
+
+**Scope Creep Detection Categories:**
+
+| Category | Description | Severity |
+|----------|-------------|----------|
+| Feature Addition | New feature not in spec | major |
+| Behavior Extension | Enhanced behavior beyond spec | major |
+| API Addition | New endpoint/function not specified | major |
+| Configuration Addition | New config not specified | minor |
+| Implementation Optimization | Same behavior, better code | note |
+
+### BR-009: Status Truthfulness Must Be Verified
+**Mandatory Requirement**: Reviewer must verify completion-report status aligns with README status.
+- `completion-report.md` status must match README feature status
+- Known gaps must be disclosed in both locations
+- Status misrepresentation = **major** finding
+- Partial completion reported as complete = **blocker** finding
+
+**Status Truthfulness Matrix:**
+
+| completion-report Status | README Allowed | README Forbidden | Severity if Violated |
+|--------------------------|----------------|------------------|----------------------|
+| "COMPLETE with known gaps" | "COMPLETE with gaps", "主体完成" | "✅ 已完成", "全部完成" | **major** |
+| "PARTIAL" | "进行中", "PARTIAL" | "✅ 已完成", "COMPLETE" | **major** |
+| "COMPLETE" | "✅ 已完成", "COMPLETE" | "部分完成" | **minor** |
+
+## Upstream Artifact References
+- `specs/003-architect-core/contracts/design-note-contract.md` - Design baseline
+- `specs/004-developer-core/contracts/implementation-summary-contract.md` - Implementation claims
+- `specs/005-tester-core/contracts/verification-report-contract.md` - Test evidence
+- `specs/006-reviewer-core/upstream-consumption.md` - Detailed field-by-field consumption guide
+
+## Downstream Artifact References
+- `specs/006-reviewer-core/contracts/review-findings-report-contract.md` - Primary output
+- `specs/006-reviewer-core/contracts/acceptance-decision-record-contract.md` - Decision output
+
+## Integration with Acceptance-Decision-Record Workflow
+
+This skill feeds into the acceptance-decision-record artifact through:
+
+1. **Findings Summary**: All spec-implementation diff findings become input for acceptance decision
+2. **Governance Alignment Status**: `governance_status` field maps directly to acceptance criteria
+3. **Recommendation Action**: `recommendation.action` (approve/reject/request_changes/escalate) flows to acceptance decision
+
+**Workflow Integration:**
+
+```
+spec-implementation-diff output
+    │
+    ├── comparison[] → review-findings-report.scope_mismatches
+    ├── gaps[] → review-findings-report.findings_by_severity
+    ├── deviations[] → review-findings-report.findings_by_severity
+    ├── governance_alignment.conflicts[] → review-findings-report.governance_conflicts
+    ├── governance_alignment.status_truthfulness → acceptance-decision-record.status_verified
+    └── recommendation → acceptance-decision-record.decision
+```
+
+**Acceptance Decision Record Fields from This Skill:**
+
+| Field in acceptance-decision-record | Source from spec-implementation-diff |
+|-------------------------------------|--------------------------------------|
+| `decision` | `recommendation.action` |
+| `scope_verified` | `comparison` completeness |
+| `governance_aligned` | `governance_alignment.conflicts` empty |
+| `status_truthful` | `governance_alignment.status_truthfulness.aligned` |
+| `blockers` | Findings with severity=blocker |
+| `major_findings` | Findings with severity=major |
+
 ## Diff Categories
 
 ### 1. 功能对齐 (Functional Alignment)
@@ -524,15 +612,58 @@ spec_implementation_diff:
 
 ## Common Failure Modes
 
+### General Failure Modes
+
 | 失败模式 | 表现 | 处理建议 |
 |----------|------|----------|
 | 遗漏对比 | 未检查所有需求 | 使用需求跟踪表 |
 | 过度宽容 | 接受严重偏离 | 明确 blocker 标准 |
 | 文档滞后 | spec 未更新 | 同步更新文档 |
 | 沟通不足 | 偏离未沟通 | 要求文档化理由 |
+
+### Governance Alignment Failure Modes (AH-006)
+
+| 失败模式 | 表现 | 处理建议 |
+|----------|------|----------|
 | **治理漂移漏检** | 只做 spec-implementation 对比，不做 governance check | **强制执行 AH-006 governance alignment check** |
 | **状态误导未识别** | completion-report 有 gaps 但 README 显示 complete | **强制执行 AH-004 status truthfulness check** |
 | **路径错误未验证** | 声明的路径不存在但未报告 | **强制执行 AH-003 path resolution check** |
+| **术语冲突未报告** | Feature 使用非标准术语但未报告为 finding | 对照 `role-definition.md` 和 `package-spec.md` |
+| **角色边界越权** | Feature 声明新角色或改变角色边界 | 必须报告为 major/blocker finding |
+
+### Scope Creep Detection Failure Modes (BR-008)
+
+| 失败模式 | 表现 | 处理建议 |
+|----------|------|----------|
+| **Scope Creep 漏检** | 实现了 spec 外的功能但未标记为 finding | 对比 `spec.md` 的 non_goals 和 requirements |
+| **过度实现误判** | 将必要的实现细节误判为 scope creep | 区分"功能扩展"与"实现细节" |
+| **隐式功能添加** | 通过"优化"名义添加新功能 | 检查行为变化，不仅看代码变化 |
+| **API 扩展未标记** | 添加了 spec 未指定的 API 端点 | 对照 spec 的 API 契约逐项检查 |
+| **配置项膨胀** | 添加了大量未在 spec 中定义的配置 | 区分"必要配置"与"功能扩展配置" |
+
+**Scope Creep Detection Checklist:**
+- [ ] 所有实现的功能都在 spec 中有对应
+- [ ] 新增的 API 端点都在 spec 中定义
+- [ ] 新增的配置项都在 spec 中说明
+- [ ] 行为变化都与 spec 描述一致
+- [ ] 无"顺便实现"的额外功能
+
+### Status Truthfulness Failure Modes (BR-009)
+
+| 失败模式 | 表现 | 处理建议 |
+|----------|------|----------|
+| **状态不一致漏检** | completion-report 与 README 状态不同 | **强制对比两份文档的状态描述** |
+| **Partial 报 Complete** | 有已知 gap 但声称完全完成 | 检查所有 AC 状态，确保 gap 已披露 |
+| **Gap 未同步** | completion-report 有 gap，README 无标注 | 要求在 README 中同步披露 |
+| **状态分类错误** | 使用了错误的状态分类（a/b/c） | 对照 audit-hardening.md 的状态定义 |
+| **误导性表述** | 使用"基本完成"等模糊表述 | 要求使用精确的状态术语 |
+
+**Status Truthfulness Detection Checklist:**
+- [ ] completion-report 状态已读取
+- [ ] README feature 状态已读取
+- [ ] 两者状态一致
+- [ ] 已知 gap 已在两处披露
+- [ ] 使用了正确的状态分类术语
 
 ## Notes
 
@@ -565,4 +696,20 @@ spec_implementation_diff:
 - `docs/audit-hardening.md` - Complete audit hardening specification
 - `quality-gate.md` Section 2.2 - Audit severity levels (blocker/major/minor/note)
 - `role-definition.md` Section 4 (reviewer) - Enhanced reviewer responsibilities (AH-006)
+
+## Educational Assets
+
+### Examples
+See `examples/` directory for detailed walkthroughs:
+- `example-001-spec-alignment-check.md` - Complete spec-implementation alignment verification
+- `example-002-governance-drift-detection.md` - AH-006 governance drift detection with findings
+
+### Anti-Examples
+See `anti-examples/` directory for common mistakes to avoid:
+- `anti-example-001-ignoring-governance.md` - Skipping AH-006 checks (WRONG approach)
+- `anti-example-002-scope-creep-blindness.md` - Missing scope creep detection (BR-008 violation)
+
+### Checklists
+See `checklists/` directory for step-by-step verification:
+- `spec-implementation-diff-checklist.md` - Complete checklist with all phases and BR compliance
 

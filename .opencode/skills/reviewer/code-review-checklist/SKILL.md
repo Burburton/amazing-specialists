@@ -10,6 +10,86 @@
 - 审查标准不一致
 - 无法给出可执行的修改建议
 
+## Business Rules Compliance
+
+### BR-002: Self-Check Is Not Independent Verification
+**Critical Distinction**: Developer self-check informs review but **cannot** replace reviewer verification.
+- Self-check reports are hints for review focus areas, NOT evidence of correctness
+- Reviewer must independently verify critical claims
+- Review reports must explicitly distinguish "developer self-check claims" from "reviewer independently verified"
+- Prohibited language: "Developer verified this works" → Required: "Reviewer independently verified..."
+- **Role Boundary**: This skill is for **reviewer** (independent verification), not developer self-check (use `code-change-selfcheck` skill instead)
+
+### BR-004: Severity Classification
+Review findings must classify issues using the severity levels defined in `quality-gate.md`:
+
+| Severity | Definition | Review Action |
+|----------|------------|---------------|
+| **blocker** | Must fix, blocks milestone acceptance | Must appear in `must_fix` list, blocks approval |
+| **major** | Affects downstream or causes understanding deviation | Must appear in `should_fix` list, recommend fix |
+| **minor** | Minor issue, improvement possible | Appears in `consider` list, optional |
+| **note** | Informational observation | Appears in `positives` or separate notes |
+
+**Mapping from S-levels (Execution Severity)**:
+- S3 (Critical) → blocker
+- S2 (Major) → major  
+- S1 (Minor) → minor
+- S0 (Trivial) → note
+
+### BR-006: Governance Alignment
+Review must check alignment with governance documents when code affects:
+- **Role model changes** (role-definition.md boundaries)
+- **Workflow changes** (command behavior, stage order)
+- **Package governance** (package-spec.md, io-contract.md)
+- **Public documentation** (README.md status claims)
+
+When governance impact is detected, reviewer must:
+1. Flag the governance impact in `risks` section
+2. Verify changes are consistent across affected documents
+3. Report governance drift as at least **major** severity
+
+### BR-007: Honesty Over False Confidence
+Review reports must honestly disclose:
+- What was NOT reviewed (time constraints, complexity)
+- Known gaps in coverage
+- Assumptions made during review
+- Areas requiring deeper analysis
+
+## Input Specifications
+
+### Required Upstream Artifacts
+- `implementation-summary` (from developer) - Goal alignment, changed files, risks
+- `self-check-report` (from developer) - Developer's own checks (hints only per BR-002)
+- `design-note` (from architect, if exists) - Design specifications
+- `spec.md` (feature spec) - Requirements and acceptance criteria
+
+### Optional Upstream Artifacts
+- `test-report` (from tester) - Test coverage and results
+- `security-report` (from security, for high-risk changes)
+
+## Output Specifications
+
+### Primary Output
+`review-report` artifact with:
+- `overall_decision`: approve | reject | warn
+- `issues` with severity classification (BR-004)
+- `must_fix` list for blocker/major issues
+- `recommendation_to_next` with clear next steps
+
+### Downstream Consumers
+- **developer**: Uses `must_fix` list for rework
+- **docs**: Uses `positives` and issues for changelog
+- **quality gate**: Uses decision for milestone acceptance
+
+## Upstream Artifact References
+- `specs/004-developer-core/contracts/implementation-summary-contract.md`
+- `specs/004-developer-core/contracts/self-check-report-contract.md`
+- `specs/003-architect-core/contracts/design-note-contract.md`
+
+## Downstream Artifact References
+- `specs/006-reviewer-core/contracts/review-report-contract.md`
+- `quality-gate.md` Section 3.4 - Reviewer Gate
+
 ## When to Use
 
 必须使用时：
@@ -129,14 +209,47 @@
 - 边界处理
 - 安全隐患
 
-### Step 5: 问题分类
-将发现的问题分类：
-- **Blocker**: 必须修复（功能/安全/性能）
-- **Warning**: 建议修复（质量/可维护性）
-- **Suggestion**: 可选优化（风格/建议）
-- **Praise**: 值得表扬的写法
+### Step 5: 问题分类 (Issue Classification - BR-004)
+将发现的问题按严重程度分类：
 
-### Step 6: 生成 Review Report
+#### Blocker (必须修复，阻塞里程碑)
+- 功能不正确（核心功能失效）
+- 安全漏洞（注入、泄露、权限绕过）
+- 严重性能问题（系统不可用）
+- 数据损坏风险
+- 阻碍后续工作
+- **Governance drift** (BR-006): 与 canonical 治理文档根本性冲突
+
+#### Major (建议修复，影响下游)
+- 代码质量问题（影响可维护性）
+- 可维护性问题（过度复杂）
+- 测试覆盖不足（关键路径缺失）
+- 潜在 bug（边界条件未处理）
+- 性能隐患（可能在高负载下出问题）
+- **Partial gap 未披露** (BR-006): completion-report 与实际不一致
+
+#### Minor (可选改进)
+- 风格建议
+- 优化建议
+- 更好的写法
+- 文档建议
+- 轻微术语不统一
+
+#### Note (信息性)
+- 值得表扬的写法
+- 观察性建议
+- 背景信息补充
+
+### Step 6: Governance Alignment Check (BR-006)
+检查代码变更是否影响治理层：
+
+1. **Role Boundary Check**: 代码是否改变角色边界？
+2. **Workflow Check**: 代码是否改变命令行为或阶段顺序？
+3. **Documentation Sync Check**: 是否需要同步更新 README.md / AGENTS.md？
+
+如发现问题，在 `risk_assessment` 中添加 governance 风险项。
+
+### Step 7: 生成 Review Report
 输出 review report
 
 ## Output Format
@@ -147,6 +260,11 @@ review_report:
   task_id: string
   reviewer: string
   timestamp: string
+  
+  # BR-002 Compliance: Distinguish self-check from independent verification
+  self_check_acknowledged:
+    status: string  # "Developer claims X/Y checks passed"
+    use: string     # "Hints for review focus, NOT evidence"
   
   summary:
     overall_decision: approve | reject | warn
@@ -163,43 +281,57 @@ review_report:
         passed: number
         failed: number
         
+  # BR-004 Compliance: Severity classification required
   issues:
     - id: string
       category: string
-      severity: blocker | warning | suggestion
-      type: correctness | security | performance | quality | test | documentation
+      severity: blocker | major | minor | note  # BR-004 compliant
+      type: correctness | security | performance | quality | test | documentation | governance
       description: string
       location: string
       code_snippet: string
       suggestion: string
       rationale: string
+      br_002_verification: string  # How reviewer independently verified
       
   positives:
     - description: string
       location: string
       
   recommendations:
-    must_fix: string[]
-    should_fix: string[]
-    consider: string[]
+    must_fix: string[]      # blocker issues only
+    should_fix: string[]    # major issues
+    consider: string[]      # minor issues
     
   follow_up:
     - item: string
       owner: string
       due_date: string
       
+  # BR-006 Compliance: Governance alignment risks
   risk_assessment:
     risks:
       - risk: string
         level: high | medium | low
         mitigation: string
+        governance_impact: boolean  # BR-006: Does this affect governance docs?
         
+  # BR-007 Compliance: Honest disclosure
+  review_coverage:
+    files_reviewed: string[]
+    files_not_reviewed: string[]
+    not_reviewed_reason: string
+    assumptions_made: string[]
+    
   recommendation_to_next:
     action: approve | reject | request_changes | escalate
     next_steps: string[]
 ```
 
 ## Examples
+
+> **Note**: Complete examples with step-by-step walkthroughs are available in `examples/` directory.
+> See `examples/example-001-feature-code-review.md` and `examples/example-002-bugfix-code-review.md`.
 
 ### 示例 1：Approve Review
 
@@ -388,34 +520,70 @@ review_report:
       - "创建技术债务 ticket 跟踪改进项"
 ```
 
-## Severity Guidelines
+## Severity Guidelines (BR-004 Compliance)
+
+> **Reference**: `quality-gate.md` Section 2.2 - Audit Severity Levels
 
 ### Blocker (必须修复)
-- 功能不正确
-- 安全漏洞
-- 严重性能问题
+**Definition**: 必须修复，否则阻塞里程碑验收
+
+**Examples**:
+- 功能不正确（核心功能失效）
+- 安全漏洞（SQL注入、XSS、权限绕过）
+- 严重性能问题（系统不可用）
 - 数据损坏风险
 - 阻碍后续工作
+- **伪造验证结果** (BR-002 violation)
+- **Governance 根本性冲突** (BR-006)
 
-### Warning (建议修复)
-- 代码质量问题
-- 可维护性问题
-- 测试覆盖不足
+**Action**: 必须修复，列入 `must_fix`，决策为 reject
+
+### Major (建议修复)
+**Definition**: 影响下游工作，或造成理解偏差
+
+**Examples**:
+- 代码质量问题（影响可维护性）
+- 可维护性问题（过度复杂）
+- 测试覆盖不足（关键路径缺失）
 - 潜在 bug
 - 性能隐患
+- **与 canonical 文档冲突** (BR-006)
+- **Partial gap 未披露** (BR-006)
+- **路径声明错误** (BR-006)
 
-### Suggestion (可选)
+**Action**: 建议修复，列入 `should_fix`
+
+### Minor (可选)
+**Definition**: 轻微问题，有改进空间
+
+**Examples**:
 - 风格建议
 - 优化建议
 - 更好的写法
 - 文档建议
+- 轻微术语不统一
+
+**Action**: 可选改进，列入 `consider`
+
+### Note (信息性)
+**Definition**: 信息性备注，供参考
+
+**Examples**:
+- 值得表扬的写法
+- 观察性建议
+- 背景信息补充
+
+**Action**: 记录在 `positives` 或 `notes`
 
 ## Checklists
+
+> **Note**: Standalone checklist file available at `checklists/code-review-checklist.md`
 
 ### 审查前
 - [ ] 已读取 spec 和 design
 - [ ] 已理解改动范围
 - [ ] 已确定审查重点
+- [ ] **BR-002**: 已读取 self-check report 作为 hints（非 evidence）
 
 ### 审查中
 - [ ] 已检查目标对齐
@@ -423,22 +591,51 @@ review_report:
 - [ ] 已检查安全性
 - [ ] 已检查测试覆盖
 - [ ] 已检查代码质量
+- [ ] **BR-002**: 已独立验证关键声明（非依赖 self-check）
+- [ ] **BR-006**: 已检查 governance 对齐（如适用）
 
 ### 审查后
-- [ ] 问题已分类
+- [ ] 问题已按 BR-004 严重程度分类
 - [ ] 建议已具体可执行
 - [ ] 报告已生成
 - [ ] 决策已明确
+- [ ] **BR-007**: 已披露未审查部分和假设
 
 ## Common Failure Modes
 
-| 失败模式 | 表现 | 处理建议 |
-|----------|------|----------|
-| 流于形式 | 只检查风格 | 强制 checklist |
-| 过度审查 | 吹毛求疵 | 聚焦 blocker |
-| 遗漏关键 | 放过安全问题 | 安全优先检查 |
-| 建议模糊 | "优化一下" | 必须具体可执行 |
-| 个人偏好 | 强加个人风格 | 遵循团队规范 |
+| 失败模式 | 表现 | 处理建议 | BR Reference |
+|----------|------|----------|--------------|
+| 流于形式 | 只检查风格 | 强制 checklist | - |
+| 过度审查 | 吹毛求疵 | 聚焦 blocker | - |
+| 遗漏关键 | 放过安全问题 | 安全优先检查 | - |
+| 建议模糊 | "优化一下" | 必须具体可执行 | - |
+| 个人偏好 | 强加个人风格 | 遵循团队规范 | - |
+| **Self-check 混淆** | "Developer verified" | Reviewer 必须独立验证 | BR-002 |
+| **严重程度混乱** | blocker 写成 suggestion | 严格按 BR-004 分类 | BR-004 |
+| **Governance 忽略** | 未检查治理文档对齐 | 添加 governance 检查项 | BR-006 |
+| **虚假信心** | 未披露审查盲区 | 必须记录未审查部分 | BR-007 |
+
+## Anti-Patterns
+
+> **Note**: Detailed anti-examples available in `anti-examples/` directory.
+> See `anti-examples/anti-example-001-vague-review.md` and `anti-examples/anti-example-002-rubber-stamp-approval.md`.
+
+### ❌ Anti-Pattern: Vague Review
+```markdown
+## Review Report
+Overall: LGTM, looks good.
+Issues: None
+```
+
+**Why wrong**: No specific findings, no evidence of actual review, no actionable feedback.
+
+### ❌ Anti-Pattern: Rubber-Stamp Approval
+```markdown
+## Review Report
+Self-check passed 15/15, so approving.
+```
+
+**Why wrong**: BR-002 violation - self-check is not independent verification.
 
 ## Notes
 
@@ -446,6 +643,12 @@ review_report:
 - spec-implementation-diff 检查 spec 对齐
 - code-review-checklist 检查代码质量
 - 两者配合使用
+
+### 与 developer/code-change-selfcheck 的边界 (BR-002)
+- **code-change-selfcheck**: developer 自检，产出 self-check-report
+- **code-review-checklist**: reviewer 独立审查，产出 review-report
+- **关键区别**: self-check 是 hints，review 是独立验证
+- **禁止**: reviewer 直接采用 self-check 结论作为 evidence
 
 ### 审查时间分配
 - 快速审查：10-15 分钟
@@ -460,3 +663,13 @@ review_report:
 - lint/format：自动化检查
 - security scan：自动化安全扫描
 - reviewer：人工审查补充
+
+### Educational Materials
+- `examples/` - Step-by-step review workflow examples
+- `anti-examples/` - Common mistakes and how to avoid them
+- `checklists/` - Standalone checklist for quick reference
+
+### Related Skills
+- `reviewer/spec-implementation-diff` - Spec vs implementation comparison
+- `reviewer/reject-with-actionable-feedback` - How to give actionable feedback
+- `developer/code-change-selfcheck` - Developer self-check (upstream)

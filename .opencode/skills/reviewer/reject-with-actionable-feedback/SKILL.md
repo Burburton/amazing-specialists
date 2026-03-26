@@ -10,6 +10,104 @@
 - 问题不分轻重，混在一起
 - 修改后仍不知道是否满足要求
 
+## Business Rules Compliance
+
+### BR-005: Rejection Must Be Actionable
+**Critical Requirement**: Every rejection must provide specific, executable remediation guidance.
+
+- **No vague rejections**: "Needs improvement" or "Not good enough" is **not acceptable**
+- **Must include**: For each must-fix item:
+  - What exactly is wrong (issue description)
+  - Why it must be fixed (rationale)
+  - How to fix it (specific remediation steps)
+  - Code example showing the fix
+  - Verification method to confirm the fix
+- **Closure criteria**: Each issue must have clear pass/fail criteria
+
+**Non-compliance indicators**:
+- Rejection without specific remediation steps
+- "Refactor this" without explaining what/why
+- Missing code examples for code-level issues
+
+### BR-007: No Code Mutation During Rejection
+**Critical Requirement**: Reviewer must NOT modify code during rejection process.
+
+- **Reviewer role**: Identify issues and provide guidance
+- **Developer role**: Make the actual code changes
+- **Boundary**: Reviewer may show examples of what the fixed code should look like, but must NOT directly edit the codebase
+- **Rationale**: Maintains clear responsibility boundaries and audit trail
+
+**Violations**:
+- Directly editing source files during review
+- Committing fixes on behalf of developer
+- Modifying tests to make them pass
+
+### BR-003: Rejection Report Must State Coverage Boundaries
+This skill explicitly documents:
+- What was reviewed (in scope)
+- What was NOT reviewed (out of scope)
+- Why certain areas were excluded (rationale)
+
+## Integration with Other Skills
+
+### With code-review-checklist
+- **code-review-checklist** discovers issues systematically
+- **reject-with-actionable-feedback** organizes and communicates those issues
+- **Workflow**: Run code-review-checklist FIRST, then reject-with-actionable-feedback
+
+### With spec-implementation-diff
+- **spec-implementation-diff** identifies spec deviations
+- **reject-with-actionable-feedback** communicates those deviations as must-fix items
+- **Workflow**: spec-implementation-diff findings become must-fix entries
+
+### With developer rework workflow
+- Rejection output feeds directly into developer's rework task
+- Clear must-fix items enable focused, efficient rework
+- Closure criteria define when rework is complete
+- Re-review instructions define what to check after rework
+
+## Downstream Artifact References
+- `specs/006-reviewer-core/contracts/review-feedback-contract.md` - review_feedback field receives output from this skill
+- `specs/004-developer-core/contracts/rework-instruction-contract.md` - Developer consumes rejection output for rework
+
+## Closure Criteria
+
+### When Is a Rejection "Complete"?
+A rejection feedback is complete when:
+
+1. **All issues classified**: Every finding has must-fix / should-fix / non-blocking classification
+2. **All must-fix items actionable**: Each must-fix has:
+   - [ ] Specific location identified
+   - [ ] Issue explanation provided
+   - [ ] Rationale for fixing
+   - [ ] Remediation steps provided
+   - [ ] Code example included (for code issues)
+   - [ ] Verification method specified
+3. **Re-review scope defined**: Clear instructions on what to re-check
+4. **Timeline estimated**: Reasonable fix and re-review time estimates
+5. **Escalation decision made**: Whether escalation is needed is explicitly stated
+
+### When Is Rework "Complete"?
+Developer's rework is complete when:
+
+1. **All must-fix items addressed**: Every MF-* item has been fixed
+2. **Verification passed**: Each fix passes its specified verification method
+3. **No new issues introduced**: Changes don't create new problems
+4. **Should-fix items considered**: At least acknowledged (fixed or deferred with rationale)
+
+## Failure Modes
+
+| Failure Mode | Manifestation | Handling |
+|--------------|---------------|----------|
+| Vague rejection | "Needs work" without specifics | Use structured feedback format |
+| Missing remediation | States problem but not solution | Require how_to_fix for each issue |
+| Silent fixing | Reviewer modifies code directly | Enforce BR-007, provide examples only |
+| Over-rejection | Non-blocking treated as must-fix | Apply strict must-fix criteria |
+| Under-rejection | Critical issue marked as suggestion | Re-evaluate severity classification |
+| Scope creep | Rejection includes unrelated issues | Focus on current task scope only |
+| Missing closure criteria | Developer doesn't know when done | Require verification field for each issue |
+| Escalation confusion | Should escalate but rejected | Use escalation decision tree |
+
 ## When to Use
 
 必须使用时：

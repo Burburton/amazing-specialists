@@ -1,0 +1,276 @@
+# Docs Role Workflow Diagram
+
+## Document Metadata
+
+| Field | Value |
+|-------|-------|
+| **Feature ID** | 007-docs-core |
+| **Document Type** | Workflow Diagram |
+| **Version** | 1.0.0 |
+
+---
+
+## 1. Standard Feature Completion Docs Sync
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    UPSTREAM ARTIFACTS                           │
+├─────────────────────────────────────────────────────────────────┤
+│  architect           developer           tester                │
+│  ┌────────────┐     ┌────────────────┐  ┌────────────────┐     │
+│  │design-note │     │implementation-  │  │verification-   │     │
+│  │open-       │     │summary         │  │report          │     │
+│  │questions   │     │self-check-report│  │regression-     │     │
+│  └────────────┘     │bugfix-report   │  │risk-report     │     │
+│                     └────────────────┘  └────────────────┘     │
+│                                                                  │
+│  reviewer                                                       │
+│  ┌────────────────────────────┐                                 │
+│  │acceptance-decision-record  │                                 │
+│  │review-findings-report      │                                 │
+│  └────────────────────────────┘                                 │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                    DOCS: CONSUME UPSTREAM                       │
+├─────────────────────────────────────────────────────────────────┤
+│  1. Read completion-report.md (feature completion state)        │
+│  2. Read implementation-summary.md (what changed)               │
+│  3. Read acceptance-decision-record.md (reviewer decision)      │
+│  4. Read verification-report.md (test verification)             │
+│  5. BR-001: Document all consumed artifacts                     │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                    DOCS: readme-sync EXECUTION                  │
+├─────────────────────────────────────────────────────────────────┤
+│  1. Identify affected README sections                           │
+│  2. BR-002: Apply minimal surface area                          │
+│  3. BR-005: Perform cross-document consistency checks           │
+│  4. BR-008: Verify status truthfulness                          │
+│  5. Document touched_sections + change_reasons                  │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                    DOCS: CONSISTENCY CHECKS                     │
+├─────────────────────────────────────────────────────────────────┤
+│  ┌─────────────────────────┐    ┌─────────────────────────┐    │
+│  │ README status           │◄──►│ completion-report       │    │
+│  │                         │    │ completion_status       │    │
+│  └─────────────────────────┘    └─────────────────────────┘    │
+│                                                                  │
+│  ┌─────────────────────────┐    ┌─────────────────────────┐    │
+│  │ README feature table    │◄──►│ acceptance-decision     │    │
+│  │                         │    │ decision_state          │    │
+│  └─────────────────────────┘    └─────────────────────────┘    │
+│                                                                  │
+│  Result: ALIGNED | MISALIGNED | NOT_APPLICABLE                 │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                    DOCS: changelog-writing EXECUTION            │
+├─────────────────────────────────────────────────────────────────┤
+│  1. Extract completion context                                   │
+│  2. BR-006: Classify change_type (feature/repair/docs/govern)   │
+│  3. Document capability_changes, docs_changes                   │
+│  4. Identify breaking_changes, known_limitations                │
+│  5. Generate changelog-entry artifact                           │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                    OUTPUT ARTIFACTS                             │
+├─────────────────────────────────────────────────────────────────┤
+│  ┌─────────────────────────┐    ┌─────────────────────────┐    │
+│  │ docs-sync-report        │    │ changelog-entry         │    │
+│  │ ───────────────────────│    │ ───────────────────────│    │
+│  │ • sync_target          │    │ • feature_id           │    │
+│  │ • consumed_artifacts   │    │ • change_type          │    │
+│  │ • touched_sections     │    │ • summary              │    │
+│  │ • change_reasons       │    │ • capability_changes   │    │
+│  │ • consistency_checks   │    │ • breaking_changes     │    │
+│  │ • recommendation       │    │ • known_limitations    │    │
+│  └─────────────────────────┘    └─────────────────────────┘    │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                    DOWNSTREAM CONSUMERS                         │
+├─────────────────────────────────────────────────────────────────┤
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐    │
+│  │ maintainers │  │   users     │  │     OpenClaw        │    │
+│  │             │  │             │  │                     │    │
+│  │ changelog   │  │ updated     │  │ docs-sync-report    │    │
+│  │ for release │  │ README      │  │ for acceptance      │    │
+│  │ notes       │  │             │  │ verification        │    │
+│  └─────────────┘  └─────────────┘  └─────────────────────┘    │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 2. Status Correction Flow
+
+```
+README Status Drift Detected
+            │
+            ▼
+┌─────────────────────────────────────────┐
+│ docs: Identify Discrepancy Source       │
+├─────────────────────────────────────────┤
+│ README shows "Complete"                 │
+│ completion-report shows "Partial"       │
+└─────────────────────────────────────────┘
+            │
+            ▼
+┌─────────────────────────────────────────┐
+│ docs: Compare with Evidence             │
+├─────────────────────────────────────────┤
+│ • acceptance-decision-record            │
+│ • verification-report                   │
+│ • implementation-summary                │
+└─────────────────────────────────────────┘
+            │
+            ▼
+┌─────────────────────────────────────────┐
+│ docs: Correct Status (BR-008)           │
+├─────────────────────────────────────────┤
+│ Update README to match evidence         │
+│ Document correction in docs-sync-report │
+└─────────────────────────────────────────┘
+            │
+            ▼
+┌─────────────────────────────────────────┐
+│ Output: docs-sync-report                │
+│ recommendation: sync-complete           │
+└─────────────────────────────────────────┘
+```
+
+---
+
+## 3. Blocked Documentation Sync Flow
+
+```
+Insufficient Upstream Artifacts
+OR Conflicting Status Claims
+            │
+            ▼
+┌─────────────────────────────────────────┐
+│ docs: Document Blocker                  │
+├─────────────────────────────────────────┤
+│ What is missing or conflicting?         │
+│ Why does it block sync?                 │
+└─────────────────────────────────────────┘
+            │
+            ▼
+┌─────────────────────────────────────────┐
+│ docs: Classify Issue Type               │
+├─────────────────────────────────────────┤
+│ • MISSING_ARTIFACT                      │
+│ • CONFLICTING_STATUS                    │
+│ • AMBIGUOUS_EVIDENCE                    │
+│ • DOCUMENTATION_DEBT                    │
+└─────────────────────────────────────────┘
+            │
+            ▼
+┌─────────────────────────────────────────┐
+│ docs: Escalate (recommendation: blocked)│
+├─────────────────────────────────────────┤
+│ unresolved_ambiguities:                 │
+│   - blocking: true                      │
+│   - recommended_resolution: ...         │
+└─────────────────────────────────────────┘
+            │
+            ▼
+┌─────────────────────────────────────────┐
+│ Target: OpenClaw / architect / reviewer │
+│ Action: Resolve blocker before retry    │
+└─────────────────────────────────────────┘
+```
+
+---
+
+## 4. Change Type Classification (BR-006)
+
+```
+Feature/Repair Completed
+            │
+            ▼
+┌─────────────────────────────────────────┐
+│ What was the primary change?            │
+└─────────────────────────────────────────┘
+            │
+    ┌───────┴───────┬───────┬───────┐
+    ▼               ▼       ▼       ▼
+┌────────┐   ┌────────┐ ┌────────┐ ┌────────┐
+│feature │   │repair  │ │docs-   │ │govern- │
+│        │   │        │ │only    │ │ance    │
+└────────┘   └────────┘ └────────┘ └────────┘
+    │            │          │          │
+    ▼            ▼          ▼          ▼
+New         Bug fix,    No code   Process,
+capability  defect      changes,  policy,
+added       correction  doc       rules
+                         update    update
+```
+
+---
+
+## 5. Recommendation States
+
+```
+                    ┌─────────────────┐
+                    │ docs-sync-report│
+                    │ recommendation  │
+                    └────────┬────────┘
+                             │
+        ┌────────────────────┼────────────────────┐
+        ▼                    ▼                    ▼
+┌───────────────┐   ┌───────────────┐   ┌───────────────┐
+│ sync-complete │   │needs-follow-up│   │    blocked    │
+├───────────────┤   ├───────────────┤   ├───────────────┤
+│ All docs      │   │ Sync done     │   │ Cannot        │
+│ synchronized  │   │ with pending  │   │ complete      │
+│ No blockers   │   │ follow-up     │   │ Requires      │
+│ Consistent    │   │ items         │   │ resolution    │
+├───────────────┤   ├───────────────┤   ├───────────────┤
+│ Proceed to    │   │ May proceed   │   │ Resolve       │
+│ acceptance    │   │ Track items   │   │ blockers      │
+└───────────────┘   └───────────────┘   └───────────────┘
+```
+
+---
+
+## 6. Role Integration in 6-Role Chain
+
+```
+┌─────────┐    ┌───────────┐    ┌────────┐    ┌──────────┐    ┌──────┐    ┌────────┐
+│architect│───▶│developer  │───▶│tester  │───▶│reviewer  │───▶│docs  │───▶│security│
+└─────────┘    └───────────┘    └────────┘    └──────────┘    └──────┘    └────────┘
+     │              │               │              │              │            │
+     ▼              ▼               ▼              ▼              ▼            ▼
+design-note   implementation-  verification-  acceptance-    docs-sync-    security-
+open-         summary          report         decision-      report        review-
+questions     self-check       regression-    record         changelog-    report
+              report           risk-report    review-        entry
+              bugfix-report    edge-case-     findings-
+                               matrix         report
+
+                              ▲                              │
+                              │                              │
+                              └──────────────────────────────┘
+                                  docs consumes ALL upstream
+```
+
+---
+
+## References
+
+- `specs/007-docs-core/role-scope.md` - Role boundaries
+- `specs/007-docs-core/upstream-consumption.md` - Upstream artifact consumption
+- `specs/007-docs-core/downstream-interfaces.md` - Downstream handoff
+- `specs/007-docs-core/contracts/` - Artifact contracts

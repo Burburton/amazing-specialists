@@ -334,11 +334,29 @@ Docs Output Quality Gate
 #### Objective
 确保 docs 输出的文档同步报告完整，用户侧影响已同步。
 
+> **实现来源**: `007-docs-core` feature 正式实现了 docs 角色质量门禁。
+
 #### 必备输出检查
 - [ ] synced docs list 已列出
 - [ ] missing docs 已说明（如无显式写"无"）
 - [ ] user-facing summary 存在
 - [ ] internal summary 存在（如适用）
+
+#### docs-sync-report 检查（007-docs-core）
+- [ ] sync_target 已定义
+- [ ] consumed_artifacts 已记录（BR-001 证据消费）
+- [ ] touched_sections 已记录（BR-002 最小表面积）
+- [ ] change_reasons 每个变更都有原因
+- [ ] consistency_checks 已执行（BR-005 跨文档一致性）
+- [ ] status_updates 基于证据
+- [ ] recommendation 明确（sync-complete / needs-follow-up / blocked）
+
+#### changelog-entry 检查（007-docs-core）
+- [ ] feature_id 正确
+- [ ] change_type 正确分类（BR-006）
+- [ ] summary 具体，非空泛
+- [ ] breaking_changes 已披露（如有）
+- [ ] known_limitations 已记录
 
 #### 文档质量检查
 - [ ] 明确更新了哪些文档
@@ -351,9 +369,18 @@ Docs Output Quality Gate
 - [ ] README 与实际不符
 - [ ] 文档遗漏风险说明
 - [ ] 文档提前描述未完成功能
+- [ ] Status Inflation (AP-001): 声明完成但证据显示部分完成
+- [ ] Over-Updating (AP-002): 变更无关部分
+- [ ] Drift Ignorance (AP-003): 未检查跨文档一致性
+- [ ] Vague Changelog (AP-005): 通用条目无具体内容
 
 #### Pass Criteria
-用户侧可见的文档已同步，缺失文档已识别。
+用户侧可见的文档已同步，缺失文档已识别，状态与证据对齐。
+
+#### Validation References
+- `specs/007-docs-core/validation/docs-sync-report-checklist.md`
+- `specs/007-docs-core/validation/changelog-entry-checklist.md`
+- `specs/007-docs-core/validation/consistency-review-checklist.md`
 
 ---
 

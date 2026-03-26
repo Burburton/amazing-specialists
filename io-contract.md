@@ -58,6 +58,9 @@ inputs:                          # 工件引用或上下文片段
       - implementation_summary
       - test_report
       - review_report
+      - docs_sync_report        # docs 产出（007-docs-core）
+      - changelog_entry         # docs 产出（007-docs-core）
+      - security_report
     path: string                 # 工件路径
     summary: string              # 工件内容摘要
     
@@ -396,6 +399,30 @@ docs 产出的文档同步报告，必须包含：
 - missing docs
 - user-facing change summary
 - internal change summary
+
+#### docs_sync_report
+docs 产出的结构化文档同步报告（007-docs-core），必须包含：
+- sync_target（同步目标）
+- consumed_artifacts（消费的上游 artifacts，BR-001）
+- touched_sections（变更的文档部分，BR-002）
+- change_reasons（变更原因）
+- consistency_checks（跨文档一致性检查，BR-005）
+- status_updates（状态更新）
+- unresolved_ambiguities（未解决的模糊）
+- recommendation（sync-complete / needs-follow-up / blocked）
+
+#### changelog_entry
+docs 产出的结构化 changelog 条目（007-docs-core），必须包含：
+- feature_id
+- feature_name
+- change_type（feature / repair / docs-only / governance，BR-006）
+- summary
+- capability_changes
+- docs_changes
+- validation_changes
+- breaking_changes
+- known_limitations
+- related_features
 
 #### security_report
 security 产出的安全报告，必须包含：

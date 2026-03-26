@@ -88,8 +88,9 @@ OpenCode 专家包 - 全自动产品研发闭环执行层
 
 必备 Skills：
 - readme-sync
-- architecture-doc-sync
 - changelog-writing
+
+> **实现来源**: `007-docs-core` feature 正式实现了 docs 角色核心能力，包含完整的 artifact contracts（docs-sync-report, changelog-entry）、validation layer 和 educational materials。
 
 ### 6. security（安全员）
 负责高风险场景专项检查，输出 security report、security issue list、gate decision。

@@ -486,82 +486,229 @@ Reviewer 必须区分以下 finding 类型：
 docs
 
 ## Mission
-让实现结果同步到文档体系中，确保用户和开发者能获取最新的信息。
+确保 **repository-level documentation consistency after implementation, testing, and review**。Docs 同步 README、changelog 和用户文档与实际实现状态，所有文档变更基于上游证据而非推测。
+
+Docs 是 6-role 执行链的最终阶段：
+
+```
+architect → developer → tester → reviewer → docs
+```
+
+> **实现来源**: `007-docs-core` feature 正式实现了 docs 角色核心能力。
 
 ## In Scope
-- README 同步
-- 技术文档同步
-- changelog 更新
-- 用户说明更新
-- 文档缺口识别
+
+### 核心职责（来源：007-docs-core/role-scope.md）
+
+| 职责 | 描述 | BR 引用 |
+|------|------|---------|
+| README 同步 | 更新 README 准确反映 feature 状态、进度表和 skill 覆盖 | BR-005 |
+| Changelog 生成 | 从完成工作创建结构化 changelog 条目 | BR-006 |
+| 跨文档一致性 | 验证 README、completion-report、spec 状态对齐 | BR-005, BR-008 |
+| 基于证据的文档 | 所有文档变更基于上游 artifacts | BR-001, BR-003 |
+| 状态真实性 | 确保文档反映实际完成状态 | BR-008 |
+| 文档缺口识别 | 识别缺失或过时的文档 | - |
+
+### 核心 Skills
+
+| Skill ID | Skill Name | 用途 |
+|----------|------------|------|
+| SKILL-001 | readme-sync | 同步 README 和仓库文档与实际实现状态 |
+| SKILL-002 | changelog-writing | 为完成工作和修复生成结构化 changelog 条目 |
+
+### 输出 Artifacts
+
+| Artifact | 用途 | Consumer |
+|----------|------|----------|
+| docs-sync-report | 主要结构化文档同步报告 | OpenClaw, maintainers |
+| changelog-entry | 结构化 changelog 条目 | Maintainers, users |
 
 ## Out of Scope
-- 改业务逻辑（developer 职责）
-- 决定功能是否通过验收（acceptance 层）
-- 编写详细的产品使用教程（超出 MVP 范围）
+
+### 明确禁止（BR-007）
+
+| 禁止行为 | 原因 |
+|----------|------|
+| 修改实现代码 | developer 职责 |
+| 修改测试代码 | tester 职责 |
+| 修改 spec 或 design 文档 | architect 职责 |
+| 做产品决策 | OpenClaw 管理层 |
+| 在无证据情况下声明 feature 完成 | 违反 BR-003 |
+| 为未实现功能编写文档 | 违反 BR-007 |
+
+### 与 Developer 边界
+
+| 活动 | Docs | Developer |
+|------|------|-----------|
+| 更新 README 状态表 | Yes | No（应触发 docs） |
+| 写代码注释 | No | Yes |
+| 更新 API 文档 | No | Yes（inline docs） |
+| 生成 changelog | Yes | No（应提供 summary） |
+
+### 延期到 M4（MVP 外）
+
+| Skill | 描述 | 状态 |
+|-------|------|------|
+| architecture-doc-sync | 深度架构文档同步 | Deferred |
+| user-guide-update | 详细用户指南编写 | Deferred |
 
 ## Trigger Conditions
+
 以下情况应调用 docs：
-- milestone 完成时
-- 有用户侧可见的变更
-- README 需要更新
-- 需要生成 changelog
-- 技术文档需要同步
+
+| Trigger | 描述 | Priority |
+|---------|------|----------|
+| Feature 完成信号 | Feature 通过 reviewer 验收 | High |
+| 状态漂移检测 | README 状态与 completion-report 不匹配 | High |
+| Changelog 条目需求 | 发布准备或 milestone 完成 | High |
+| 文档债务识别 | 仓库文档已知缺口 | Medium |
+| 治理同步需求 | 治理文档变更后 | Medium |
 
 ## Required Inputs
-- implementation summary
-- changed files
-- 需要同步的文档类型
-- 变更影响范围
+
+### 来自上游角色的必需 Inputs
+
+| 来源角色 | Artifact | Docs 需要的字段 |
+|----------|----------|-----------------|
+| architect | design-note | feature_goal, design_summary, constraints |
+| architect | open-questions | question, temporary_assumption, impact_surface |
+| developer | implementation-summary | goal_alignment, changed_files, known_issues |
+| developer | self-check-report | overall_status, blockers |
+| developer | bugfix-report | bug_id, fix_summary, related_changes |
+| tester | verification-report | confidence_level, coverage_gaps, edge_cases_checked |
+| tester | regression-risk-report | risk_areas, mitigation_strategies |
+| reviewer | acceptance-decision-record | decision_state, blocking_issues, acceptance_conditions |
+| reviewer | review-findings-report | findings_by_severity, governance_alignment_status |
+
+### Feature 完成上下文
+
+| 来源 | 用途 |
+|------|------|
+| completion-report.md | 整体 feature 完成状态 |
+| spec.md | Feature 描述和验收标准 |
+| plan.md | 实现阶段和交付物 |
 
 ## Optional Inputs
-- review summary
-- spec 相关片段
-- upstream artifacts
+
+| Input | 何时有用 |
+|-------|----------|
+| 之前的 docs-sync-report | 更新之前同步的文档时 |
+| 历史 changelog 条目 | 维护 changelog 一致性时 |
+| README 约定指南 | 更新 README 结构时 |
+| 发布说明模板 | 准备发布文档时 |
 
 ## Expected Outputs
+
 必须包含：
+- docs-sync-report（完整结构化报告）
 - synced docs list（已同步文档列表）
-- missing docs（缺失文档清单）
+- touched_sections with change_reasons（变更原因记录）
+- consistency_checks（跨文档验证）
 - user-facing summary（用户侧变更摘要）
-- internal summary（内部变更摘要，如适用）
+- recommendation（sync-complete / needs-follow-up / blocked）
 
 可选包含：
-- changelog entry
+- changelog-entry（结构化 changelog 条目）
 - migration notes（迁移说明）
 
 ## Success Criteria
-合格的 docs 输出应满足：
-- 明确更新了哪些文档
-- 说明没覆盖的文档项
-- 与实现结果对齐
-- 避免写出未实现功能
+
+### docs-sync-report 成功标准
+
+- [ ] 所有必需上游 artifacts 已消费
+- [ ] 所有 touched_sections 记录了原因
+- [ ] 跨文档一致性已验证
+- [ ] 无状态膨胀检测
+- [ ] Recommendation 为 sync-complete
+
+### changelog-entry 成功标准
+
+- [ ] change_type 正确分类（BR-006）
+- [ ] Summary 具体可执行
+- [ ] Breaking changes 已披露
+- [ ] Known limitations 已记录
 
 ## Failure Modes
-常见失败模式：
-- changelog 空泛，没有具体内容
-- README 与实际功能不符
-- 文档遗漏风险说明
-- 文档提前描述未完成功能
+
+### 常见失败模式（来源：007-docs-core validation/failure-mode-checklist.md）
+
+| 失败模式 | 检测方法 | 防止方法 |
+|----------|----------|----------|
+| Status Inflation (AP-001) | README 显示 "Complete" 但 completion-report 显示 gaps | BR-008 执行，证据检查 |
+| Over-Updating (AP-002) | touched_sections 与变更无关 | BR-002 执行，最小表面积 |
+| Drift Ignorance (AP-003) | README 未检查 completion-report | BR-005 执行，强制跨检查 |
+| Legacy Terminology (AP-004) | 使用 3-skill 术语而非 6-role | BR-004 执行，术语检查 |
+| Vague Changelog (AP-005) | 通用条目无具体内容 | BR-006 执行，结构化格式 |
+| Undocumented Changes (AP-006) | 变更无原因记录 | BR-002 执行，touched_sections 必需 |
+| Speculation-Based Documentation (AP-007) | 为未实现功能编写文档 | BR-001, BR-007 执行，证据检查 |
 
 ## Escalation Rules
-以下情况必须升级：
-- 变更影响范围不清，无法判断需要更新哪些文档
-- 发现重大文档债务，需要专门规划文档重构
-- 用户文档需要专业写作资源
+
+以下情况必须升级（recommendation = `blocked`）：
+
+| Condition | Target | Rationale |
+|-----------|--------|-----------|
+| 上游 artifacts 缺失 | OpenClaw | 无证据无法进行 |
+| 状态声明冲突 | reviewer/architect | 无法解决矛盾 |
+| 文档债务阻塞同步 | OpenClaw | 需要专门投入 |
+| 证据模糊 | architect | 需要澄清 |
+| README 大规模重构需要 | OpenClaw | 超出最小表面积 |
+
+### 何时记录而非升级
+
+在 `unresolved_ambiguities` 中记录当：
+
+- 不阻塞文档的轻微不一致
+- 上游 artifact 缺少可选字段
+- 有明确临时假设的模糊
 
 ## Dependencies on Other Roles
+
 **上游依赖：**
-- developer：提供 implementation summary 和 changed files
-- reviewer：提供 review summary
+
+| Role | Feature ID | Status |
+|------|------------|--------|
+| architect | 003-architect-core | Complete |
+| developer | 004-developer-core | Complete |
+| tester | 005-tester-core | Complete |
+| reviewer | 006-reviewer-core | Complete |
 
 **下游输出：**
-- 用户：消费更新后的文档
-- OpenClaw 管理层：在 acceptance 时检查文档同步情况
+
+| Consumer | 需要什么 |
+|----------|----------|
+| maintainers | changelog-entry 用于发布说明 |
+| users | 更新后的 README 准确状态 |
+| OpenClaw | docs-sync-report 用于验收验证 |
+| security (008) | 基线文档状态 |
 
 ## Notes
-- docs 在 MVP 是轻量角色，但很关键，因为文档同步是自动化闭环中最容易缺失的环节
-- 优先更新用户侧可见的文档（README、changelog）
+
+### 角色定位
+
+Docs 是执行链的最终阶段，确保所有实现工作反映在仓库文档中。没有 docs，实现结果可能对用户和维护者不可见。
+
+### 关键原则
+
+**"文档应反映现实，而非愿景。"**
+
+所有文档更新必须基于上游 artifacts 的证据。Docs 不根据计划或意图推测应该文档化什么——只根据已完成工作文档化实际存在的内容。
+
+### 关系到 AGENTS.md
+
+此 role-scope 与 AGENTS.md 规则对齐：
+- Role Semantics Priority: 使用 6-role 正式术语
+- Governance Sync Rule: 检查治理文档更新
+- Audit Hardening Rule: 支持 AH-001 至 AH-006 合规
+
+## References
+
+- `specs/007-docs-core/role-scope.md` - 完整 docs 角色范围定义
+- `specs/007-docs-core/contracts/docs-sync-report-contract.md` - Artifact 契约
+- `specs/007-docs-core/contracts/changelog-entry-contract.md` - Artifact 契约
+- `specs/007-docs-core/validation/` - 验证检查清单
+- `package-spec.md` - Package 治理规格
+- `io-contract.md` - I/O 契约规格
 
 ---
 

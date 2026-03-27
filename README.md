@@ -177,7 +177,7 @@ User Input
 | `007-docs-core` | docs 角色核心技能 | ✅ Complete | 2 core skills, 2 artifact contracts, validation layer, anti-pattern guidance |
 | `008-security-core` | security 角色核心技能 | ✅ Complete | 2 core skills, 2 artifact contracts, validation layer, 6-role model complete |
 
-> **当前进度**: `003-architect-core` 至 `008-security-core` 已全部完成。**6-Role 正式执行模型完整实现**。`010-3-skill-migration` 完成 3-skill 过渡骨架归档。
+> **当前进度**: `003-architect-core` 至 `008-security-core` 已全部完成。**6-Role 正式执行模型 MVP 完整实现**。
 
 ### 阶段 7：3-Skill 迁移 ✅ 已完成（010-3-skill-migration）
 
@@ -186,10 +186,27 @@ User Input
 - `architect-auditor` → architect + reviewer 角色分工
 - `task-executor` → developer + tester + docs + security 角色分工
 
+### 阶段 8：M4 可选增强套件 ✅ 已完成（011-m4-enhancement-kit）
+
+基于 6-role 正式模型，为每个角色添加 2 个可选增强技能：
+- **Enhanced Mode**: 通过 `--enhanced` 标志启用
+- **12 个 M4 Skills**: interface-contract-design, migration-planning, refactor-safely, dependency-minimization, integration-test-design, flaky-test-diagnosis, maintainability-review, risk-review, architecture-doc-sync, user-guide-update, secret-handling-review, dependency-risk-review
+- **默认 MVP 模式**: 不带 `--enhanced` 时仅使用 21 个核心技能
+- **增强层激活**: 命令行标志、spec.md 元数据继承、环境变量
+
+**新增文档**：
+- `docs/enhanced-mode-selector.md` - Enhanced 模式检测逻辑
+- `docs/enhanced-mode-guide.md` - Enhanced 模式使用指南
+
+> **当前进度**: `003-architect-core` 至 `008-security-core` 完成 MVP 核心，`010-3-skill-migration` 完成骨架归档，`011-m4-enhancement-kit` 完成 M4 可选增强。**Skills 总计 33 个（21 MVP + 12 M4）**。
+
 ## Quick Start
 
 ### 查看使用指南
-阅读 [docs/skills-usage-guide.md](docs/skills-usage-guide.md) 了解如何使用 21 个 skills。
+阅读 [docs/skills-usage-guide.md](docs/skills-usage-guide.md) 了解如何使用 21 个 MVP 核心 skills。
+
+### 查看 Enhanced Mode 指南
+阅读 [docs/enhanced-mode-guide.md](docs/enhanced-mode-guide.md) 了解如何启用和使用 12 个 M4 增强 skills。
 
 ### 查看开发计划
 阅读 [specs/skill-development-plan.md](specs/skill-development-plan.md) 了解 skills 的开发顺序和内容框架。
@@ -203,16 +220,44 @@ User Input
 
 ```
 .opencode/skills/
-├── common/              # 5个通用技能
-├── architect/           # 3个架构师技能（✅ 003-architect-core）
-├── developer/           # 3个开发者技能（✅ 004-developer-core）
-├── tester/              # 3个测试员技能（✅ 005-tester-core）
-├── reviewer/            # 3个审查员技能（✅ 006-reviewer-core）
-├── docs/                # 2个文档员技能（✅ 007-docs-core）
-└── security/            # 2个安全员技能（✅ 008-security-core）
+├── common/              # 5个通用技能（MVP）
+├── architect/           # 5个架构师技能（3 MVP + 2 M4）
+│   ├── requirement-to-design/      # MVP
+│   ├── module-boundary-design/     # MVP
+│   ├── tradeoff-analysis/          # MVP
+│   ├── interface-contract-design/  # M4 (可选)
+│   └── migration-planning/          # M4 (可选)
+├── developer/           # 5个开发者技能（3 MVP + 2 M4）
+│   ├── feature-implementation/     # MVP
+│   ├── bugfix-workflow/            # MVP
+│   ├── code-change-selfcheck/      # MVP
+│   ├── refactor-safely/            # M4 (可选)
+│   └── dependency-minimization/    # M4 (可选)
+├── tester/              # 5个测试员技能（3 MVP + 2 M4）
+│   ├── unit-test-design/           # MVP
+│   ├── regression-analysis/        # MVP
+│   ├── edge-case-matrix/           # MVP
+│   ├── integration-test-design/    # M4 (可选)
+│   └── flaky-test-diagnosis/       # M4 (可选)
+├── reviewer/            # 5个审查员技能（3 MVP + 2 M4）
+│   ├── code-review-checklist/      # MVP
+│   ├── spec-implementation-diff/   # MVP
+│   ├── reject-with-actionable-feedback/  # MVP
+│   ├── maintainability-review/     # M4 (可选)
+│   └── risk-review/                # M4 (可选)
+├── docs/                # 4个文档员技能（2 MVP + 2 M4）
+│   ├── readme-sync/                # MVP
+│   ├── changelog-writing/          # MVP
+│   ├── architecture-doc-sync/      # M4 (可选)
+│   └── user-guide-update/          # M4 (可选)
+└── security/            # 4个安全员技能（2 MVP + 2 M4）
+    ├── auth-and-permission-review/ # MVP
+    ├── input-validation-review/    # MVP
+    ├── secret-handling-review/     # M4 (可选)
+    └── dependency-risk-review/     # M4 (可选)
 ```
 
-> **6-Role Model Complete**: 所有 6 个角色的核心能力已实现。历史 3-skill 过渡骨架已归档到 `docs/archive/legacy-skills/`。
+> **MVP 默认，M4 可选**: 默认使用 21 个 MVP 核心技能。M4 12 个增强技能需通过 `--enhanced` 标志显式启用。详见 [docs/enhanced-mode-guide.md](docs/enhanced-mode-guide.md)。
 
 ## System Position
 
@@ -243,9 +288,10 @@ Layer 3: OpenCode 执行层（本专家包）- 角色化专业执行
 | M1 - Common Skills | 5/5 | ✅ 100% |
 | M2 - Core Roles | 12/12 | ✅ 100% |
 | M3 - Peripheral | 4/4 | ✅ 100% |
-| **总计** | **21/21** | **✅ 100%** |
+| M4 - Enhancement Kit | 12/12 | ✅ 100% (可选) |
+| **总计** | **33/33** | **✅ 100%** |
 
-> **6-Role Model Complete**: 所有 6 个角色的核心能力已实现。
+> **MVP 模式默认启用**: 21 个核心技能。M4 12 个增强技能需通过 `--enhanced` 标志显式启用。
 
 ### 文档完成度
 
@@ -261,17 +307,36 @@ Layer 3: OpenCode 执行层（本专家包）- 角色化专业执行
 | 模板文件 (docs/templates/) | ✅ |
 | 检查规范 (docs/validation/) | ✅ |
 | 追溯方法 (docs/traceability/) | ✅ |
+| Enhanced Mode 指南 (docs/enhanced-mode-guide.md) | ✅ |
+| Enhanced Mode 选择器 (docs/enhanced-mode-selector.md) | ✅ |
 
-### 下一步（M4 - 可选增强）
+### M4 - 可选增强套件 ✅ 已完成（011-m4-enhancement-kit）
 
-| 角色 | 待实现 Skills |
-|------|--------------|
-| architect | interface-contract-design, migration-planning |
-| developer | refactor-safely, dependency-minimization |
-| tester | integration-test-design, flaky-test-diagnosis |
-| reviewer | maintainability-review, risk-review |
-| docs | architecture-doc-sync, user-guide-update |
-| security | secret-handling-review, dependency-risk-review |
+M4 是 **可选增强层**，补充 MVP 核心技能的高级能力。默认使用 MVP 模式，需显式启用 Enhanced 模式。
+
+#### 启用方式
+- **命令行**: 使用 `--enhanced` 标志，如 `/spec-start --enhanced <feature>`
+- **Spec 元数据**: 在 `spec.md` 中设置 `enhanced: true`，后续命令自动继承
+- **环境变量**: `OPCODE_ENHANCED=true`（调试用）
+
+#### M4 Skills 清单（12 个）
+
+| 角色 | M4 Skills | 用途 |
+|------|-----------|------|
+| architect | interface-contract-design | API/接口契约设计 |
+| architect | migration-planning | 迁移策略规划 |
+| developer | refactor-safely | 安全重构流程 |
+| developer | dependency-minimization | 依赖最小化 |
+| tester | integration-test-design | 集成测试设计 |
+| tester | flaky-test-diagnosis | 不稳定测试诊断 |
+| reviewer | maintainability-review | 可维护性审查 |
+| reviewer | risk-review | 风险评估审查 |
+| docs | architecture-doc-sync | 架构文档同步 |
+| docs | user-guide-update | 用户指南更新 |
+| security | secret-handling-review | 密钥处理审查 |
+| security | dependency-risk-review | 依赖风险审查 |
+
+> **详见**: [docs/enhanced-mode-guide.md](docs/enhanced-mode-guide.md) 了解何时使用 Enhanced 模式。
 
 ## Limits
 

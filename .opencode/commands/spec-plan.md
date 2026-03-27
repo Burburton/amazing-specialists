@@ -1,9 +1,13 @@
 ---
 description: Generate implementation plan from a feature spec
 agent: general
+flags:
+  --enhanced: Enable M4 enhancement kit for advanced planning
 ---
 
 Read `specs/$1/spec.md` and generate or update technical design artifacts for feature `$1`.
+
+## Standard Mode (Default)
 
 Produce or update:
 - `specs/$1/plan.md`
@@ -28,16 +32,28 @@ Plan requirements:
 - Risks / Tradeoffs
 - Requirement Traceability
 
-`data-model.md` should include:
-- Core objects
-- Key fields
-- Invariants
-- State transitions where relevant
+## Enhanced Mode (--enhanced)
 
-`research.md` should include:
-- Unknowns explored
-- Technical options considered
-- Final decisions and rationale
+When `--enhanced` flag is provided or `spec.md` has `enhanced: true`, additionally apply M4 skills:
+
+### Migration Planning (architect)
+If the feature involves data/system migration:
+- Generate detailed migration strategy in plan
+- Define rollback triggers and procedures
+- Add validation checkpoints between phases
+
+### Dependency Minimization (developer)
+Analyze dependency impact:
+- Identify new dependencies required
+- Suggest lightweight alternatives
+- Flag potential version conflicts
+- Add dependency notes to plan
+
+### Integration Test Planning (tester)
+For integration-heavy features:
+- Identify integration points
+- Suggest integration test scenarios
+- Add integration test tasks to plan
 
 Output:
 - files created or updated

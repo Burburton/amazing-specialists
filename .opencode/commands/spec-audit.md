@@ -1,6 +1,8 @@
 ---
 description: Audit consistency between spec, plan, tasks, code, and canonical governance documents
 agent: explore
+flags:
+  --enhanced: Enable M4 enhancement kit for comprehensive audit
 ---
 
 Audit feature `$1`.
@@ -163,6 +165,57 @@ audit_report:
 - `--truthfulness-check`: Enable status truthfulness verification (AH-004)
 - `--readme-sync-check`: Enable README governance sync check (AH-005)
 - `--full-governance-audit`: Enable all governance checks (default for milestone audit)
+- `--enhanced`: Enable M4 enhancement kit for comprehensive audit
+
+## Enhanced Mode (--enhanced)
+
+When `--enhanced` flag is provided or `spec.md` has `enhanced: true`, additionally apply M4 skills:
+
+### Maintainability Review (reviewer)
+Evaluate code maintainability:
+- Complexity analysis (cyclomatic, cognitive)
+- Naming and documentation quality
+- Dependency relationship assessment
+- SOLID principles compliance
+- Technical debt identification
+
+### Risk Review (reviewer)
+Assess technical risks:
+- Identify high-risk areas
+- Evaluate failure impact
+- Check rollback capability
+- Assess monitoring coverage
+- Verify fault tolerance mechanisms
+
+### Secret Handling Review (security)
+If the feature handles sensitive information:
+- Check for hardcoded secrets
+- Verify secret storage security
+- Check for logging leaks
+- Verify secret rotation mechanisms
+- Check transport security
+
+### Dependency Risk Review (security)
+Analyze dependency security:
+- Check for known CVEs
+- Verify dependency maintenance status
+- Check license compliance
+- Assess supply chain security
+
+### Enhanced Output Structure
+Add to audit report:
+```yaml
+enhanced_audit:
+  maintainability:
+    score: number (1-10)
+    findings: [...]
+  risk_assessment:
+    level: low | medium | high | critical
+    items: [...]
+  security_enhanced:
+    secret_handling: pass | needs_fix | block
+    dependency_risk: pass | needs_fix | block
+```
 
 ## References
 

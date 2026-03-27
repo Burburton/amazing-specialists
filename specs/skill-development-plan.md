@@ -20,7 +20,7 @@
 | architect-auditor | `.opencode/skills/architect-auditor/` | architect |
 | task-executor | `.opencode/skills/task-executor/` | developer |
 
-### 2.2 缺失统计
+### 2.2 缺失统计（MVP 范围）
 | 类别 | 应有 | 已有 | 缺失 |
 |------|------|------|------|
 | Common Skills | 5 | 0 | 5 |
@@ -29,8 +29,10 @@
 | tester | 5 | 0 | 5 |
 | reviewer | 5 | 0 | 5 |
 | docs | 4 | 0 | 4 |
-| security | 4 | 0 | 4 |
-| **总计** | **33** | **3** | **30** |
+| security (MVP) | 2 | 0 | 2 |
+| **总计** | **31** | **3** | **28** |
+
+> **注**: security MVP 范围定义为 2 个核心技能（auth-and-permission-review, input-validation-review）。secret-handling-review 和 dependency-risk-review 列入 M4 扩展待定。
 
 ---
 
@@ -127,15 +129,23 @@
 | - | ~~architecture-doc-sync~~ | P2 | 可延后 | - |
 | - | ~~user-guide-update~~ | P2 | 可延后 | - |
 
-#### security（4个）
+#### security（2个 - MVP）
+> **注**: MVP 阶段仅实现 2 个核心安全审查技能，通过 `008-security-core` feature 正式实现。
+
 | 顺序 | Skill | 优先级 | 复用策略 | 预计工时 |
 |------|-------|--------|----------|----------|
 | 21 | auth-and-permission-review | P1 | 半复用 | 2h |
 | 22 | input-validation-review | P1 | 半复用 | 2h |
-| 23 | secret-handling-review | P1 | 半复用 | 2h |
-| 24 | dependency-risk-review | P1 | 半复用 | 2h |
 
 **阶段验收标准**: 涉及 auth/permission 的变更能触发 security 检查
+
+#### security（M4 扩展 - 待定）
+> **注**: 以下技能不在 MVP 范围内，将在后续 M4 阶段按需实现。
+
+| 顺序 | Skill | 优先级 | 复用策略 | 预计工时 |
+|------|-------|--------|----------|----------|
+| - | secret-handling-review | P2 | 半复用 | 2h |
+| - | dependency-risk-review | P2 | 半复用 | 2h |
 
 ---
 
@@ -292,15 +302,16 @@
 │   │   └── SKILL.md
 │   └── user-guide-update/
 │       └── SKILL.md
-└── security/
-    ├── auth-and-permission-review/
+└── security/                          # MVP: 2个核心技能
+    ├── auth-and-permission-review/     # ✅ 008-security-core 正式实现
     │   └── SKILL.md
-    ├── secret-handling-review/
+    ├── input-validation-review/        # ✅ 008-security-core 正式实现
     │   └── SKILL.md
-    ├── input-validation-review/
-    │   └── SKILL.md
-    └── dependency-risk-review/
-        └── SKILL.md
+    # M4 扩展（待定）:
+    # ├── secret-handling-review/
+    # │   └── SKILL.md
+    # └── dependency-risk-review/
+    #     └── SKILL.md
 ```
 
 ---
@@ -328,7 +339,8 @@ Role Skills
   ├── docs
   │   └── readme-sync (依赖: artifact-reading)
   └── security
-      └── auth-and-permission-review (依赖: artifact-reading)
+      ├── auth-and-permission-review (依赖: artifact-reading)
+      └── input-validation-review (依赖: artifact-reading)
 ```
 
 ---
@@ -339,8 +351,8 @@ Role Skills
 |--------|----------|----------|----------|
 | M1 | Common Skills (5个) | 2-3天 | 能统一读取工件，统一输出结果 |
 | M2 | Core Roles 基础 (12个) | 5-7天 | 能用 001-bootstrap 跑通 feature 流程 |
-| M3 | 外围角色 (6个) | 3-4天 | 高风险任务能触发 security 检查 |
-| M4 | 高级增强 (9个) | 按需 | 根据实际使用反馈决定 |
+| M3 | 外围角色 (4个) | 2-3天 | 高风险任务能触发 security 检查 |
+| M4 | 高级增强 (11个) | 按需 | 根据实际使用反馈决定 |
 
 ---
 
@@ -373,4 +385,5 @@ Role Skills
 
 | 日期 | 版本 | 变更内容 | 作者 |
 |------|------|----------|------|
+| 2026-03-27 | v0.2 | 将 security MVP 范围从 4 个技能调整为 2 个，与 README 对齐；secret-handling-review 和 dependency-risk-review 移至 M4 待定 | 008-security-core |
 | 2026-03-22 | v0.1 | 初始版本，规划 skill 创建顺序和内容框架 | - |

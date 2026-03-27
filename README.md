@@ -164,13 +164,19 @@ User Input
 - 更新治理文档（package-spec.md, role-definition.md, AGENTS.md, README.md）
 - 创建迁移说明文档（role-model-evolution.md, skill-to-role-migration.md）
 
-### 阶段 5：命令固化与 Bootstrap 验证（下一阶段）
-- 固化 5 个核心命令的输入输出格式
-- 建立统一的 artifact 模板（design_note, implementation_summary, test_report, review_report 等）
-- 建立规则文件（coding-rules, testing-rules, review-rules）
-- 跑通 specs/001-bootstrap 验证闭环
-- 实现 quality gate 自动化检查
-- 建立 traceability 追溯链
+### 阶段 5：命令固化与 Bootstrap 验证 ✅ 已完成（009-command-hardening）
+- ✅ 固化 5 个核心命令的输入输出格式
+- ✅ 建立统一的 artifact 模板（9 个模板，覆盖 6 角色 + 通用）
+- ✅ 建立规则文件（coding-rules, testing-rules, review-rules）
+- ✅ 跑通 specs/001-bootstrap 验证闭环
+- ✅ 建立 quality gate 检查规范（quality-gate-checklist, gate-validation-method）
+- ✅ 建立 traceability 追溯链方法
+
+**新增文档目录**：
+- `docs/rules/` - 执行规则文件
+- `docs/templates/` - 统一 artifact 模板
+- `docs/validation/` - 质量门禁检查规范
+- `docs/traceability/` - 追溯链方法
 
 > **注意**：当前 `.opencode/skills/` 中的 `spec-writer`、`architect-auditor`、`task-executor` 是**过渡骨架**（transition skeleton），用于支撑早期 bootstrap 流程。它们将在 003-008 feature 中逐步被 6-role 正式能力替代。详见 [docs/architecture/role-model-evolution.md](docs/architecture/role-model-evolution.md) 和 [docs/infra/migration/skill-to-role-migration.md](docs/infra/migration/skill-to-role-migration.md)。
 
@@ -267,6 +273,10 @@ Layer 3: OpenCode 执行层（本专家包）- 角色化专业执行
 | skill-development-plan.md | ✅ |
 | skills-usage-guide.md | ✅ |
 | 验证报告 x3 | ✅ |
+| 规则文件 (docs/rules/) | ✅ |
+| 模板文件 (docs/templates/) | ✅ |
+| 检查规范 (docs/validation/) | ✅ |
+| 追溯方法 (docs/traceability/) | ✅ |
 
 ### 下一步（M4 - 可选增强）
 

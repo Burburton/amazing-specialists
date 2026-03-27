@@ -156,28 +156,30 @@
 - `specs/007-docs-core/`
 - `specs/008-security-core/`
 
-### Phase 3: Physical Restructuring (Future)
+### Phase 3: Physical Restructuring (010-3-skill-migration) ✅
 
-**时间**：待定（待 6-role 成熟后）
+**时间**：2026-03-28
 
 **目标**：
-- 物理重构 `.opencode/skills/` 目录
-- 移除或归档 3-skill 过渡骨架
-- 建立 6-role 目录结构
+- 物理归档 `.opencode/skills/` 中的 3-skill 过渡骨架
+- 移动到 `docs/archive/legacy-skills/`
+- 保持历史可追溯
 
-**决策点**：
-- 是否保留 3-skill 的兼容层？
-- 是否直接删除 3-skill 目录？
-- 如何平滑迁移现有项目？
+**交付物**：
+- `docs/archive/legacy-skills/spec-writer/SKILL.md`
+- `docs/archive/legacy-skills/architect-auditor/SKILL.md`
+- `docs/archive/legacy-skills/task-executor/SKILL.md`
+- `docs/archive/legacy-skills/README.md`
+- `specs/010-3-skill-migration/`
 
 ## Decision Log
 
 | 日期 | 决策 | 理由 | 状态 |
 |------|------|------|------|
 | 2024-XX | 采用 6-role 模型 | 更清晰的职责边界，便于专业化 | 已实施 |
-| 2026-03 | 启动 002-role-model-alignment | 治理层与技术骨架不一致，需要对齐 | 进行中 |
-| 2026-03 | 先语义对齐，后物理重构 | 最小侵入，避免破坏现有流程 | 已决定 |
-| Future | 物理重构 skills 目录 | 待 6-role 成熟后再执行 | 待定 |
+| 2026-03 | 启动 002-role-model-alignment | 治理层与技术骨架不一致，需要对齐 | ✅ 已完成 |
+| 2026-03 | 先语义对齐，后物理重构 | 最小侵入，避免破坏现有流程 | ✅ 已执行 |
+| 2026-03-28 | 归档 3-skill 到 docs/archive | 保留历史可追溯，不删除 | ✅ 已完成 |
 
 ## References
 

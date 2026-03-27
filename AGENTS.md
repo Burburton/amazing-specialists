@@ -44,17 +44,14 @@ Priority order for feature work:
 
 当提及角色、actor、执行者时，**优先使用 6-role 术语**。
 
-### 3-Skill 过渡骨架定位
+### 3-Skill 过渡骨架已归档
 
-`.opencode/skills/` 中的 **3-skill 是 legacy transition/bootstrap 兼容层**：
-- `spec-writer` - legacy，将迁移到 architect（前置规格化）+ docs（文档规范）
-- `architect-auditor` - legacy，将迁移到 architect + reviewer
-- `task-executor` - legacy，将迁移到 developer/tester/docs/security
+早期 **3-skill 过渡骨架**已归档到 `docs/archive/legacy-skills/`（2026-03-28）：
+- `spec-writer` → architect + docs 角色协作
+- `architect-auditor` → architect + reviewer 角色分工
+- `task-executor` → developer + tester + docs + security 角色分工
 
-**使用 3-skill 时必须标注**：
-1. 在文档中标记为 "(transition)"、"(legacy)" 或 "(bootstrap)"
-2. 在 comments 中注明 "legacy compatibility"
-3. 优先调用 6-role skills（如果已存在）
+> **注意**: 3-skill 已归档，不应在新开发中使用。使用 6-role skills 替代。详见 `specs/010-3-skill-migration/`。
 
 ### Feature 命名规范
 
@@ -78,9 +75,8 @@ Priority order for feature work:
 ### 参考文档
 
 - `role-definition.md` - 6-role 详细定义
-- `package-spec.md` - 正式模型与过渡骨架说明
-- `docs/architecture/role-model-evolution.md` - 演进策略
-- `docs/infra/migration/skill-to-role-migration.md` - 详细映射说明
+- `package-spec.md` - 正式模型与角色说明
+- `docs/archive/legacy-skills/README.md` - 3-skill 归档说明
 
 ## Package Rules
 - Do not change role boundaries silently.

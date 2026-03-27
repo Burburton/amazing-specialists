@@ -82,7 +82,7 @@ The `007-docs-core` feature has been successfully implemented, establishing the 
 | io-contract.md | ✅ Updated | Added docs_sync_report, changelog_entry artifact types with field definitions |
 | quality-gate.md | ✅ Updated | Section 3.5 docs Gate enhanced with 007-docs-core validation references |
 | README.md | ✅ Updated | Docs skills marked as complete, skills directory updated |
-| tasks.md | ✅ Updated | All 35 tasks tracked |
+| tasks.md | ✅ Updated | All 38 tasks tracked |
 
 ---
 

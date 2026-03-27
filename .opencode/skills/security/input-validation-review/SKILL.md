@@ -190,7 +190,7 @@ input_validation_review:
         
   validation_findings:
     - id: string
-      severity: critical | high | medium | low
+      severity: critical | high | medium | low | info
       category: sql_injection | xss | command_injection | path_traversal | 
                 nosql_injection | ldap_injection | deserialization | 
                 missing_validation | insufficient_validation
@@ -232,7 +232,7 @@ input_validation_review:
     overall_risk: critical | high | medium | low
     
   gate_decision:
-    decision: pass | conditional_pass | fail
+    decision: pass | needs-fix | block
     conditions: string[]
     
   recommendations:
@@ -332,7 +332,7 @@ input_validation_review:
     overall_risk: critical
     
   gate_decision:
-    decision: fail
+    decision: block
     conditions:
       - "必须修复 VAL-001（SQL 注入）"
       - "建议为所有输入添加验证"
@@ -467,3 +467,85 @@ input_validation_review:
 3. 参数化所有查询
 4. 输出时编码
 5. 最小权限原则
+
+## Anti-Patterns (BR-001, BR-002, BR-003, BR-004)
+
+### AP-001: Vague Security Warning (模糊安全警告)
+**Definition**: 泛泛的"验证输入"建议，没有具体输入点或漏洞类型。
+**Example**: "Validate all inputs properly."
+**Prevention**: 要求指定具体 input source、parameter、vulnerability type。
+**BR Violation**: BR-001 (Security Must Be Actionable)
+
+### AP-002: Missing Severity (缺少严重性分类)
+**Definition**: 发现没有严重性分类。
+**Example**: "There's a validation issue."
+**Prevention**: 要求所有 findings 必须有 severity 字段。
+**BR Violation**: BR-004 (Severity Classification)
+
+### AP-003: False Positive Without Evidence (无证据的误报)
+**Definition**: 声称漏洞但没有展示 vulnerable code。
+**Example**: "This might have SQL injection" 不提供查询代码。
+**Prevention**: 要求提供 vulnerable_code.snippet 展示漏洞。
+**BR Violation**: BR-002 (Evidence-Based Findings)
+
+### AP-004: No Remediation (无修复建议)
+**Definition**: 发现没有如何修复的指导或安全代码示例。
+**Example**: "This input is not validated."
+**Prevention**: 要求 remediation 字段包含 secure_code_example。
+**BR Violation**: BR-001 (Security Must Be Actionable)
+
+### AP-005: Security Scope Creep (安全范围蔓延)
+**Definition**: 实现非 MVP 安全技能。
+**Example**: 在 008 中实现 dependency-risk-review。
+**Prevention**: 明确范围边界，MVP 仅包含 auth-and-permission-review 和 input-validation-review。
+**BR Violation**: BR-005 (MVP Boundary Discipline)
+
+### AP-006: Gate Decision Omission (缺少 Gate 决策)
+**Definition**: 输入验证报告没有 pass/needs-fix/block 决策。
+**Example**: 报告结束没有 gate_decision。
+**Prevention**: 要求 gate_decision 字段必须存在。
+**BR Violation**: BR-003 (Gate Decision Required)
+
+## Role Boundaries
+
+### Security Does NOT (BR-006)
+- **修改实现代码**: Security 只提供发现，不修改代码
+- **声明功能验收**: 接受决策是 reviewer 角色的职责
+- **审查非安全方面**: 代码风格、架构决策是 reviewer 的职责
+
+### Parallel Execution with Reviewer (BR-007)
+- Security 与 reviewer 并行执行高风险任务
+- Security gate decision 告知 reviewer，但不替代 reviewer 的接受决策
+- Security block 通常导致 reviewer reject，直到安全问题解决
+
+### Escalation Rules
+当以下情况必须升级：
+- **SQL/Command Injection 发现**: 立即阻止，通知 developer
+- **Multiple injection vulnerabilities**: 可能系统性问题
+- **Third-party library vulnerability**: 需要 management 决策
+- **Fix requires architecture change**: 需要 architect 决策
+
+## Input/Output Specifications
+
+### Required Inputs
+| Input | Source | Purpose |
+|-------|--------|---------|
+| `changed_files` | developer | 确定审查范围 |
+| `implementation-summary` | developer | 理解实现意图 |
+| `task-risk-level` | feature context | 判断审查必要性 |
+
+### Output Artifact
+| Artifact | Contract | Purpose |
+|----------|----------|---------|
+| `input-validation-review-report` | `specs/008-security-core/contracts/input-validation-review-report-contract.md` | 输入验证发现报告 |
+
+## Failure Modes
+
+### Common Failure Modes
+| Failure Mode | Detection | Prevention |
+|--------------|-----------|------------|
+| **Missing input source** | No input trace | Require input.source |
+| **Generic validation advice** | No specific fix | Require secure_code_example |
+| **No data flow trace** | Missing flow | Trace input to sink |
+| **No gate decision** | Missing decision | Mandatory gate_decision |
+| **Injection not demonstrated** | No exploit payload | Require exploit_scenario |

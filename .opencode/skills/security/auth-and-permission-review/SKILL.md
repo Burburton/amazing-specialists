@@ -90,16 +90,16 @@
 
 ## Common Vulnerabilities
 
-| 漏洞 | 描述 | 检测方法 | 修复建议 |
-|------|------|----------|----------|
-| **弱密码哈希** | 使用 MD5/SHA1 | 检查哈希算法 | 改用 bcrypt/argon2 |
-| **硬编码密钥** | Secret 在代码中 | 搜索密钥字符串 | 使用环境变量 |
-| **JWT 无验证** | 不验证签名 | 检查 JWT 验证逻辑 | 始终验证签名 |
-| **Token 泄露** | Token 在日志/URL | 搜索 token 关键字 | 避免记录/传输 |
-| **会话固定** | Session ID 可预测 | 检查 ID 生成 | 使用随机 ID |
-| **权限绕过** | 缺少权限检查 | 检查敏感操作 | 添加权限校验 |
-| **IDOR** | 越权访问资源 | 测试资源访问 | 验证所有权 |
-| **CSRF** | 跨站请求伪造 | 检查 CSRF 防护 | 添加 CSRF Token |
+| 漏洞 | 描述 | CWE | OWASP | 检测方法 | 修复建议 |
+|------|------|-----|-------|----------|----------|
+| **弱密码哈希** | 使用 MD5/SHA1 | CWE-916 | A02:2021 Crypto Failures | 检查哈希算法 | 改用 bcrypt/argon2 |
+| **硬编码密钥** | Secret 在代码中 | CWE-798 | A07:2021 Auth Failures | 搜索密钥字符串 | 使用环境变量 |
+| **JWT 无验证** | 不验证签名 | CWE-287 | A07:2021 Auth Failures | 检查 JWT 验证逻辑 | 始终验证签名 |
+| **会话固定** | Session ID 可预测 | CWE-384 | A07:2021 Auth Failures | 检查 ID 生成 | 使用随机 ID |
+| **权限绕过** | 缺少权限检查 | CWE-862 | A01:2021 Access Control | 检查敏感操作 | 添加权限校验 |
+| **IDOR** | 越权访问资源 | CWE-639 | A01:2021 Access Control | 测试资源访问 | 验证所有权 |
+| **CSRF** | 跨站请求伪造 | CWE-352 | A01:2021 Access Control | 检查 CSRF 防护 | 添加 CSRF Token |
+| **Token 泄露** | Token 在日志/URL | CWE-598 | A07:2021 Auth Failures | 搜索 token 关键字 | 避免记录/传输 |
 
 ## Steps
 
@@ -189,7 +189,7 @@ security_review_report:
     consider: string[]
     
   gate_decision:
-    decision: pass | conditional_pass | fail
+    decision: pass | needs-fix | block
     conditions: string[]
     
   follow_up:
@@ -300,7 +300,7 @@ security_review_report:
     overall_risk: critical
     
   gate_decision:
-    decision: fail
+    decision: block
     conditions:
       - "必须修复 SEC-001（硬编码密钥）"
       - "必须修复 SEC-002（权限检查）"
@@ -392,6 +392,88 @@ security_review_report:
 - 工具无法检测的问题
 
 ### Gate 标准
-- **Pass**: 无严重/高危问题
-- **Conditional Pass**: 有低危问题需跟踪
-- **Fail**: 有严重/高危问题必须修复
+- **pass**: 无严重/高危问题
+- **needs-fix**: 有中低危问题需跟踪修复
+- **block**: 有严重/高危问题必须修复
+
+## Anti-Patterns (BR-001, BR-002, BR-003, BR-004)
+
+### AP-001: Vague Security Warning (模糊安全警告)
+**Definition**: 安全发现没有具体位置、理由或修复建议。
+**Example**: "This code may be insecure."
+**Prevention**: 要求每个 finding 包含 location、severity、rationale、remediation。
+**BR Violation**: BR-001 (Security Must Be Actionable)
+
+### AP-002: Missing Severity (缺少严重性分类)
+**Definition**: 发现没有严重性分类。
+**Example**: "There's an issue with the authentication flow."
+**Prevention**: 要求所有 findings 必须有 severity 字段。
+**BR Violation**: BR-004 (Severity Classification)
+
+### AP-003: False Positive Without Evidence (无证据的误报)
+**Definition**: 在没有代码证据的情况下声称漏洞。
+**Example**: "This might have injection" 当所有查询都是参数化的。
+**Prevention**: 要求提供 vulnerable code snippet 展示漏洞。
+**BR Violation**: BR-002 (Evidence-Based Findings)
+
+### AP-004: No Remediation (无修复建议)
+**Definition**: 发现没有如何修复的指导。
+**Example**: "This endpoint lacks authorization."
+**Prevention**: 要求 remediation 字段包含 code example。
+**BR Violation**: BR-001 (Security Must Be Actionable)
+
+### AP-005: Security Scope Creep (安全范围蔓延)
+**Definition**: 实现非 MVP 安全技能。
+**Example**: 在 008 中实现 secret-handling-review。
+**Prevention**: 明确范围边界，MVP 仅包含 auth-and-permission-review 和 input-validation-review。
+**BR Violation**: BR-005 (MVP Boundary Discipline)
+
+### AP-006: Gate Decision Omission (缺少 Gate 决策)
+**Definition**: 安全报告没有 pass/needs-fix/block 决策。
+**Example**: 发现报告结束但没有结论。
+**Prevention**: 要求 gate_decision 字段必须存在。
+**BR Violation**: BR-003 (Gate Decision Required)
+
+## Role Boundaries
+
+### Security Does NOT (BR-006)
+- **修改实现代码**: Security 只提供发现，不修改代码
+- **声明功能验收**: 接受决策是 reviewer 角色的职责
+- **审查非安全方面**: 代码风格、架构决策是 reviewer 的职责
+
+### Parallel Execution with Reviewer (BR-007)
+- Security 与 reviewer 并行执行高风险任务
+- Security gate decision 告知 reviewer，但不替代 reviewer 的接受决策
+- Security block 通常导致 reviewer reject，直到安全问题解决
+
+### Escalation Rules
+当以下情况必须升级：
+- **Critical 漏洞发现**: 立即通知 developer 和 reviewer
+- **多个高危发现**: 可能表明系统性问题
+- **修复需要设计变更**: 需要 architect 决策
+- **第三方依赖漏洞**: 需要 management 决策
+
+## Input/Output Specifications
+
+### Required Inputs
+| Input | Source | Purpose |
+|-------|--------|---------|
+| `changed_files` | developer | 确定审查范围 |
+| `implementation-summary` | developer | 理解实现意图 |
+| `task-risk-level` | feature context | 判断审查必要性 |
+
+### Output Artifact
+| Artifact | Contract | Purpose |
+|----------|----------|---------|
+| `security-review-report` | `specs/008-security-core/contracts/security-review-report-contract.md` | 认证授权发现报告 |
+
+## Failure Modes
+
+### Common Failure Modes
+| Failure Mode | Detection | Prevention |
+|--------------|-----------|------------|
+| **Vague finding** | No specific location/remediation | Require finding structure |
+| **Missing severity** | No severity field | Mandatory classification |
+| **No code evidence** | No vulnerable snippet | Require code snippet |
+| **No remediation** | Finding without fix | Mandatory remediation |
+| **No gate decision** | Missing decision | Mandatory gate_decision |

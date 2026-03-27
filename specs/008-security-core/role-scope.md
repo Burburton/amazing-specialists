@@ -3,7 +3,7 @@
 ## Document Status
 - **Feature ID**: `008-security-core`
 - **Version**: 1.0.0
-- **Status**: Draft
+- **Status**: Complete
 - **Created**: 2026-03-27
 - **Aligned With**: `role-definition.md` Section 6
 

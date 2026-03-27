@@ -122,6 +122,8 @@ User Input
   -> 用户验收
 ```
 
+> **注**: security 角色在高风险任务（认证、支付、敏感数据）中触发。标准流程可在 reviewer 后追加 security 检查。
+
 ## Recommended Workflow
 
 ### 阶段 1：治理层初始化 ✅ 已完成

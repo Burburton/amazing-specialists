@@ -65,7 +65,7 @@ Feature `010-3-skill-migration` 完成了 **Phase 3: Physical Restructuring**，
 |-------|-----------|--------|----------|
 | AC-001 | 3-skill 目录已归档 | ✅ Pass | 3 个 SKILL.md 在 docs/archive/legacy-skills/ |
 | AC-002 | 归档说明已创建 | ✅ Pass | docs/archive/legacy-skills/README.md 存在 |
-| AC-003 | README.md 已更新 | ✅ Pass | 移除 3-skill 描述，添加阶段 7 |
+| AC-003 | README.md 已更新 | ✅ Pass | 更新 3-skill 为已归档说明，添加阶段 7 |
 | AC-004 | 迁移文档已更新 | ✅ Pass | Phase 3 标记完成 |
 | AC-005 | Skills 目录结构已更新 | ✅ Pass | .opencode/skills/ 不再包含 3-skill |
 | AC-006 | 6-role skills 未受影响 | ✅ Pass | 6-role 目录保持不变 |
@@ -119,7 +119,7 @@ Feature `010-3-skill-migration` 完成了 **Phase 3: Physical Restructuring**，
 
 | 文件 | 变更说明 |
 |------|----------|
-| `README.md` | 移除 3-skill 描述，添加阶段 7 |
+| `README.md` | 更新 3-skill 描述为已归档说明，添加阶段 7 |
 | `docs/architecture/role-model-evolution.md` | Phase 3 标记完成 |
 | `docs/infra/migration/skill-to-role-migration.md` | 添加迁移完成说明 |
 | `AGENTS.md` | 更新 3-skill 章节为归档说明 |

@@ -288,7 +288,7 @@ This document breaks down the 008-security-core implementation into small, execu
   - [ ] Checklist executable
   - [ ] Pass/fail criteria clear
 
-- **Status**: ⏳ PENDING
+- **Status**: ✅ COMPLETE
 
 ### Task 4.4: Create Anti-Pattern Guidance Document
 - **Task ID**: T4.4
@@ -396,7 +396,7 @@ This document breaks down the 008-security-core implementation into small, execu
   - [ ] BR violation mapping documented
   - [ ] Remediation steps actionable
 
-- **Status**: ⏳ DEFERRED (Anti-patterns covered in validation/anti-pattern-guidance.md)
+- **Status**: ✅ COMPLETE
 
 ### Task 5.4: Create Anti-Examples for input-validation-review
 - **Task ID**: T5.4
@@ -417,48 +417,6 @@ This document breaks down the 008-security-core implementation into small, execu
   - [ ] Anti-examples clearly illustrate failure modes
   - [ ] BR violation mapping documented
   - [ ] Remediation steps actionable
-
-- **Status**: ⏳ DEFERRED (Anti-patterns covered in validation/anti-pattern-guidance.md)
-
-### Task 5.5: Create Templates for auth-and-permission-review [P]
-- **Task ID**: T5.5
-- **Title**: Build reusable template for auth-and-permission-review
-- **Purpose**: Provide ready-to-use template that works across features
-- **Related Requirements**: AC-003
-- **Files to Modify**:
-  - `.opencode/skills/security/auth-and-permission-review/templates/security-review-report-template.md` (new)
-- **Expected Outputs**:
-  - Reusable template document with:
-    - Standard report structure
-    - Field placeholders
-    - Severity classification guide
-    - CWE/OWASP reference quick reference
-- **Dependency / Ordering Notes**: Depends on T3.1, T2.1 (skill and contract)
-- **Acceptance Checks**:
-  - [ ] Template usable without modification
-  - [ ] Field placeholders clear
-  - [ ] Integrates with contract
-
-- **Status**: ✅ COMPLETE
-
-### Task 5.6: Create Templates for input-validation-review [P]
-- **Task ID**: T5.6
-- **Title**: Build reusable template for input-validation-review
-- **Purpose**: Provide ready-to-use template that works across features
-- **Related Requirements**: AC-003
-- **Files to Modify**:
-  - `.opencode/skills/security/input-validation-review/templates/input-validation-review-report-template.md` (new)
-- **Expected Outputs**:
-  - Reusable template document with:
-    - Standard report structure
-    - Field placeholders
-    - Input trace format
-    - CWE/OWASP reference quick reference
-- **Dependency / Ordering Notes**: Depends on T3.2, T2.2 (skill and contract)
-- **Acceptance Checks**:
-  - [ ] Template usable without modification
-  - [ ] Field placeholders clear
-  - [ ] Integrates with contract
 
 - **Status**: ✅ COMPLETE
 

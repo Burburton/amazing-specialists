@@ -1,7 +1,7 @@
 ---
 enhanced: true
 feature_id: 014-enhanced-mode-validation
-status: draft
+status: complete
 created: 2026-03-28
 ---
 

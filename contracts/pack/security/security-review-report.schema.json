@@ -1,0 +1,160 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "contracts/pack/security/security-review-report.schema.json",
+  "title": "Security Review Report Contract",
+  "description": "Security review report with vulnerability findings, CWE/OWASP references, and gate decision",
+  "type": "object",
+  "properties": {
+    "dispatch_id": { "type": "string" },
+    "task_id": { "type": "string" },
+    "created_at": { "type": "string", "format": "date-time" },
+    "created_by": { "type": "string" },
+    "scope": {
+      "type": "object",
+      "properties": {
+        "components_reviewed": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "properties": {
+              "path": { "type": "string" },
+              "type": { "type": "string", "enum": ["authentication", "authorization", "session", "transport", "logging"] },
+              "description": { "type": "string" }
+            },
+            "required": ["path", "type", "description"]
+          }
+        },
+        "auth_mechanisms": { "type": "array", "items": { "type": "string" } },
+        "permission_systems": { "type": "array", "items": { "type": "string" } },
+        "review_type": { "type": "string", "enum": ["full", "focused", "re-review"] }
+      },
+      "required": ["components_reviewed", "auth_mechanisms", "permission_systems", "review_type"]
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "pattern": "^SEC-\\d+$" },
+          "severity": { "type": "string", "enum": ["critical", "high", "medium", "low", "info"] },
+          "category": { "type": "string", "enum": ["authentication", "authorization", "session", "transport", "logging"] },
+          "title": { "type": "string" },
+          "description": { "type": "string" },
+          "location": {
+            "type": "object",
+            "properties": {
+              "file": { "type": "string" },
+              "line_start": { "type": "integer" },
+              "line_end": { "type": "integer" }
+            },
+            "required": ["file", "line_start"]
+          },
+          "vulnerability": {
+            "type": "object",
+            "properties": {
+              "type": { "type": "string" },
+              "cwe": { "type": "string" },
+              "owasp": { "type": "string" }
+            },
+            "required": ["type", "cwe", "owasp"]
+          },
+          "code_snippet": { "type": "string" },
+          "impact": {
+            "type": "object",
+            "properties": {
+              "description": { "type": "string" },
+              "exploit_scenario": { "type": "string" },
+              "affected_users": { "type": "string" }
+            },
+            "required": ["description", "exploit_scenario", "affected_users"]
+          },
+          "remediation": {
+            "type": "object",
+            "properties": {
+              "recommendation": { "type": "string" },
+              "code_example": { "type": "string" },
+              "effort": { "type": "string", "enum": ["quick", "moderate", "extensive"] },
+              "priority": { "type": "string", "enum": ["immediate", "soon", "later"] }
+            },
+            "required": ["recommendation", "effort", "priority"]
+          }
+        },
+        "required": ["id", "severity", "category", "title", "description", "location", "vulnerability", "code_snippet", "impact", "remediation"]
+      }
+    },
+    "risk_assessment": {
+      "type": "object",
+      "properties": {
+        "overall_risk": { "type": "string", "enum": ["critical", "high", "medium", "low"] },
+        "risk_factors": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "factor": { "type": "string" },
+              "level": { "type": "string", "enum": ["high", "medium", "low"] }
+            },
+            "required": ["factor", "level"]
+          }
+        },
+        "residual_risk": { "type": "string" }
+      },
+      "required": ["overall_risk", "risk_factors", "residual_risk"]
+    },
+    "gate_decision": {
+      "type": "object",
+      "properties": {
+        "decision": { "type": "string", "enum": ["pass", "needs-fix", "block"] },
+        "conditions": { "type": "array", "items": { "type": "string" } },
+        "blocking_findings": { "type": "array", "items": { "type": "string" } }
+      },
+      "required": ["decision", "conditions", "blocking_findings"]
+    },
+    "recommendations": {
+      "type": "object",
+      "properties": {
+        "must_fix": { "type": "array", "items": { "type": "string" } },
+        "should_fix": { "type": "array", "items": { "type": "string" } },
+        "consider": { "type": "array", "items": { "type": "string" } }
+      },
+      "required": ["must_fix", "should_fix", "consider"]
+    },
+    "follow_up": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "item": { "type": "string" },
+          "owner": { "type": "string" },
+          "due_date": { "type": "string" }
+        },
+        "required": ["item", "owner", "due_date"]
+      }
+    },
+    "notes": { "type": ["string", "null"] },
+    "compliance": {
+      "type": "object",
+      "properties": {
+        "standards": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "compliant": { "type": "boolean" },
+              "notes": { "type": "string" }
+            },
+            "required": ["name", "compliant", "notes"]
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "dispatch_id", "task_id", "created_at", "created_by",
+    "scope", "findings", "risk_assessment", "gate_decision",
+    "recommendations"
+  ],
+  "additionalProperties": false
+}

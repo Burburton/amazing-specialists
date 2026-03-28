@@ -875,6 +875,50 @@ $ feature-implementation
 
 ---
 
+## Contract Schema Discovery
+
+所有 Artifact Contract 都有机器可读 JSON Schema 定义，可用于自动化验证：
+
+### Schema Pack 位置
+
+```
+contracts/pack/
+├── registry.json              # 统一契约注册表
+├── validate-schema.js         # 验证工具
+├── architect/                 # 4 个 architect 契约 schema
+├── developer/                 # 3 个 developer 契约 schema
+├── tester/                    # 3 个 tester 契约 schema
+├── reviewer/                  # 3 个 reviewer 契约 schema
+├── docs/                      # 2 个 docs 契约 schema
+└── security/                  # 2 个 security 契约 schema
+```
+
+### Schema 发现使用
+
+```yaml
+# 查询契约元数据
+$ cat contracts/pack/registry.json
+
+# 验证 artifact
+$ node contracts/pack/validate-schema.js <artifact-path> <contract-id>
+
+# 示例：验证 design-note
+$ node contracts/pack/validate-schema.js artifacts/design-note.json AC-001
+```
+
+### Contract ID 参考
+
+| 契约类型 | Contract ID | Schema Path |
+|----------|-------------|-------------|
+| design-note | AC-001 | contracts/pack/architect/design-note.schema.json |
+| implementation-summary | DC-001 | contracts/pack/developer/implementation-summary.schema.json |
+| verification-report | TC-001 | contracts/pack/tester/verification-report.schema.json |
+| review-findings-report | RC-001 | contracts/pack/reviewer/review-findings-report.schema.json |
+| docs-sync-report | DOC-001 | contracts/pack/docs/docs-sync-report.schema.json |
+| security-review-report | SEC-001 | contracts/pack/security/security-review-report.schema.json |
+
+---
+
 ## 版本信息
 
 - **Version**: 1.0.0

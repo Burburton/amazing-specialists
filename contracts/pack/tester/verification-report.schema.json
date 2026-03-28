@@ -1,0 +1,249 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "contracts/pack/tester/verification-report.schema.json",
+  "title": "Verification Report Contract",
+  "description": "Tester-produced report recording tests run, pass/fail summary, coverage gaps, and confidence level",
+  "type": "object",
+  "properties": {
+    "dispatch_id": { "type": "string" },
+    "task_id": { "type": "string" },
+    "created_at": { "type": "string", "format": "date-time" },
+    "created_by": { "type": "string" },
+    "test_scope_reference": {
+      "type": "object",
+      "properties": {
+        "report_path": { "type": "string" },
+        "scope_version": { "type": "string" },
+        "scope_summary": { "type": "string" }
+      },
+      "required": ["report_path", "scope_version", "scope_summary"]
+    },
+    "tests_added_or_run": {
+      "type": "object",
+      "properties": {
+        "new_tests": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "test_id": { "type": "string" },
+              "file_path": { "type": "string" },
+              "test_name": { "type": "string" },
+              "test_type": { "type": "string", "enum": ["unit", "integration", "e2e", "manual"] },
+              "category": { "type": "string", "enum": ["happy_path", "error_path", "boundary", "regression"] },
+              "description": { "type": "string" }
+            },
+            "required": ["test_id", "file_path", "test_name", "test_type", "category", "description"]
+          }
+        },
+        "modified_tests": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "test_id": { "type": "string" },
+              "file_path": { "type": "string" },
+              "modification": { "type": "string" }
+            },
+            "required": ["test_id", "file_path", "modification"]
+          }
+        },
+        "executed_tests": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "test_id": { "type": "string" },
+              "execution_time_ms": { "type": "integer" },
+              "result": { "type": "string", "enum": ["pass", "fail", "skip", "blocked"] }
+            },
+            "required": ["test_id", "execution_time_ms", "result"]
+          }
+        }
+      },
+      "required": ["new_tests", "modified_tests", "executed_tests"]
+    },
+    "execution_summary": {
+      "type": "object",
+      "properties": {
+        "total_tests": { "type": "integer" },
+        "passed": { "type": "integer" },
+        "failed": { "type": "integer" },
+        "skipped": { "type": "integer" },
+        "blocked": { "type": "integer" },
+        "execution_environment": { "type": "string" },
+        "execution_timestamp": { "type": "string", "format": "date-time" },
+        "test_framework": { "type": "string" },
+        "duration_seconds": { "type": "integer" }
+      },
+      "required": ["total_tests", "passed", "failed", "skipped", "blocked", "execution_environment", "execution_timestamp", "test_framework", "duration_seconds"]
+    },
+    "pass_cases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "test_id": { "type": "string" },
+          "description": { "type": "string" },
+          "evidence_summary": { "type": "string" },
+          "automated": { "type": "boolean" }
+        },
+        "required": ["test_id", "description", "evidence_summary", "automated"]
+      }
+    },
+    "failed_cases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "test_id": { "type": "string" },
+          "description": { "type": "string" },
+          "failure_message": { "type": "string" },
+          "failure_type": { "type": "string", "enum": ["assertion", "exception", "timeout", "environment"] },
+          "reproduction_steps": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        },
+        "required": ["test_id", "description", "failure_message", "failure_type", "reproduction_steps"]
+      }
+    },
+    "failure_classification": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "test_id": { "type": "string" },
+          "classification": { "type": "string", "enum": ["implementation", "test", "environment", "design", "dependency"] },
+          "rationale": { "type": "string" },
+          "severity": { "type": "string", "enum": ["critical", "major", "minor"] },
+          "suggested_owner": { "type": "string" },
+          "recommended_action": { "type": "string" }
+        },
+        "required": ["test_id", "classification", "rationale", "severity", "suggested_owner", "recommended_action"]
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "properties": {
+        "automated_evidence": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": { "type": "string", "enum": ["log", "screenshot", "diff", "coverage_report", "assertion_output"] },
+              "source": { "type": "string" },
+              "description": { "type": "string" }
+            },
+            "required": ["type", "source", "description"]
+          }
+        },
+        "manual_evidence": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": { "type": "string", "enum": ["observation", "interview", "document_review"] },
+              "description": { "type": "string" },
+              "observer": { "type": "string" },
+              "timestamp": { "type": "string", "format": "date-time" }
+            },
+            "required": ["type", "description", "observer", "timestamp"]
+          }
+        },
+        "coverage_report": {
+          "type": "object",
+          "properties": {
+            "statement_coverage": { "type": "number" },
+            "branch_coverage": { "type": "number" },
+            "function_coverage": { "type": "number" },
+            "report_path": { "type": ["string", "null"] }
+          },
+          "required": ["statement_coverage", "branch_coverage", "function_coverage", "report_path"]
+        }
+      },
+      "required": ["automated_evidence", "manual_evidence", "coverage_report"]
+    },
+    "coverage_gaps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "gap_id": { "type": "string" },
+          "description": { "type": "string" },
+          "affected_component": { "type": "string" },
+          "reason_uncovered": { "type": "string" },
+          "risk_assessment": { "type": "string" },
+          "priority_to_address": { "type": "string", "enum": ["high", "medium", "low"] }
+        },
+        "required": ["gap_id", "description", "affected_component", "reason_uncovered", "risk_assessment", "priority_to_address"]
+      }
+    },
+    "edge_cases_checked": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "edge_id": { "type": "string" },
+          "description": { "type": "string" },
+          "category": { "type": "string", "enum": ["boundary", "invalid_input", "race_condition", "resource_limit"] },
+          "test_result": { "type": "string", "enum": ["pass", "fail", "not_tested", "blocked"] },
+          "notes": { "type": ["string", "null"] }
+        },
+        "required": ["edge_id", "description", "category", "test_result"]
+      }
+    },
+    "blocked_items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "block_id": { "type": "string" },
+          "description": { "type": "string" },
+          "blocker_type": { "type": "string", "enum": ["environment", "spec_ambiguity", "dependency", "resource", "access"] },
+          "impact": { "type": "string" },
+          "workaround_available": { "type": "boolean" },
+          "workaround_description": { "type": ["string", "null"] }
+        },
+        "required": ["block_id", "description", "blocker_type", "impact", "workaround_available"]
+      }
+    },
+    "confidence_level": {
+      "type": "object",
+      "properties": {
+        "level": { "type": "string", "enum": ["FULL", "PARTIAL", "LOW"] },
+        "rationale": { "type": "string" },
+        "evidence_strength": { "type": "string" },
+        "assumptions_made": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "required": ["level", "rationale", "evidence_strength", "assumptions_made"]
+    },
+    "recommendation": {
+      "type": "string",
+      "enum": ["PASS_TO_REVIEW", "REWORK", "RETEST", "ESCALATE"]
+    },
+    "notes": { "type": ["string", "null"] },
+    "attachments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "path": { "type": "string" },
+          "description": { "type": "string" }
+        }
+      }
+    }
+  },
+  "required": [
+    "dispatch_id", "task_id", "created_at", "created_by",
+    "test_scope_reference", "tests_added_or_run", "execution_summary",
+    "pass_cases", "failed_cases", "failure_classification", "evidence",
+    "coverage_gaps", "edge_cases_checked", "blocked_items",
+    "confidence_level", "recommendation"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "contracts/pack/developer/self-check-report.schema.json",
+  "title": "Self-Check Report Contract",
+  "description": "Developer self-validation report showing compliance with coding rules and implementation requirements",
+  "type": "object",
+  "properties": {
+    "dispatch_id": {
+      "type": "string",
+      "description": "Associated dispatch ID"
+    },
+    "task_id": {
+      "type": "string",
+      "description": "Task ID"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Check timestamp"
+    },
+    "created_by": {
+      "type": "string",
+      "description": "Creator"
+    },
+    "summary": {
+      "type": "object",
+      "description": "Check summary",
+      "properties": {
+        "total_checks": { "type": "integer" },
+        "passed": { "type": "integer" },
+        "failed": { "type": "integer" },
+        "blockers": { "type": "integer" },
+        "warnings": { "type": "integer" },
+        "skipped": { "type": "integer" }
+      },
+      "required": ["total_checks", "passed", "failed", "blockers", "warnings", "skipped"]
+    },
+    "check_results": {
+      "type": "array",
+      "description": "Check results by category",
+      "items": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "string",
+            "description": "Check category name"
+          },
+          "checks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "item": { "type": "string" },
+                "status": {
+                  "type": "string",
+                  "enum": ["pass", "fail", "na"]
+                },
+                "severity": {
+                  "type": "string",
+                  "enum": ["blocker", "warning", "info"]
+                },
+                "description": { "type": "string" },
+                "evidence": { "type": ["string", "null"] },
+                "fix_required": { "type": "boolean" }
+              },
+              "required": ["item", "status", "severity", "description", "fix_required"]
+            }
+          }
+        },
+        "required": ["category", "checks"]
+      }
+    },
+    "blockers": {
+      "type": "array",
+      "description": "Must-fix issues",
+      "items": {
+        "type": "object",
+        "properties": {
+          "blocker_id": { "type": "string" },
+          "category": { "type": "string" },
+          "description": { "type": "string" },
+          "location": { "type": ["string", "null"] },
+          "fix_suggestion": { "type": "string" },
+          "fixed": { "type": "boolean" },
+          "fix_description": { "type": ["string", "null"] }
+        },
+        "required": ["blocker_id", "category", "description", "fix_suggestion", "fixed"]
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "description": "Should-fix issues",
+      "items": {
+        "type": "object",
+        "properties": {
+          "warning_id": { "type": "string" },
+          "category": { "type": "string" },
+          "description": { "type": "string" },
+          "recommendation": { "type": "string" }
+        },
+        "required": ["warning_id", "category", "description", "recommendation"]
+      }
+    },
+    "overall_status": {
+      "type": "string",
+      "enum": ["PASS", "FAIL_WITH_BLOCKERS", "PASS_WITH_WARNINGS"],
+      "description": "Overall status"
+    },
+    "recommendation": {
+      "type": "string",
+      "enum": ["PROCEED", "FIX_BLOCKERS", "ESCALATE"],
+      "description": "Recommended action"
+    },
+    "notes": {
+      "type": ["string", "null"]
+    },
+    "time_spent_minutes": {
+      "type": "integer"
+    },
+    "automated_checks_count": {
+      "type": "integer"
+    },
+    "manual_checks_count": {
+      "type": "integer"
+    }
+  },
+  "required": [
+    "dispatch_id",
+    "task_id",
+    "timestamp",
+    "created_by",
+    "summary",
+    "check_results",
+    "blockers",
+    "warnings",
+    "overall_status",
+    "recommendation"
+  ],
+  "additionalProperties": false
+}

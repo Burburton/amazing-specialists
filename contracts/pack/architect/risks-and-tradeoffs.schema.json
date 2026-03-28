@@ -1,0 +1,139 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "contracts/pack/architect/risks-and-tradeoffs.schema.json",
+  "title": "Risks and Tradeoffs Contract",
+  "description": "Document capturing design decision trade-offs, risks, and revisit conditions",
+  "type": "object",
+  "properties": {
+    "decision_point": {
+      "type": "string",
+      "description": "The specific design decision being analyzed",
+      "minLength": 10
+    },
+    "alternatives_considered": {
+      "type": "array",
+      "description": "Alternative approaches evaluated",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Short identifier for the alternative"
+          },
+          "description": {
+            "type": "string",
+            "description": "Brief explanation of the approach"
+          },
+          "pros": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Advantages of this approach"
+          },
+          "cons": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Disadvantages of this approach"
+          }
+        },
+        "required": ["name", "description", "pros", "cons"]
+      }
+    },
+    "selected_approach": {
+      "type": "string",
+      "description": "The approach that was chosen",
+      "minLength": 10
+    },
+    "rejected_approaches": {
+      "type": "array",
+      "description": "Why each rejected alternative was not selected",
+      "items": {
+        "type": "object",
+        "properties": {
+          "approach": {
+            "type": "string",
+            "description": "Name of the rejected approach"
+          },
+          "rejection_reason": {
+            "type": "string",
+            "description": "Primary reason for rejection"
+          },
+          "showstoppers": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Critical blocking issues"
+          },
+          "tradeoff_cost": {
+            "type": "string",
+            "description": "What is sacrificed by not choosing this approach"
+          }
+        },
+        "required": ["approach", "rejection_reason", "tradeoff_cost"]
+      }
+    },
+    "tradeoff_rationale": {
+      "type": "string",
+      "description": "Comprehensive explanation of the reasoning behind the selection",
+      "minLength": 100
+    },
+    "risks_introduced": {
+      "type": "array",
+      "description": "New risks created or amplified by this decision",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "properties": {
+          "risk_id": {
+            "type": "string",
+            "description": "Risk identifier"
+          },
+          "risk": {
+            "type": "string",
+            "description": "Description of the risk"
+          },
+          "severity": {
+            "type": "string",
+            "enum": ["Low", "Medium", "High", "Critical"],
+            "description": "Risk severity level"
+          },
+          "likelihood": {
+            "type": "string",
+            "enum": ["Unlikely", "Possible", "Likely", "Almost Certain"],
+            "description": "Risk likelihood"
+          },
+          "impact": {
+            "type": "string",
+            "description": "What happens if this risk materializes"
+          },
+          "mitigation_strategy": {
+            "type": "string",
+            "description": "How the risk will be addressed"
+          },
+          "mitigation_owner": {
+            "type": "string",
+            "description": "Role responsible for mitigation"
+          }
+        },
+        "required": ["risk_id", "risk", "severity", "likelihood", "impact", "mitigation_strategy", "mitigation_owner"]
+      }
+    },
+    "revisit_trigger": {
+      "type": "array",
+      "description": "Conditions that should trigger re-evaluation",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "decision_point",
+    "alternatives_considered",
+    "selected_approach",
+    "rejected_approaches",
+    "tradeoff_rationale",
+    "risks_introduced",
+    "revisit_trigger"
+  ],
+  "additionalProperties": false
+}

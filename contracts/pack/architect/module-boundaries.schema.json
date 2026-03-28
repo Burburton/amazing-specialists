@@ -1,0 +1,219 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "contracts/pack/architect/module-boundaries.schema.json",
+  "title": "Module Boundaries Contract",
+  "description": "Definition of module boundaries, ownership assignments, and interface contracts between modules",
+  "type": "object",
+  "properties": {
+    "module_list": {
+      "type": "array",
+      "description": "List of modules with names and descriptions",
+      "minItems": 2,
+      "maxItems": 15,
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier (e.g., MOD-001)"
+          },
+          "name": {
+            "type": "string",
+            "description": "Human-readable name"
+          },
+          "description": {
+            "type": "string",
+            "description": "One-sentence purpose"
+          },
+          "stability": {
+            "type": "string",
+            "enum": ["stable", "evolving", "experimental"],
+            "description": "Module stability level"
+          }
+        },
+        "required": ["id", "name", "description", "stability"]
+      }
+    },
+    "module_responsibilities": {
+      "type": "object",
+      "description": "Each module's responsibilities",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Responsibility ID"
+            },
+            "description": {
+              "type": "string",
+              "description": "What this module is responsible for"
+            },
+            "priority": {
+              "type": "string",
+              "enum": ["core", "secondary", "supporting"],
+              "description": "Responsibility priority"
+            },
+            "verification_hint": {
+              "type": "string",
+              "description": "Hint for tester on how to verify"
+            }
+          },
+          "required": ["id", "description", "priority"]
+        }
+      }
+    },
+    "inputs_outputs": {
+      "type": "object",
+      "description": "Input/output for each module",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "inputs": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": { "type": "string" },
+                "name": { "type": "string" },
+                "type": { "type": "string", "enum": ["data", "event", "command", "query"] },
+                "source_or_sink": { "type": "string" }
+              },
+              "required": ["id", "name", "type", "source_or_sink"]
+            }
+          },
+          "outputs": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": { "type": "string" },
+                "name": { "type": "string" },
+                "type": { "type": "string", "enum": ["data", "event", "command", "query"] },
+                "source_or_sink": { "type": "string" }
+              },
+              "required": ["id", "name", "type", "source_or_sink"]
+            }
+          }
+        },
+        "required": ["inputs", "outputs"]
+      }
+    },
+    "dependency_directions": {
+      "type": "object",
+      "description": "Directed dependency relationships",
+      "properties": {
+        "dependencies": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "from_module": { "type": "string" },
+              "to_module": { "type": "string" },
+              "type": { "type": "string", "enum": ["direct", "interface", "event", "configuration"] },
+              "strength": { "type": "string", "enum": ["strong", "weak"] },
+              "rationale": { "type": "string" }
+            },
+            "required": ["from_module", "to_module", "type", "strength", "rationale"]
+          }
+        },
+        "dependency_rules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "rule": { "type": "string" },
+              "enforced_by": { "type": "string" }
+            },
+            "required": ["rule", "enforced_by"]
+          }
+        }
+      },
+      "required": ["dependencies", "dependency_rules"]
+    },
+    "integration_seams": {
+      "type": "array",
+      "description": "Points where modules connect",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "modules_involved": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "seam_type": { "type": "string", "enum": ["api", "event", "data", "protocol", "lifecycle"] },
+          "description": { "type": "string" },
+          "risk_level": { "type": "string", "enum": ["low", "medium", "high"] },
+          "testing_hint": { "type": "string" }
+        },
+        "required": ["id", "name", "modules_involved", "seam_type", "description", "risk_level"]
+      }
+    },
+    "future_extension_boundary": {
+      "type": "object",
+      "description": "Extension rules and guidelines",
+      "properties": {
+        "extension_points": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "module_id": { "type": "string" },
+              "extension_type": { "type": "string", "enum": ["subclass", "plugin", "configuration", "event_handler"] },
+              "description": { "type": "string" },
+              "constraints": { "type": "string" }
+            },
+            "required": ["id", "module_id", "extension_type", "description"]
+          }
+        },
+        "stability_contract": {
+          "type": "object",
+          "properties": {
+            "stable_modules": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "evolving_modules": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "deprecation_policy": { "type": "string" }
+          },
+          "required": ["stable_modules", "evolving_modules", "deprecation_policy"]
+        }
+      },
+      "required": ["extension_points", "stability_contract"]
+    },
+    "explicit_non_responsibilities": {
+      "type": "object",
+      "description": "What each module does NOT do",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": { "type": "string" },
+            "description": { "type": "string" },
+            "rationale": { "type": "string" },
+            "may_belong_to": { "type": "string" }
+          },
+          "required": ["id", "description", "rationale"]
+        }
+      }
+    }
+  },
+  "required": [
+    "module_list",
+    "module_responsibilities",
+    "inputs_outputs",
+    "dependency_directions",
+    "integration_seams",
+    "future_extension_boundary",
+    "explicit_non_responsibilities"
+  ],
+  "additionalProperties": false
+}

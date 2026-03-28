@@ -1,0 +1,200 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "contracts/pack/architect/design-note.schema.json",
+  "title": "Design Note Contract",
+  "description": "Primary design baseline document produced by architect role, transforming feature specifications into structured technical designs",
+  "type": "object",
+  "properties": {
+    "background": {
+      "type": "string",
+      "description": "Context and motivation for the design (minimum 2 sentences)",
+      "minLength": 50
+    },
+    "feature_goal": {
+      "type": "string",
+      "description": "What this feature aims to achieve (single concise paragraph, testable/verifiable)",
+      "minLength": 30
+    },
+    "input_sources": {
+      "type": "array",
+      "description": "Where requirements come from",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string",
+            "description": "File path or document name"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["spec", "governance", "constraint", "context"],
+            "description": "Type of source document"
+          },
+          "mandatory": {
+            "type": "boolean",
+            "description": "Whether this source is required"
+          }
+        },
+        "required": ["source", "type", "mandatory"],
+        "additionalProperties": false
+      }
+    },
+    "requirement_to_design_mapping": {
+      "type": "array",
+      "description": "Explicit mapping of requirements to design decisions",
+      "items": {
+        "type": "object",
+        "properties": {
+          "requirement_id": {
+            "type": "string",
+            "description": "Requirement ID (e.g., BR-001, NFR-001)"
+          },
+          "requirement_text": {
+            "type": "string",
+            "description": "Brief summary of the requirement"
+          },
+          "design_decision": {
+            "type": "string",
+            "description": "How the design addresses this requirement"
+          },
+          "artifact_section": {
+            "type": "string",
+            "description": "Which section/field contains the implementation"
+          }
+        },
+        "required": ["requirement_id", "requirement_text", "design_decision", "artifact_section"],
+        "additionalProperties": false
+      }
+    },
+    "design_summary": {
+      "type": "string",
+      "description": "High-level design overview (5-10 sentences)",
+      "minLength": 100
+    },
+    "constraints": {
+      "type": "array",
+      "description": "Limitations and boundaries",
+      "items": {
+        "type": "object",
+        "properties": {
+          "constraint_id": {
+            "type": "string",
+            "description": "Constraint ID (e.g., C-001)"
+          },
+          "description": {
+            "type": "string",
+            "description": "What the constraint is"
+          },
+          "source": {
+            "type": "string",
+            "description": "Where this constraint comes from"
+          },
+          "impact": {
+            "type": "string",
+            "description": "How this affects the design"
+          }
+        },
+        "required": ["constraint_id", "description", "source", "impact"],
+        "additionalProperties": false
+      }
+    },
+    "non_goals": {
+      "type": "array",
+      "description": "Explicit out-of-scope items",
+      "items": {
+        "type": "object",
+        "properties": {
+          "item": {
+            "type": "string",
+            "description": "What is explicitly out of scope"
+          },
+          "rationale": {
+            "type": "string",
+            "description": "Why this is excluded"
+          },
+          "future_consideration": {
+            "type": "boolean",
+            "description": "Whether this might be added later"
+          }
+        },
+        "required": ["item", "rationale", "future_consideration"],
+        "additionalProperties": false
+      }
+    },
+    "assumptions": {
+      "type": "array",
+      "description": "Design assumptions made",
+      "items": {
+        "type": "object",
+        "properties": {
+          "assumption_id": {
+            "type": "string",
+            "description": "Assumption ID (e.g., A-001)"
+          },
+          "description": {
+            "type": "string",
+            "description": "What is being assumed"
+          },
+          "risk_if_wrong": {
+            "type": "string",
+            "description": "What happens if this assumption is incorrect"
+          },
+          "validation_method": {
+            "type": "string",
+            "description": "How to verify this assumption"
+          }
+        },
+        "required": ["assumption_id", "description", "risk_if_wrong", "validation_method"],
+        "additionalProperties": false
+      }
+    },
+    "open_questions": {
+      "type": "array",
+      "description": "Unresolved design questions",
+      "items": {
+        "type": "object",
+        "properties": {
+          "question_id": {
+            "type": "string",
+            "description": "Question ID (e.g., Q-001)"
+          },
+          "question": {
+            "type": "string",
+            "description": "The unresolved question"
+          },
+          "why_it_matters": {
+            "type": "string",
+            "description": "Impact on design/implementation"
+          },
+          "temporary_assumption": {
+            "type": "string",
+            "description": "Working assumption until resolved"
+          },
+          "impact_surface": {
+            "type": "string",
+            "description": "What parts of the system are affected"
+          },
+          "recommended_next_step": {
+            "type": "string",
+            "description": "How to resolve this question"
+          }
+        },
+        "required": ["question_id", "question", "why_it_matters", "temporary_assumption", "impact_surface", "recommended_next_step"],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "background",
+    "feature_goal",
+    "input_sources",
+    "requirement_to_design_mapping",
+    "design_summary",
+    "constraints",
+    "non_goals",
+    "assumptions",
+    "open_questions"
+  ],
+  "additionalProperties": false
+}

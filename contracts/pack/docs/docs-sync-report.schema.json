@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "contracts/pack/docs/docs-sync-report.schema.json",
+  "title": "Docs Sync Report Contract",
+  "description": "Documentation synchronization report recording changes made, evidence consumed, and downstream handoff recommendation",
+  "type": "object",
+  "properties": {
+    "dispatch_id": { "type": "string" },
+    "task_id": { "type": "string" },
+    "created_at": { "type": "string", "format": "date-time" },
+    "created_by": { "type": "string" },
+    "sync_target": {
+      "type": "object",
+      "properties": {
+        "feature_id": { "type": "string" },
+        "feature_name": { "type": "string" },
+        "sync_scope": { "type": "string", "enum": ["full", "partial", "status-only"] },
+        "sync_reason": { "type": "string" }
+      },
+      "required": ["feature_id", "feature_name", "sync_scope", "sync_reason"]
+    },
+    "consumed_artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "properties": {
+          "artifact_type": { "type": "string", "enum": ["implementation-summary", "completion-report", "acceptance-decision-record", "verification-report", "design-note", "open-questions"] },
+          "artifact_path": { "type": "string" },
+          "consumed_fully": { "type": "boolean" },
+          "key_fields_extracted": { "type": "array", "items": { "type": "string" } },
+          "gaps_found": { "type": "array", "items": { "type": "string" } }
+        },
+        "required": ["artifact_type", "artifact_path", "consumed_fully", "key_fields_extracted", "gaps_found"]
+      }
+    },
+    "touched_sections": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "properties": {
+          "document": { "type": "string" },
+          "section": { "type": "string" },
+          "change_type": { "type": "string", "enum": ["add", "update", "remove"] },
+          "change_description": { "type": "string" },
+          "lines_changed": { "type": "string" }
+        },
+        "required": ["document", "section", "change_type", "change_description", "lines_changed"]
+      }
+    },
+    "change_reasons": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "properties": {
+          "reason_id": { "type": "string" },
+          "section_affected": { "type": "string" },
+          "reason": { "type": "string" },
+          "evidence_source": { "type": "string" },
+          "is_minimal": { "type": "boolean" }
+        },
+        "required": ["reason_id", "section_affected", "reason", "evidence_source", "is_minimal"]
+      }
+    },
+    "consistency_checks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "properties": {
+          "check_id": { "type": "string" },
+          "check_name": { "type": "string" },
+          "documents_compared": { "type": "array", "items": { "type": "string" } },
+          "result": { "type": "string", "enum": ["ALIGNED", "MISALIGNED", "NOT_APPLICABLE"] },
+          "discrepancy": { "type": ["string", "null"] },
+          "resolution": { "type": ["string", "null"] }
+        },
+        "required": ["check_id", "check_name", "documents_compared", "result", "discrepancy", "resolution"]
+      }
+    },
+    "status_updates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "feature": { "type": "string" },
+          "previous_status": { "type": "string" },
+          "new_status": { "type": "string" },
+          "evidence": { "type": "string" },
+          "evidence_source": { "type": "string" }
+        },
+        "required": ["feature", "previous_status", "new_status", "evidence", "evidence_source"]
+      }
+    },
+    "unresolved_ambiguities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "item_id": { "type": "string" },
+          "description": { "type": "string" },
+          "impact": { "type": "string" },
+          "attempted_resolution": { "type": "string" },
+          "blocking": { "type": "boolean" },
+          "recommended_resolution": { "type": "string" }
+        },
+        "required": ["item_id", "description", "impact", "attempted_resolution", "blocking", "recommended_resolution"]
+      }
+    },
+    "recommendation": {
+      "type": "object",
+      "properties": {
+        "state": { "type": "string", "enum": ["sync-complete", "needs-follow-up", "blocked"] },
+        "justification": { "type": "string" },
+        "follow_up_items": { "type": "array", "items": { "type": "string" } },
+        "blocking_items": { "type": "array", "items": { "type": "string" } },
+        "next_steps": { "type": "array", "items": { "type": "string" } }
+      },
+      "required": ["state", "justification", "follow_up_items", "blocking_items", "next_steps"]
+    }
+  },
+  "required": [
+    "dispatch_id", "task_id", "created_at", "created_by",
+    "sync_target", "consumed_artifacts", "touched_sections",
+    "change_reasons", "consistency_checks", "status_updates",
+    "unresolved_ambiguities", "recommendation"
+  ],
+  "additionalProperties": false
+}

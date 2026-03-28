@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "contracts/pack/architect/open-questions.schema.json",
+  "title": "Open Questions Contract",
+  "description": "Document capturing unresolved design questions with impact analysis and temporary assumptions",
+  "type": "object",
+  "properties": {
+    "question_id": {
+      "type": "string",
+      "description": "Unique question identifier (e.g., Q-001)",
+      "pattern": "^Q-\\d+$"
+    },
+    "question": {
+      "type": "string",
+      "description": "The unresolved question stated as a clear, specific inquiry",
+      "minLength": 10,
+      "maxLength": 500
+    },
+    "why_it_matters": {
+      "type": "string",
+      "description": "Explanation of impact on design, implementation, or downstream consumers",
+      "minLength": 20,
+      "maxLength": 1000
+    },
+    "temporary_assumption": {
+      "type": "string",
+      "description": "Working assumption to allow development to proceed",
+      "minLength": 10,
+      "maxLength": 1000
+    },
+    "impact_surface": {
+      "type": "string",
+      "description": "System components, packages, interfaces affected by this question",
+      "minLength": 10,
+      "maxLength": 1500
+    },
+    "recommended_next_step": {
+      "type": "string",
+      "description": "Concrete action required to resolve this question",
+      "minLength": 10,
+      "maxLength": 1000
+    },
+    "status": {
+      "type": "string",
+      "enum": ["Open", "Resolved", "Deferred", "Escalated"],
+      "description": "Current status of the question"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date",
+      "description": "Creation date"
+    },
+    "resolved_at": {
+      "type": ["string", "null"],
+      "format": "date",
+      "description": "Resolution date if resolved"
+    },
+    "resolution": {
+      "type": ["string", "null"],
+      "description": "Resolution details if resolved"
+    }
+  },
+  "required": [
+    "question_id",
+    "question",
+    "why_it_matters",
+    "temporary_assumption",
+    "impact_surface",
+    "recommended_next_step"
+  ],
+  "additionalProperties": false
+}

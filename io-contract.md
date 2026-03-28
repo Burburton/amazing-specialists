@@ -434,6 +434,46 @@ security 产出的安全报告，必须包含：
 
 ---
 
+### Machine-Readable Schema (Contract Schema Pack)
+
+所有 Artifact Contract 都有对应的机器可读 JSON Schema 定义，位于 `contracts/pack/`：
+
+- **registry.json** - 统一契约注册表，包含 17 个契约的完整元数据
+- **schema files** - JSON Schema Draft 2020-12 格式的契约定义
+- **validate-schema.js** - 基础 schema 验证工具
+
+**契约发现**：
+```bash
+# 查询所有契约
+cat contracts/pack/registry.json
+
+# 查询特定契约 schema
+cat contracts/pack/architect/design-note.schema.json
+```
+
+**契约验证**：
+```bash
+# 验证 artifact 是否符合契约
+node contracts/pack/validate-schema.js <artifact-path> <contract-id>
+
+# 示例
+node contracts/pack/validate-schema.js design-note.yaml AC-001
+```
+
+**契约 ID 映射**：
+| 角色 | Contract ID 范围 | 契约名称 |
+|------|------------------|----------|
+| architect | AC-001 ~ AC-004 | design-note, open-questions, risks-and-tradeoffs, module-boundaries |
+| developer | DC-001 ~ DC-003 | implementation-summary, self-check-report, bugfix-report |
+| tester | TC-001 ~ TC-003 | verification-report, test-scope-report, regression-risk-report |
+| reviewer | RC-001 ~ RC-003 | review-findings-report, actionable-feedback-report, acceptance-decision-record |
+| docs | DOC-001 ~ DOC-002 | docs-sync-report, changelog-entry |
+| security | SEC-001 ~ SEC-002 | security-review-report, input-validation-review-report |
+
+> **注**: Markdown 契约仍为权威定义。JSON Schema 为派生格式，用于自动化工具集成。
+
+---
+
 ## 4. Escalation Contract
 
 ### Contract Name

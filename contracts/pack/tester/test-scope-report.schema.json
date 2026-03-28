@@ -1,0 +1,251 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "contracts/pack/tester/test-scope-report.schema.json",
+  "title": "Test Scope Report Contract",
+  "description": "Document defining test scope, boundary conditions, and risk-based testing priorities",
+  "type": "object",
+  "properties": {
+    "dispatch_id": { "type": "string" },
+    "task_id": { "type": "string" },
+    "created_at": { "type": "string", "format": "date-time" },
+    "created_by": { "type": "string" },
+    "input_artifacts": {
+      "type": "object",
+      "properties": {
+        "implementation_summary_path": { "type": "string" },
+        "self_check_report_path": { "type": ["string", "null"] },
+        "bugfix_report_path": { "type": ["string", "null"] },
+        "other_artifacts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "path": { "type": "string" },
+              "type": { "type": "string" }
+            }
+          }
+        }
+      },
+      "required": ["implementation_summary_path", "other_artifacts"]
+    },
+    "goal_under_test": {
+      "type": "object",
+      "properties": {
+        "original_goal": { "type": "string" },
+        "test_interpretation": { "type": "string" },
+        "acceptance_targets": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "criterion": { "type": "string" },
+              "measurable": { "type": "boolean" },
+              "test_method": { "type": "string" }
+            },
+            "required": ["criterion", "measurable", "test_method"]
+          }
+        }
+      },
+      "required": ["original_goal", "test_interpretation", "acceptance_targets"]
+    },
+    "changed_surface": {
+      "type": "object",
+      "properties": {
+        "files": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "properties": {
+              "path": { "type": "string" },
+              "test_priority": { "type": "string", "enum": ["critical", "high", "medium", "low"] },
+              "test_types": {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            },
+            "required": ["path", "test_priority", "test_types"]
+          }
+        },
+        "modules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "boundary": { "type": "string" },
+              "impacted_functions": {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            }
+          }
+        },
+        "data_flows": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "source": { "type": "string" },
+              "destination": { "type": "string" },
+              "data_type": { "type": "string" }
+            }
+          }
+        }
+      },
+      "required": ["files", "modules", "data_flows"]
+    },
+    "risk_priorities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "risk_id": { "type": "string" },
+          "description": { "type": "string" },
+          "level": { "type": "string", "enum": ["high", "medium", "low"] },
+          "test_approach": { "type": "string" },
+          "priority_rank": { "type": "integer" }
+        },
+        "required": ["risk_id", "description", "level", "test_approach", "priority_rank"]
+      }
+    },
+    "test_strategy": {
+      "type": "object",
+      "properties": {
+        "overall_approach": { "type": "string" },
+        "test_levels": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "level": { "type": "string", "enum": ["unit", "integration", "e2e", "manual"] },
+              "coverage_target": { "type": "string" },
+              "tools": {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            },
+            "required": ["level", "coverage_target", "tools"]
+          }
+        },
+        "prioritization_rationale": { "type": "string" }
+      },
+      "required": ["overall_approach", "test_levels", "prioritization_rationale"]
+    },
+    "in_scope_items": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "properties": {
+          "item_id": { "type": "string" },
+          "description": { "type": "string" },
+          "category": { "type": "string", "enum": ["functional", "non-functional", "regression"] },
+          "test_case_ids": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        },
+        "required": ["item_id", "description", "category", "test_case_ids"]
+      }
+    },
+    "out_of_scope_items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "item_id": { "type": "string" },
+          "description": { "type": "string" },
+          "reason": { "type": "string" },
+          "impact_assessment": { "type": "string" },
+          "deferred_to": { "type": ["string", "null"] }
+        },
+        "required": ["item_id", "description", "reason", "impact_assessment"]
+      }
+    },
+    "assumptions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "assumption": { "type": "string" },
+          "source": { "type": "string" },
+          "risk_if_wrong": { "type": "string" },
+          "validation_method": { "type": ["string", "null"] }
+        },
+        "required": ["assumption", "source", "risk_if_wrong"]
+      }
+    },
+    "environment_requirements": {
+      "type": "object",
+      "properties": {
+        "tools": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "version": { "type": ["string", "null"] },
+              "purpose": { "type": "string" }
+            },
+            "required": ["name", "purpose"]
+          }
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": { "type": "string", "enum": ["test_data", "mock_data", "production_subset"] },
+              "description": { "type": "string" },
+              "setup_instructions": { "type": ["string", "null"] }
+            },
+            "required": ["type", "description"]
+          }
+        },
+        "services": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "status": { "type": "string", "enum": ["available", "needs_setup", "unavailable"] },
+              "notes": { "type": ["string", "null"] }
+            },
+            "required": ["name", "status"]
+          }
+        }
+      },
+      "required": ["tools", "data", "services"]
+    },
+    "recommendation": {
+      "type": "string",
+      "enum": ["PROCEED", "BLOCKED", "ESCALATE"]
+    },
+    "blockers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "blocker_id": { "type": "string" },
+          "description": { "type": "string" },
+          "type": { "type": "string", "enum": ["environment", "spec_ambiguity", "dependency", "resource"] },
+          "blocking_scope": { "type": "string" },
+          "proposed_resolution": { "type": "string" },
+          "owner": { "type": "string" }
+        },
+        "required": ["blocker_id", "description", "type", "blocking_scope", "proposed_resolution", "owner"]
+      }
+    },
+    "estimated_test_count": { "type": "integer" },
+    "estimated_effort_hours": { "type": "number" }
+  },
+  "required": [
+    "dispatch_id", "task_id", "created_at", "created_by",
+    "input_artifacts", "goal_under_test", "changed_surface",
+    "risk_priorities", "test_strategy", "in_scope_items",
+    "out_of_scope_items", "assumptions", "environment_requirements",
+    "recommendation"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,272 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "contracts/pack/developer/implementation-summary.schema.json",
+  "title": "Implementation Summary Contract",
+  "description": "Developer-produced artifact documenting code changes, goal achievement, and known issues",
+  "type": "object",
+  "properties": {
+    "dispatch_id": {
+      "type": "string",
+      "description": "Associated dispatch ID"
+    },
+    "task_id": {
+      "type": "string",
+      "description": "Task ID"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Creation timestamp"
+    },
+    "created_by": {
+      "type": "string",
+      "description": "Creator (developer)"
+    },
+    "goal_alignment": {
+      "type": "object",
+      "description": "Goal alignment status",
+      "properties": {
+        "goal": {
+          "type": "string",
+          "description": "Original task goal"
+        },
+        "achieved": {
+          "type": "string",
+          "enum": ["true", "partial", "false"],
+          "description": "Whether goal was achieved"
+        },
+        "deviations": {
+          "type": "array",
+          "description": "Deviations from goal if any",
+          "items": {
+            "type": "object",
+            "properties": {
+              "deviation": { "type": "string" },
+              "rationale": { "type": "string" },
+              "approved_by": { "type": ["string", "null"] }
+            },
+            "required": ["deviation", "rationale"]
+          }
+        }
+      },
+      "required": ["goal", "achieved", "deviations"]
+    },
+    "implementation": {
+      "type": "object",
+      "description": "Implementation details",
+      "properties": {
+        "approach": {
+          "type": "string",
+          "description": "Implementation strategy overview"
+        },
+        "key_decisions": {
+          "type": "array",
+          "description": "Key decisions made",
+          "items": {
+            "type": "object",
+            "properties": {
+              "decision": { "type": "string" },
+              "reason": { "type": "string" },
+              "alternatives_considered": {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            },
+            "required": ["decision", "reason"]
+          }
+        }
+      },
+      "required": ["approach", "key_decisions"]
+    },
+    "changed_files": {
+      "type": "array",
+      "description": "Files changed during implementation",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "File path"
+          },
+          "change_type": {
+            "type": "string",
+            "enum": ["added", "modified", "deleted"],
+            "description": "Type of change"
+          },
+          "description": {
+            "type": "string",
+            "description": "Change description"
+          },
+          "lines_changed": {
+            "type": "object",
+            "properties": {
+              "added": { "type": "integer" },
+              "deleted": { "type": "integer" }
+            }
+          }
+        },
+        "required": ["path", "change_type", "description"]
+      }
+    },
+    "dependencies_added": {
+      "type": "array",
+      "description": "New dependencies added",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "version": { "type": "string" },
+          "reason": { "type": "string" },
+          "is_dev_dependency": { "type": "boolean" }
+        },
+        "required": ["name", "version", "reason", "is_dev_dependency"]
+      }
+    },
+    "dependencies_removed": {
+      "type": "array",
+      "description": "Dependencies removed",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "reason": { "type": "string" }
+        },
+        "required": ["name", "reason"]
+      }
+    },
+    "tests": {
+      "type": "array",
+      "description": "Tests added or run",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["unit", "integration", "e2e"],
+            "description": "Test type"
+          },
+          "files": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "coverage": {
+            "type": "string",
+            "description": "Coverage percentage"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["pass", "fail", "partial"],
+            "description": "Test status"
+          }
+        },
+        "required": ["type", "files", "status"]
+      }
+    },
+    "self_check": {
+      "type": "object",
+      "description": "Self-check reference",
+      "properties": {
+        "report_path": {
+          "type": "string",
+          "description": "Path to self-check-report"
+        },
+        "overall_status": {
+          "type": "string",
+          "enum": ["PASS", "FAIL_WITH_BLOCKERS", "PASS_WITH_WARNINGS"],
+          "description": "Overall self-check status"
+        },
+        "blockers_count": {
+          "type": "integer"
+        },
+        "warnings_count": {
+          "type": "integer"
+        }
+      },
+      "required": ["report_path", "overall_status", "blockers_count", "warnings_count"]
+    },
+    "known_issues": {
+      "type": "array",
+      "description": "Known issues",
+      "items": {
+        "type": "object",
+        "properties": {
+          "issue_id": { "type": "string" },
+          "description": { "type": "string" },
+          "severity": {
+            "type": "string",
+            "enum": ["low", "medium", "high"]
+          },
+          "component": { "type": "string" },
+          "planned_fix": { "type": ["string", "null"] },
+          "workaround": { "type": ["string", "null"] }
+        },
+        "required": ["issue_id", "description", "severity", "component"]
+      }
+    },
+    "risks": {
+      "type": "array",
+      "description": "Identified risks",
+      "items": {
+        "type": "object",
+        "properties": {
+          "risk_id": { "type": "string" },
+          "description": { "type": "string" },
+          "level": {
+            "type": "string",
+            "enum": ["low", "medium", "high"]
+          },
+          "mitigation": { "type": "string" },
+          "owner": { "type": "string" }
+        },
+        "required": ["risk_id", "description", "level", "mitigation", "owner"]
+      }
+    },
+    "performance_notes": {
+      "type": ["string", "null"],
+      "description": "Performance-related notes"
+    },
+    "documentation_updated": {
+      "type": "array",
+      "description": "Documentation changes",
+      "items": {
+        "type": "object",
+        "properties": {
+          "file": { "type": "string" },
+          "type": {
+            "type": "string",
+            "enum": ["code_comment", "readme", "api_doc", "changelog"]
+          },
+          "description": { "type": "string" }
+        },
+        "required": ["file", "type", "description"]
+      }
+    },
+    "recommendation": {
+      "type": "string",
+      "enum": ["SEND_TO_TEST", "REWORK", "ESCALATE"],
+      "description": "Next action recommendation"
+    },
+    "time_spent_minutes": {
+      "type": "integer"
+    },
+    "blockers_encountered": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "required": [
+    "dispatch_id",
+    "task_id",
+    "created_at",
+    "created_by",
+    "goal_alignment",
+    "implementation",
+    "changed_files",
+    "self_check",
+    "known_issues",
+    "risks",
+    "recommendation"
+  ],
+  "additionalProperties": false
+}

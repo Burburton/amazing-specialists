@@ -1,0 +1,53 @@
+{
+  "background": "This feature addresses the need for a unified contract schema pack that consolidates all 17 artifact contracts into a single location with machine-readable JSON Schema definitions.",
+  "feature_goal": "Create a unified Contract Schema Pack that enables downstream systems to programmatically discover and validate contracts.",
+  "input_sources": [
+    {
+      "source": "specs/017-contract-schema-pack/spec.md",
+      "type": "spec",
+      "mandatory": true
+    }
+  ],
+  "requirement_to_design_mapping": [
+    {
+      "requirement_id": "BR-001",
+      "requirement_text": "Single source of truth for registry",
+      "design_decision": "Create registry.json as authoritative source",
+      "artifact_section": "contracts/pack/registry.json"
+    }
+  ],
+  "design_summary": "The Contract Schema Pack consolidates all 17 artifact contracts into a unified directory structure with JSON Schema files for automated validation and a registry for contract discovery.",
+  "constraints": [
+    {
+      "constraint_id": "C-001",
+      "description": "JSON Schema Draft 2020-12 format required",
+      "source": "NFR-002",
+      "impact": "All schemas must use this specification"
+    }
+  ],
+  "non_goals": [
+    {
+      "item": "Runtime validation service",
+      "rationale": "Out of scope per spec",
+      "future_consideration": false
+    }
+  ],
+  "assumptions": [
+    {
+      "assumption_id": "A-001",
+      "description": "All 17 markdown contracts are stable and complete",
+      "risk_if_wrong": "Incomplete contracts would cause schema inconsistencies",
+      "validation_method": "Verify contracts exist and have defined fields"
+    }
+  ],
+  "open_questions": [
+    {
+      "question_id": "Q-001",
+      "question": "Should schemas be JSON or YAML?",
+      "why_it_matters": "File format affects tool compatibility",
+      "temporary_assumption": "JSON (JSON Schema standard)",
+      "impact_surface": "Schema file format",
+      "recommended_next_step": "Use JSON per plan.md decision"
+    }
+  ]
+}

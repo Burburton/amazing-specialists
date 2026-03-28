@@ -1,0 +1,221 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "contracts/pack/developer/bugfix-report.schema.json",
+  "title": "Bugfix Report Contract",
+  "description": "Report documenting bug fix implementation with root cause analysis and verification evidence",
+  "type": "object",
+  "properties": {
+    "dispatch_id": {
+      "type": "string",
+      "description": "Associated dispatch ID"
+    },
+    "task_id": {
+      "type": "string",
+      "description": "Task ID"
+    },
+    "bug_id": {
+      "type": "string",
+      "description": "Bug ID from issue tracker"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Creation timestamp"
+    },
+    "created_by": {
+      "type": "string",
+      "description": "Fixer"
+    },
+    "problem_analysis": {
+      "type": "object",
+      "description": "Problem analysis",
+      "properties": {
+        "symptom": { "type": "string" },
+        "expected_behavior": { "type": "string" },
+        "actual_behavior": { "type": "string" },
+        "environment": { "type": ["string", "null"] },
+        "frequency": {
+          "type": ["string", "null"],
+          "enum": ["always", "often", "sometimes", "rarely", null]
+        }
+      },
+      "required": ["symptom", "expected_behavior", "actual_behavior"]
+    },
+    "root_cause": {
+      "type": "object",
+      "description": "Root cause analysis",
+      "properties": {
+        "category": {
+          "type": "string",
+          "enum": ["logic_error", "boundary_condition", "concurrency", "configuration", "dependency", "environment", "data", "design"],
+          "description": "Root cause category"
+        },
+        "description": { "type": "string" },
+        "analysis_method": { "type": "string" },
+        "contributing_factors": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "factor": { "type": "string" },
+              "impact": { "type": "string" }
+            },
+            "required": ["factor", "impact"]
+          }
+        }
+      },
+      "required": ["category", "description", "analysis_method"]
+    },
+    "impact_assessment": {
+      "type": "object",
+      "description": "Impact assessment",
+      "properties": {
+        "severity": {
+          "type": "string",
+          "enum": ["critical", "high", "medium", "low"]
+        },
+        "affected_components": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "affected_users": { "type": ["string", "null"] },
+        "data_corruption": { "type": "boolean" },
+        "security_implications": { "type": "boolean" }
+      },
+      "required": ["severity", "affected_components", "data_corruption", "security_implications"]
+    },
+    "fix_details": {
+      "type": "object",
+      "description": "Fix details",
+      "properties": {
+        "approach": { "type": "string" },
+        "changed_files": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "path": { "type": "string" },
+              "change_type": { "type": "string" },
+              "description": { "type": "string" },
+              "lines_changed": {
+                "type": "object",
+                "properties": {
+                  "added": { "type": "integer" },
+                  "deleted": { "type": "integer" }
+                }
+              }
+            },
+            "required": ["path", "change_type", "description"]
+          }
+        },
+        "tests_added": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "path": { "type": "string" },
+              "type": {
+                "type": "string",
+                "enum": ["regression", "reproduction"]
+              },
+              "description": { "type": "string" }
+            },
+            "required": ["path", "type", "description"]
+          }
+        },
+        "is_minimal_fix": { "type": "boolean" }
+      },
+      "required": ["approach", "changed_files", "is_minimal_fix"]
+    },
+    "verification": {
+      "type": "object",
+      "description": "Verification results",
+      "properties": {
+        "reproduction_test_passed": { "type": "boolean" },
+        "regression_test_passed": { "type": "boolean" },
+        "manual_verification_passed": { "type": "boolean" },
+        "verification_notes": { "type": ["string", "null"] }
+      },
+      "required": ["reproduction_test_passed", "regression_test_passed", "manual_verification_passed"]
+    },
+    "deployment": {
+      "type": "object",
+      "description": "Deployment details",
+      "properties": {
+        "deployed_to": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "deployment_time": {
+          "type": ["string", "null"],
+          "format": "date-time"
+        },
+        "monitoring_results": { "type": ["string", "null"] },
+        "post_deployment_issues": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "lessons_learned": {
+      "type": "array",
+      "description": "Lessons learned",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "properties": {
+          "lesson": { "type": "string" },
+          "prevention": { "type": "string" },
+          "category": {
+            "type": "string",
+            "enum": ["process", "code", "test", "review"]
+          }
+        },
+        "required": ["lesson", "prevention", "category"]
+      }
+    },
+    "follow_up": {
+      "type": "array",
+      "description": "Follow-up items",
+      "items": {
+        "type": "object",
+        "properties": {
+          "item": { "type": "string" },
+          "owner": { "type": "string" },
+          "due_date": { "type": "string" },
+          "status": {
+            "type": "string",
+            "enum": ["pending", "in_progress", "done"]
+          }
+        },
+        "required": ["item", "owner", "status"]
+      }
+    },
+    "recommendation": {
+      "type": "string",
+      "enum": ["CLOSE", "MONITOR", "REOPEN", "ESCALATE"],
+      "description": "Recommended action"
+    },
+    "time_to_fix_minutes": {
+      "type": "integer"
+    },
+    "time_to_identify_minutes": {
+      "type": "integer"
+    }
+  },
+  "required": [
+    "dispatch_id",
+    "task_id",
+    "bug_id",
+    "created_at",
+    "created_by",
+    "problem_analysis",
+    "root_cause",
+    "impact_assessment",
+    "fix_details",
+    "verification",
+    "lessons_learned",
+    "recommendation"
+  ],
+  "additionalProperties": false
+}

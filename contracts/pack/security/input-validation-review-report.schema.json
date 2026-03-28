@@ -1,0 +1,173 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "contracts/pack/security/input-validation-review-report.schema.json",
+  "title": "Input Validation Review Report Contract",
+  "description": "Focused security review for input validation with attack vectors analysis and remediation guidance",
+  "type": "object",
+  "properties": {
+    "dispatch_id": { "type": "string" },
+    "task_id": { "type": "string" },
+    "created_at": { "type": "string", "format": "date-time" },
+    "created_by": { "type": "string" },
+    "scope": {
+      "type": "object",
+      "properties": {
+        "inputs_reviewed": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "properties": {
+              "source": { "type": "string" },
+              "type": { "type": "string", "enum": ["http_body", "query_param", "path_param", "header", "file", "database"] },
+              "parameters": { "type": "array", "items": { "type": "string" } },
+              "description": { "type": "string" }
+            },
+            "required": ["source", "type", "parameters", "description"]
+          }
+        },
+        "data_flows_traced": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "from": { "type": "string" },
+              "to": { "type": "string" },
+              "description": { "type": "string" }
+            },
+            "required": ["from", "to", "description"]
+          }
+        },
+        "review_type": { "type": "string", "enum": ["full", "focused", "re-review"] }
+      },
+      "required": ["inputs_reviewed", "data_flows_traced", "review_type"]
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "pattern": "^VAL-\\d+$" },
+          "severity": { "type": "string", "enum": ["critical", "high", "medium", "low"] },
+          "category": {
+            "type": "string",
+            "enum": ["sql_injection", "xss", "command_injection", "path_traversal", "nosql_injection", "ldap_injection", "deserialization", "missing_validation", "insufficient_validation"]
+          },
+          "title": { "type": "string" },
+          "description": { "type": "string" },
+          "input": {
+            "type": "object",
+            "properties": {
+              "source": { "type": "string" },
+              "parameter": { "type": "string" },
+              "data_type": { "type": "string" }
+            },
+            "required": ["source", "parameter", "data_type"]
+          },
+          "vulnerability": {
+            "type": "object",
+            "properties": {
+              "type": { "type": "string" },
+              "cwe": { "type": "string" },
+              "owasp": { "type": "string" },
+              "description": { "type": "string" }
+            },
+            "required": ["type", "cwe", "owasp", "description"]
+          },
+          "vulnerable_code": {
+            "type": "object",
+            "properties": {
+              "location": { "type": "string" },
+              "snippet": { "type": "string" }
+            },
+            "required": ["location", "snippet"]
+          },
+          "exploit_scenario": {
+            "type": "object",
+            "properties": {
+              "payload": { "type": "string" },
+              "steps": { "type": "array", "items": { "type": "string" } },
+              "impact": { "type": "string" }
+            },
+            "required": ["payload", "steps", "impact"]
+          },
+          "remediation": {
+            "type": "object",
+            "properties": {
+              "recommendation": { "type": "string" },
+              "secure_code_example": { "type": "string" },
+              "validation_rules": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "rule": { "type": "string" },
+                    "pattern": { "type": "string" }
+                  },
+                  "required": ["rule", "pattern"]
+                }
+              },
+              "effort": { "type": "string", "enum": ["quick", "moderate", "extensive"] }
+            },
+            "required": ["recommendation", "secure_code_example", "validation_rules", "effort"]
+          }
+        },
+        "required": ["id", "severity", "category", "title", "description", "input", "vulnerability", "vulnerable_code", "exploit_scenario", "remediation"]
+      }
+    },
+    "validation_coverage": {
+      "type": "object",
+      "properties": {
+        "total_inputs": { "type": "integer" },
+        "validated_inputs": { "type": "integer" },
+        "validation_rate": { "type": "number", "minimum": 0, "maximum": 100 },
+        "missing_validation": { "type": "array", "items": { "type": "string" } }
+      },
+      "required": ["total_inputs", "validated_inputs", "validation_rate", "missing_validation"]
+    },
+    "risk_assessment": {
+      "type": "object",
+      "properties": {
+        "overall_risk": { "type": "string", "enum": ["critical", "high", "medium", "low"] },
+        "risk_factors": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "factor": { "type": "string" },
+              "level": { "type": "string", "enum": ["high", "medium", "low"] }
+            },
+            "required": ["factor", "level"]
+          }
+        },
+        "residual_risk": { "type": "string" }
+      },
+      "required": ["overall_risk", "risk_factors", "residual_risk"]
+    },
+    "gate_decision": {
+      "type": "object",
+      "properties": {
+        "decision": { "type": "string", "enum": ["pass", "needs-fix", "block"] },
+        "conditions": { "type": "array", "items": { "type": "string" } },
+        "blocking_findings": { "type": "array", "items": { "type": "string" } }
+      },
+      "required": ["decision", "conditions", "blocking_findings"]
+    },
+    "recommendations": {
+      "type": "object",
+      "properties": {
+        "must_fix": { "type": "array", "items": { "type": "string" } },
+        "should_fix": { "type": "array", "items": { "type": "string" } },
+        "consider": { "type": "array", "items": { "type": "string" } }
+      },
+      "required": ["must_fix", "should_fix", "consider"]
+    },
+    "notes": { "type": ["string", "null"] }
+  },
+  "required": [
+    "dispatch_id", "task_id", "created_at", "created_by",
+    "scope", "findings", "validation_coverage", "risk_assessment",
+    "gate_decision", "recommendations"
+  ],
+  "additionalProperties": false
+}

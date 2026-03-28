@@ -4,7 +4,7 @@
 - **Feature ID**: `007-docs-core`
 - **Feature Name**: Docs Core Skills System
 - **Version**: 1.0.0
-- **Status**: Draft
+- **Status**: Complete
 - **Created**: 2026-03-26
 - **Last Updated**: 2026-03-26
 - **Authoring Intent**: Full-feature specification for OpenCode-driven implementation, not a minimal bootstrap

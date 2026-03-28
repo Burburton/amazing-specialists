@@ -4,7 +4,7 @@
 - **Feature ID**: `005-tester-core`
 - **Feature Name**: Tester Core Skills System
 - **Version**: 1.0.0
-- **Status**: Draft
+- **Status**: Complete
 - **Created**: 2026-03-25
 - **Last Updated**: 2026-03-25
 - **Authoring Intent**: Full-feature specification for OpenCode-driven implementation, not a minimal bootstrap

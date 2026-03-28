@@ -187,8 +187,13 @@ User Input
 | `006-reviewer-core` | reviewer 角色核心技能 | ✅ Complete | 3 core skills, 3 artifact contracts, validation layer, AH-006 governance alignment |
 | `007-docs-core` | docs 角色核心技能 | ✅ Complete | 2 core skills, 2 artifact contracts, validation layer, anti-pattern guidance |
 | `008-security-core` | security 角色核心技能 | ✅ Complete | 2 core skills, 2 artifact contracts, validation layer, 6-role model complete |
+| `009-command-hardening` | 命令固化与验证 | ✅ Complete | 5 core commands, 9 templates, quality gate, traceability |
+| `010-3-skill-migration` | 3-Skill 迁移归档 | ✅ Complete | Legacy skills archived to docs/archive/legacy-skills/ |
+| `011-m4-enhancement-kit` | M4 可选增强套件 | ✅ Complete | 12 M4 skills, --enhanced flag, enhanced-mode-guide |
+| `012-performance-testing-skills` | 性能测试技能 | ✅ Complete | 4 performance testing skills for tester role |
+| `013-e2e-validation` | 端到端流程验证 | ✅ Complete | 5 commands, 6 roles, AH-001~AH-006 validated |
 
-> **当前进度**: `003-architect-core` 至 `008-security-core` 已全部完成。**6-Role 正式执行模型 MVP 完整实现**。
+> **当前进度**: `003-architect-core` 至 `013-e2e-validation` 已全部完成。**6-Role 正式执行模型完整实现并验证**。
 
 ### 阶段 7：3-Skill 迁移 ✅ 已完成（010-3-skill-migration）
 
@@ -209,7 +214,18 @@ User Input
 - `docs/enhanced-mode-selector.md` - Enhanced 模式检测逻辑
 - `docs/enhanced-mode-guide.md` - Enhanced 模式使用指南
 
-> **当前进度**: `003-architect-core` 至 `008-security-core` 完成 MVP 核心，`010-3-skill-migration` 完成骨架归档，`011-m4-enhancement-kit` 完成 M4 可选增强，`012-performance-testing-skills` 完成性能测试套件。**Skills 总计 37 个（21 MVP + 16 M4）**。
+### 阶段 9：端到端流程验证 ✅ 已完成（013-e2e-validation）
+
+通过实际运行完整 spec-driven workflow 验证系统执行能力：
+- **5 个命令验证**: spec-start, spec-plan, spec-tasks, spec-implement, spec-audit 全部通过
+- **6 个角色协同验证**: architect, developer, tester, reviewer, docs, security 正确协同
+- **Governance 规则验证**: AH-001 至 AH-006 审计规则全部通过
+- **验证结论**: PASS_WITH_WARNINGS (2 minor cosmetic issues)
+
+**新增验证报告**：
+- `specs/013-e2e-validation/verification-report.md` - 端到端验证总结
+
+> **当前进度**: `003-architect-core` 至 `008-security-core` 完成 MVP 核心，`010-3-skill-migration` 完成骨架归档，`011-m4-enhancement-kit` 完成 M4 可选增强，`012-performance-testing-skills` 完成性能测试套件，`013-e2e-validation` 完成端到端验证。**Skills 总计 37 个（21 MVP + 16 M4）**，**Features 总计 13 个**。
 
 ## Quick Start
 
@@ -226,6 +242,7 @@ User Input
 - [specs/common-skills-verification-report.md](specs/common-skills-verification-report.md) - Common Skills 验证
 - [specs/m2-skills-integration-verification-report.md](specs/m2-skills-integration-verification-report.md) - Core Roles 协同验证
 - [specs/m3-skills-integration-verification-report.md](specs/m3-skills-integration-verification-report.md) - Security/Docs 集成验证
+- [specs/013-e2e-validation/verification-report.md](specs/013-e2e-validation/verification-report.md) - 端到端流程验证
 
 ### Skills 目录结构
 
@@ -317,13 +334,14 @@ Layer 3: OpenCode 执行层（本专家包）- 角色化专业执行
 | io-contract.md | ✅ |
 | skill-development-plan.md | ✅ |
 | skills-usage-guide.md | ✅ |
-| 验证报告 x3 | ✅ |
+| 验证报告 x4 | ✅ |
 | 规则文件 (docs/rules/) | ✅ |
 | 模板文件 (docs/templates/) | ✅ |
 | 检查规范 (docs/validation/) | ✅ |
 | 追溯方法 (docs/traceability/) | ✅ |
 | Enhanced Mode 指南 (docs/enhanced-mode-guide.md) | ✅ |
 | Enhanced Mode 选择器 (docs/enhanced-mode-selector.md) | ✅ |
+| 端到端验证 (specs/013-e2e-validation/) | ✅ |
 
 ### M4 - 可选增强套件 ✅ 已完成（011-m4-enhancement-kit + 012-performance-testing-skills）
 

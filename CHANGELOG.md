@@ -331,3 +331,36 @@ Legacy skills are archived in `docs/archive/legacy-skills/`.
 - [docs/skills-usage-guide.md](docs/skills-usage-guide.md) - Skills usage guide
 - [docs/enhanced-mode-guide.md](docs/enhanced-mode-guide.md) - Enhanced mode guide
 - [specs/](specs/) - Feature specifications and reports
+---
+
+### Template Features (017-018)
+
+#### [017-contract-schema-pack] - 2026-03-28
+**Contract Schema Pack**
+
+**Added:**
+- 17 artifact JSON schemas for all 6 roles
+- `contracts/pack/registry.json` - unified contract registry
+- `validate-schema.js` - CLI validation utility
+- Machine-readable contract definitions for automation
+
+**Result:** PASS - Enables programmatic contract discovery and validation
+
+---
+
+#### [018-template-and-bootstrap-foundation] - 2026-03-28
+**模板化与 Bootstrap 基础包**
+
+**Added:**
+- Template pack structure (`templates/pack/minimal/`, `templates/pack/full/`)
+- Profile mechanism (minimal: 21 MVP skills, full: 37 skills)
+- CLI tools: `init.js`, `install.js`, `doctor.js`
+- Documentation: `USAGE.md`, `PROFILE-COMPARISON.md`, `UPGRADE-STRATEGY.md`
+- Content classification: `content-index.json`, `pack-version.json`
+
+**Known Gaps:**
+- Example project not implemented
+- Contract schemas not included in template pack
+- docs/ content not included in profiles
+
+**Result:** COMPLETE with known gaps

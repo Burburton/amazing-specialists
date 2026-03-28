@@ -3,14 +3,14 @@
 ## Document Status
 - **Feature ID**: `018-template-and-bootstrap-foundation`
 - **Version**: 1.0.0
-- **Status**: Complete
+- **Status**: COMPLETE with known gaps
 - **Completed**: 2026-03-28
 
 ---
 
 ## Summary
 
-Feature 018-template-and-bootstrap-foundation has been successfully implemented, transforming the OpenCode expert package from a "source repository" into a "reusable project template foundation" with minimal product entry points.
+Feature 018-template-and-bootstrap-foundation has been implemented with the core template pack structure and CLI tools. The feature transforms the OpenCode expert package from a "source repository" into a "reusable project template foundation" with minimal product entry points.
 
 ---
 
@@ -27,7 +27,7 @@ Feature 018-template-and-bootstrap-foundation has been successfully implemented,
 
 **File Counts**:
 - Minimal profile: 116 files
-- Full profile: 130 files
+- Full profile: 190 files
 
 ### AC-002: init Command Implemented ✅ PASS
 
@@ -56,15 +56,17 @@ Feature 018-template-and-bootstrap-foundation has been successfully implemented,
 | Returns pass/fail status | ✅ | Exit code and status report |
 | Supports --verbose flag | ✅ | Detailed output |
 
-### AC-005: Example Project Verified ✅ PASS
+### AC-005: Example Project ⚠️ PARTIAL
 
 | Requirement | Status | Evidence |
 |-------------|--------|----------|
-| Minimal profile can be initialized | ✅ | 116 files copied successfully |
-| Full profile can be initialized | ✅ | 130 files copied successfully |
-| doctor validates installation | ✅ | Health checks pass |
+| Example project created | ⚠️ | **Not implemented** |
+| Sample spec/plan/tasks | ⚠️ | **Not implemented** |
+| Example README | ⚠️ | **Not implemented** |
 
-### AC-006: Documentation Updated ✅ PASS
+**Known Gap**: The example project (`templates/pack/full/examples/sample-workflow/`) was not implemented. This is documented for future work.
+
+### AC-006: Documentation Updated ✅ PASS (with updates)
 
 | Requirement | Status | Evidence |
 |-------------|--------|----------|
@@ -72,14 +74,17 @@ Feature 018-template-and-bootstrap-foundation has been successfully implemented,
 | USAGE.md created | ✅ | `templates/USAGE.md` |
 | PROFILE-COMPARISON.md created | ✅ | `templates/PROFILE-COMPARISON.md` |
 | UPGRADE-STRATEGY.md created | ✅ | `templates/UPGRADE-STRATEGY.md` |
+| CHANGELOG.md updated | ✅ | 018 entry added (post-audit fix) |
 
-### AC-007: Contract Integration ✅ PASS
+### AC-007: Contract Integration ⚠️ PARTIAL
 
 | Requirement | Status | Evidence |
 |-------------|--------|----------|
 | registry.json included in template | ✅ | `templates/pack/minimal/contracts/pack/` |
-| Schema files included | ✅ | 17 schemas available |
-| validate-schema.js utility included | ✅ | Validation utility available |
+| Schema files included | ⚠️ | **Not included in template pack** |
+| validate-schema.js utility included | ⚠️ | **Not included in template pack** |
+
+**Known Gap**: The 17 contract schema files were not copied to the template pack. The source schemas exist in `contracts/pack/` but are not distributed with the template.
 
 ### AC-008: Security Review Passed ✅ PASS
 
@@ -97,30 +102,40 @@ Feature 018-template-and-bootstrap-foundation has been successfully implemented,
 
 | Directory | Purpose |
 |-----------|---------|
-| `templates/pack/minimal/` | Minimal profile template |
-| `templates/pack/full/` | Full profile template |
+| `templates/pack/minimal/` | Minimal profile template (116 files) |
+| `templates/pack/full/` | Full profile template (190 files) |
 | `templates/cli/` | Bootstrap CLI tools |
 
 ### Created Files
 
 | File | Purpose | Lines |
 |------|---------|-------|
-| `templates/cli/init.js` | Initialize new project | 170 |
-| `templates/cli/install.js` | Install/upgrade template | 140 |
-| `templates/cli/doctor.js` | Health validation | 150 |
-| `templates/pack/content-index.json` | Content classification | 120 |
-| `templates/pack/pack-version.json` | Version tracking | 30 |
-| `templates/pack/manifest-template.json` | Instance template | 40 |
-| `templates/USAGE.md` | Usage guide | 150 |
-| `templates/PROFILE-COMPARISON.md` | Profile comparison | 100 |
-| `templates/UPGRADE-STRATEGY.md` | Upgrade strategy | 120 |
+| `templates/cli/init.js` | Initialize new project | 177 |
+| `templates/cli/install.js` | Install/upgrade template | 199 |
+| `templates/cli/doctor.js` | Health validation | 222 |
+| `templates/pack/content-index.json` | Content classification | 189 |
+| `templates/pack/pack-version.json` | Version tracking | 33 |
+| `templates/pack/manifest-template.json` | Instance template | 31 |
+| `templates/USAGE.md` | Usage guide | 174 |
+| `templates/PROFILE-COMPARISON.md` | Profile comparison | 121 |
+| `templates/UPGRADE-STRATEGY.md` | Upgrade strategy | 145 |
 
 ### Template Pack Contents
 
 | Profile | Files | Skills | Description |
 |---------|-------|--------|-------------|
 | minimal | 116 | 21 MVP | Essential execution layer |
-| full | 130 | 37 (21+16 M4) | Complete execution layer |
+| full | 190 | 37 (21+16 M4) | Complete execution layer |
+
+---
+
+## Known Gaps
+
+| Gap ID | Description | Impact | Planned Resolution |
+|--------|-------------|--------|-------------------|
+| GAP-001 | Example project not implemented | Users lack reference workflow example | Future enhancement |
+| GAP-002 | Contract schemas not in template pack | Users cannot validate artifacts locally | Copy schemas in future release |
+| GAP-003 | docs/ content not in profiles | Users miss templates/rules/validation | Copy docs in future release |
 
 ---
 
@@ -135,23 +150,18 @@ Feature 018-template-and-bootstrap-foundation has been successfully implemented,
 - README feature table includes 018
 - Progress statement updated
 
-### AH-003: Path Resolution ✅ PASS
-- All template paths resolve correctly
+### AH-003: Path Resolution ⚠️ PARTIAL
+- Core template paths resolve correctly
 - CLI tools reference correct directories
+- Example project path declared but not implemented
 
-### AH-004: Status Truthfulness ✅ PASS
-- Feature is fully complete
-- No undisclosed gaps
+### AH-004: Status Truthfulness ✅ PASS (after audit fix)
+- Gaps now explicitly disclosed
+- File counts corrected
 
 ### AH-005: README Governance Status ✅ PASS
 - README updated with feature 018
 - Template section added
-
----
-
-## Known Gaps
-
-None. All acceptance criteria have been met.
 
 ---
 
@@ -169,10 +179,11 @@ None. All acceptance criteria have been met.
 
 ## Next Steps
 
-1. **Publish Template**: Distribute template pack via npm or GitHub releases
-2. **Sample Projects**: Create example projects demonstrating template usage
-3. **CI Integration**: Add doctor check to CI pipeline
-4. **User Feedback**: Collect feedback on template usability
+1. **Copy Contract Schemas**: Include 17 schema files in template pack
+2. **Copy docs/ Content**: Include templates/rules/validation in full profile
+3. **Example Project**: Create sample-workflow demonstration
+4. **Publish Template**: Distribute template pack via npm or GitHub releases
+5. **CI Integration**: Add doctor check to CI pipeline
 
 ---
 

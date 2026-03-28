@@ -5,12 +5,12 @@
   
   "profiles": {
     "minimal": {
-      "file_count": 50,
+      "file_count": 116,
       "skill_count": 21,
       "description": "Essential execution layer with MVP skills"
     },
     "full": {
-      "file_count": 150,
+      "file_count": 190,
       "skill_count": 37,
       "description": "Complete execution layer with M4 enhancements"
     }

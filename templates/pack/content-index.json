@@ -7,12 +7,12 @@
   "profiles": {
     "minimal": {
       "description": "Essential OpenCode execution layer with 21 MVP skills",
-      "target_files": 50,
+      "target_files": 116,
       "target_skills": 21
     },
     "full": {
       "description": "Complete OpenCode execution layer with 37 skills including M4 enhancements",
-      "target_files": 150,
+      "target_files": 190,
       "target_skills": 37,
       "extends": "minimal"
     }
@@ -185,5 +185,23 @@
       "secret-handling-review",
       "dependency-risk-review"
     ]
+  },
+
+  "known_gaps": {
+    "example_project": {
+      "path": "templates/pack/full/examples/sample-workflow/",
+      "status": "not_implemented",
+      "description": "Example project demonstrating template usage"
+    },
+    "contract_schemas": {
+      "path": "templates/pack/full/contracts/pack/*/",
+      "status": "not_included",
+      "description": "17 contract schema files not copied to template pack"
+    },
+    "docs_content": {
+      "path": "templates/pack/full/docs/",
+      "status": "empty",
+      "description": "docs/templates/, docs/rules/, docs/validation/ not included"
+    }
   }
 }

@@ -4,7 +4,7 @@
 ```yaml
 feature_id: 019-versioning-and-compatibility-foundation
 feature_name: 版本化与兼容性治理基础
-status: Draft
+status: Complete
 created_at: 2026-03-28
 priority: High
 depends_on: [016-release-preparation, 017-contract-schema-pack, 018-template-and-bootstrap-foundation]
@@ -373,7 +373,7 @@ Migration Guide 必须可通过版本号定位：
 | D-001 | VERSIONING.md | VERSIONING.md | 版本化对象定义与 SemVer 规则总文档 |
 | D-002 | compatibility-matrix.json | compatibility-matrix.json | 兼容性矩阵 JSON 文件 |
 | D-003 | compatibility-matrix.schema.json | compatibility-matrix.schema.json | 兼容性矩阵 schema |
-| D-004 | migration-guide-template.md | docs/templates/migration-guide-template.md | Migration Guide 模板 |
+| D-004 | migration-guide-template.md | docs/migration/migration-guide-template.md | Migration Guide 模板 |
 | D-005 | release-checklist-enhanced.md | docs/validation/release-checklist-enhanced.md | 增强的 Release Checklist |
 | D-006 | v0-to-v1-migration.md | docs/migration/v0-to-v1.md | 更新后的 Migration Guide |
 

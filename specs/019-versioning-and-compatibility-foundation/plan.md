@@ -6,7 +6,7 @@ feature_id: 019-versioning-and-compatibility-foundation
 feature_name: 版本化与兼容性治理基础
 plan_version: 1.0.0
 created_at: 2026-03-28
-status: Draft
+status: Complete
 depends_on: [016-release-preparation, 017-contract-schema-pack, 018-template-and-bootstrap-foundation]
 ```
 

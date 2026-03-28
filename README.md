@@ -230,8 +230,9 @@ User Input
 | `016-release-preparation` | 发布准备 | ✅ Complete | Document cleanup, governance verification, release checklist |
 | `017-contract-schema-pack` | Contract Schema Pack | ✅ Complete | 17 JSON Schemas, registry, validation utility |
 | `018-template-and-bootstrap-foundation` | 模板化与 Bootstrap | ✅ Complete | Template pack (minimal/full), CLI (init/install/doctor) |
+| `019-versioning-and-compatibility-foundation` | 版本化与兼容性 | ✅ Complete | VERSIONING.md, compatibility-matrix.json, migration guide template |
 
-> **当前进度**: `001-bootstrap` 至 `018-template-and-bootstrap-foundation` 已全部完成。**6-Role 正式执行模型完整实现并验证，Enhanced 模式已验证可用，历史功能审计通过，发布准备就绪，契约 Schema Pack 完成，模板化基础包就绪**。
+> **当前进度**: `001-bootstrap` 至 `019-versioning-and-compatibility-foundation` 已全部完成。**6-Role 正式执行模型完整实现并验证，Enhanced 模式已验证可用，历史功能审计通过，发布准备就绪，契约 Schema Pack 完成，模板化基础包就绪，版本化体系建立**。
 
 ### 阶段 7：3-Skill 迁移 ✅ 已完成（010-3-skill-migration）
 

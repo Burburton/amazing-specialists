@@ -146,6 +146,23 @@ Priority order for feature work:
   - completion-report vs README state narrative
   - tasks declared outputs vs actual repository outputs
 
+#### 7. Version Declarations Synchronized (AH-007)
+- **规则**：所有版本声明必须同步更新
+- **检查项**：`package.json`, `CHANGELOG.md`, `contracts/pack/pack-version.json`, `templates/pack/pack-version.json`
+- **严重级别**：版本不同步 = **major**
+- **参考**：`VERSIONING.md` Section "Version Sync Rules"
+
+#### 8. CHANGELOG Reflects Release (AH-008)
+- **规则**：每次发布必须有 CHANGELOG 条目
+- **检查项**：Added/Changed/Deprecated/Removed/Fixed 部分
+- **严重级别**：缺失 CHANGELOG 条目 = **major**
+
+#### 9. Compatibility Matrix Updated (AH-009)
+- **规则**：MAJOR 发布必须更新 `compatibility-matrix.json`
+- **检查项**：版本历史、兼容性状态、迁移路径
+- **严重级别**：MAJOR 发布未更新 = **major**
+- **参考**：`VERSIONING.md` Section "Compatibility Matrix"
+
 ### Findings Severity
 
 审计发现必须使用以下严重级别：

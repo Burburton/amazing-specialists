@@ -1,0 +1,143 @@
+{
+  "$schema": "http://json-schema.org/draft-2020-12/schema#",
+  "title": "OpenCode Expert Package Compatibility Matrix",
+  "description": "Defines compatibility between package versions, contract packs, template packs, and profiles",
+  
+  "matrix_version": "1.0.0",
+  "last_updated": "2026-03-28",
+  
+  "version_history": [
+    {
+      "version": "1.0.0",
+      "release_date": "2026-03-28",
+      "contract_pack_version": "1.0.0",
+      "template_pack_version": "1.0.0",
+      "tooling_version": "1.0.0",
+      "release_type": "initial",
+      "changes": [
+        "Initial release of OpenCode Expert Package",
+        "6-role formal model complete",
+        "37 skills (21 MVP + 16 M4)",
+        "17 contract schemas",
+        "Template pack (minimal/full profiles)",
+        "CLI tools (init/install/doctor)"
+      ]
+    }
+  ],
+  
+  "compatibility": {
+    "1.0.0": {
+      "compatible_with": [],
+      "migration_required_from": [],
+      "incompatible_with": []
+    }
+  },
+  
+  "component_compatibility": {
+    "contract_pack": {
+      "1.0.0": {
+        "compatible_package_versions": ["1.0.0"],
+        "breaking_changes": [],
+        "new_features": [
+          "17 artifact schemas",
+          "Registry with 17 contracts",
+          "Validation utility"
+        ]
+      }
+    },
+    
+    "template_pack": {
+      "1.0.0": {
+        "compatible_package_versions": ["1.0.0"],
+        "profiles": {
+          "minimal": {
+            "file_count": 116,
+            "skill_count": 21,
+            "compatible_with_package": ["1.0.0"]
+          },
+          "full": {
+            "file_count": 190,
+            "skill_count": 37,
+            "compatible_with_package": ["1.0.0"]
+          }
+        },
+        "breaking_changes": [],
+        "new_features": [
+          "Minimal profile (21 MVP skills)",
+          "Full profile (37 skills with M4)",
+          "CLI tools (init/install/doctor)",
+          "Documentation (USAGE.md, PROFILE-COMPARISON.md, UPGRADE-STRATEGY.md)"
+        ]
+      }
+    },
+    
+    "tooling": {
+      "1.0.0": {
+        "compatible_package_versions": ["1.0.0"],
+        "commands": {
+          "init.js": {
+            "version": "1.0.0",
+            "supported_flags": ["--profile", "--force"],
+            "supported_profiles": ["minimal", "full"]
+          },
+          "install.js": {
+            "version": "1.0.0",
+            "supported_flags": ["--profile", "--upgrade", "--dry-run"]
+          },
+          "doctor.js": {
+            "version": "1.0.0",
+            "supported_flags": ["--verbose", "--fix"],
+            "check_count": 10
+          }
+        }
+      }
+    }
+  },
+  
+  "migration_paths": {
+    "to_1.0.0": {
+      "from_versions": [],
+      "description": "Initial release - fresh installation only",
+      "migration_guide": null,
+      "estimated_effort": "N/A"
+    }
+  },
+  
+  "deprecation_schedule": [],
+  
+  "upgrade_rules": {
+    "patch": {
+      "description": "Bug fixes and documentation updates",
+      "auto_upgradable": true,
+      "migration_required": false,
+      "rollback_supported": true
+    },
+    "minor": {
+      "description": "New features, backward compatible",
+      "auto_upgradable": true,
+      "migration_required": false,
+      "rollback_supported": true
+    },
+    "major": {
+      "description": "Breaking changes",
+      "auto_upgradable": false,
+      "migration_required": true,
+      "rollback_supported": false
+    }
+  },
+  
+  "validation_rules": {
+    "version_sync": {
+      "description": "Package version must sync with component versions",
+      "rules": [
+        "Package MAJOR → Contract Pack MAJOR",
+        "Package MAJOR → Template Pack MAJOR",
+        "Contract Pack MAJOR → Package MAJOR"
+      ]
+    },
+    "changelog_required": {
+      "description": "Every release must have CHANGELOG entry",
+      "required_sections": ["Added", "Changed", "Deprecated", "Removed", "Fixed"]
+    }
+  }
+}

@@ -229,8 +229,9 @@ User Input
 | `015-historical-features-audit` | 历史功能审计 | ✅ Complete | 10 features audited, AH-001~AH-006 compliant |
 | `016-release-preparation` | 发布准备 | ✅ Complete | Document cleanup, governance verification, release checklist |
 | `017-contract-schema-pack` | Contract Schema Pack | ✅ Complete | 17 JSON Schemas, registry, validation utility |
+| `018-template-and-bootstrap-foundation` | 模板化与 Bootstrap | ✅ Complete | Template pack (minimal/full), CLI (init/install/doctor) |
 
-> **当前进度**: `001-bootstrap` 至 `017-contract-schema-pack` 已全部完成。**6-Role 正式执行模型完整实现并验证，Enhanced 模式已验证可用，历史功能审计通过，发布准备就绪，契约 Schema Pack 完成**。
+> **当前进度**: `001-bootstrap` 至 `018-template-and-bootstrap-foundation` 已全部完成。**6-Role 正式执行模型完整实现并验证，Enhanced 模式已验证可用，历史功能审计通过，发布准备就绪，契约 Schema Pack 完成，模板化基础包就绪**。
 
 ### 阶段 7：3-Skill 迁移 ✅ 已完成（010-3-skill-migration）
 
@@ -295,7 +296,46 @@ User Input
 **新增发布文档**：
 - `specs/016-release-preparation/release-checklist.md` - 发布检查清单
 
-> **当前进度**: `001-bootstrap` 至 `008-security-core` 完成 MVP 核心，`010-3-skill-migration` 完成骨架归档，`011-m4-enhancement-kit` 完成 M4 可选增强，`012-performance-testing-skills` 完成性能测试套件，`013-e2e-validation` 完成端到端验证，`014-enhanced-mode-validation` 完成 Enhanced 模式验证，`015-historical-features-audit` 完成历史功能审计，`016-release-preparation` 完成发布准备。**Skills 总计 37 个（21 MVP + 16 M4）**，**Features 总计 17 个**。
+### 阶段 13：契约 Schema Pack ✅ 已完成（017-contract-schema-pack）
+
+将文档型契约转化为 machine-readable JSON Schema：
+- **17 个 Artifact Schemas**: 覆盖 6 个角色的所有 artifact contracts
+- **统一 Registry**: `contracts/pack/registry.json` 程序化发现所有 contracts
+- **验证工具**: `validate-schema.js` CLI 工具校验 artifacts
+- **Machine-Readable**: 支持上游调度器、CLI、CI、外部仓库接入
+
+**新增目录**：
+- `contracts/pack/` - 契约 Schema Pack
+- `contracts/pack/samples/` - 测试样本
+
+### 阶段 14：模板化与 Bootstrap ✅ 已完成（018-template-and-bootstrap-foundation）
+
+将专家包从"源码仓库"推进为"可复用的项目模板基础包"：
+- **模板目录**: `templates/pack/minimal/` 和 `templates/pack/full/`
+- **Profile 机制**: minimal (21 MVP skills) / full (37 skills)
+- **CLI 工具**: init / install / doctor 命令
+- **文档**: USAGE.md, PROFILE-COMPARISON.md, UPGRADE-STRATEGY.md
+
+**模板化目标**：解决新用户难以理解哪些文件必须复制、如何初始化、如何验证接入的问题。
+
+**使用方式**：
+```bash
+# 初始化新项目 (minimal profile)
+node templates/cli/init.js ./my-project
+
+# 初始化完整项目 (full profile)
+node templates/cli/init.js ./my-project --profile full
+
+# 健康检查
+node templates/cli/doctor.js
+```
+
+**新增目录**：
+- `templates/pack/` - 模板 Pack (minimal/full profiles)
+- `templates/cli/` - Bootstrap CLI (init/install/doctor)
+- `templates/*.md` - 使用文档
+
+> **当前进度**: `001-bootstrap` 至 `008-security-core` 完成 MVP 核心，`010-3-skill-migration` 完成骨架归档，`011-m4-enhancement-kit` 完成 M4 可选增强，`012-performance-testing-skills` 完成性能测试套件，`013-e2e-validation` 完成端到端验证，`014-enhanced-mode-validation` 完成 Enhanced 模式验证，`015-historical-features-audit` 完成历史功能审计，`016-release-preparation` 完成发布准备，`017-contract-schema-pack` 完成契约 Schema Pack，`018-template-and-bootstrap-foundation` 完成模板化基础包。**Skills 总计 37 个（21 MVP + 16 M4）**，**Features 总计 19 个**。
 
 ## Quick Start
 

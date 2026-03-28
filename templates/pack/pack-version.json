@@ -1,0 +1,33 @@
+{
+  "version": "1.0.0",
+  "release_date": "2026-03-28",
+  "template_pack_id": "opencode-expert-pack",
+  
+  "profiles": {
+    "minimal": {
+      "file_count": 50,
+      "skill_count": 21,
+      "description": "Essential execution layer with MVP skills"
+    },
+    "full": {
+      "file_count": 150,
+      "skill_count": 37,
+      "description": "Complete execution layer with M4 enhancements"
+    }
+  },
+  
+  "breaking_changes": [],
+  
+  "deprecations": [],
+  
+  "checksum": {
+    "algorithm": "sha256",
+    "minimal": "",
+    "full": ""
+  },
+  
+  "compatibility": {
+    "opencode_version": ">=1.0.0",
+    "node_version": ">=18.0.0"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-2020-12/schema#",
+  "title": "Template Manifest",
+  "description": "Instance metadata for projects created from this template pack",
+  
+  "template_version": "1.0.0",
+  "profile": "minimal",
+  
+  "install_timestamp": "2026-03-28T00:00:00Z",
+  "last_upgrade_timestamp": null,
+  
+  "template_source": "https://github.com/Burburburton/amazing_agent_specialist",
+  
+  "install_options": {
+    "force": false,
+    "dry_run": false
+  },
+  
+  "upgrade_history": [],
+  
+  "user_extensions": {
+    "custom_skills": [],
+    "custom_commands": [],
+    "preserved_files": []
+  },
+  
+  "validation": {
+    "last_doctor_run": null,
+    "health_status": "unknown"
+  }
+}

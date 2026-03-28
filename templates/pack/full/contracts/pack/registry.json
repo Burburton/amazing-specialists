@@ -1,0 +1,178 @@
+{
+  "pack_version": "1.0.0",
+  "created_at": "2026-03-28T00:00:00Z",
+  "updated_at": "2026-03-28T00:00:00Z",
+  "total_contracts": 17,
+  "contracts": [
+    {
+      "contract_id": "AC-001",
+      "contract_name": "design-note",
+      "producer_role": "architect",
+      "consumer_roles": ["developer", "tester", "reviewer", "docs"],
+      "version": "1.0.0",
+      "schema_path": "contracts/pack/architect/design-note.schema.json",
+      "markdown_path": "specs/003-architect-core/contracts/design-note-contract.md",
+      "description": "Primary design baseline document produced by architect, transforming feature specifications into structured technical designs"
+    },
+    {
+      "contract_id": "AC-002",
+      "contract_name": "open-questions",
+      "producer_role": "architect",
+      "consumer_roles": ["developer", "tester", "reviewer", "management"],
+      "version": "1.0.0",
+      "schema_path": "contracts/pack/architect/open-questions.schema.json",
+      "markdown_path": "specs/003-architect-core/contracts/open-questions-contract.md",
+      "description": "Structured document capturing unresolved design questions with impact analysis and temporary assumptions"
+    },
+    {
+      "contract_id": "AC-003",
+      "contract_name": "risks-and-tradeoffs",
+      "producer_role": "architect",
+      "consumer_roles": ["reviewer", "management"],
+      "version": "1.0.0",
+      "schema_path": "contracts/pack/architect/risks-and-tradeoffs.schema.json",
+      "markdown_path": "specs/003-architect-core/contracts/risks-and-tradeoffs-contract.md",
+      "description": "Document capturing identified risks, their severity, mitigation strategies, and trade-off decisions made during design"
+    },
+    {
+      "contract_id": "AC-004",
+      "contract_name": "module-boundaries",
+      "producer_role": "architect",
+      "consumer_roles": ["developer", "tester", "reviewer"],
+      "version": "1.0.0",
+      "schema_path": "contracts/pack/architect/module-boundaries.schema.json",
+      "markdown_path": "specs/003-architect-core/contracts/module-boundaries-contract.md",
+      "description": "Definition of module boundaries, ownership assignments, and interface contracts between modules"
+    },
+    {
+      "contract_id": "DC-001",
+      "contract_name": "implementation-summary",
+      "producer_role": "developer",
+      "consumer_roles": ["tester", "reviewer", "docs"],
+      "version": "1.0.0",
+      "schema_path": "contracts/pack/developer/implementation-summary.schema.json",
+      "markdown_path": "specs/004-developer-core/contracts/implementation-summary-contract.md",
+      "description": "Developer-produced artifact documenting code changes, goal achievement, and known issues"
+    },
+    {
+      "contract_id": "DC-002",
+      "contract_name": "self-check-report",
+      "producer_role": "developer",
+      "consumer_roles": ["tester", "reviewer"],
+      "version": "1.0.0",
+      "schema_path": "contracts/pack/developer/self-check-report.schema.json",
+      "markdown_path": "specs/004-developer-core/contracts/self-check-report-contract.md",
+      "description": "Developer self-validation report showing compliance with coding rules and implementation requirements"
+    },
+    {
+      "contract_id": "DC-003",
+      "contract_name": "bugfix-report",
+      "producer_role": "developer",
+      "consumer_roles": ["tester", "reviewer", "docs"],
+      "version": "1.0.0",
+      "schema_path": "contracts/pack/developer/bugfix-report.schema.json",
+      "markdown_path": "specs/004-developer-core/contracts/bugfix-report-contract.md",
+      "description": "Report documenting bug fix implementation with root cause analysis and verification evidence"
+    },
+    {
+      "contract_id": "TC-001",
+      "contract_name": "verification-report",
+      "producer_role": "tester",
+      "consumer_roles": ["reviewer", "acceptance", "developer"],
+      "version": "1.0.0",
+      "schema_path": "contracts/pack/tester/verification-report.schema.json",
+      "markdown_path": "specs/005-tester-core/contracts/verification-report-contract.md",
+      "description": "Tester-produced report recording tests run, pass/fail summary, coverage gaps, and confidence level"
+    },
+    {
+      "contract_id": "TC-002",
+      "contract_name": "test-scope-report",
+      "producer_role": "tester",
+      "consumer_roles": ["reviewer", "developer"],
+      "version": "1.0.0",
+      "schema_path": "contracts/pack/tester/test-scope-report.schema.json",
+      "markdown_path": "specs/005-tester-core/contracts/test-scope-report-contract.md",
+      "description": "Document defining test scope, boundary conditions, and risk-based testing priorities"
+    },
+    {
+      "contract_id": "TC-003",
+      "contract_name": "regression-risk-report",
+      "producer_role": "tester",
+      "consumer_roles": ["reviewer", "developer"],
+      "version": "1.0.0",
+      "schema_path": "contracts/pack/tester/regression-risk-report.schema.json",
+      "markdown_path": "specs/005-tester-core/contracts/regression-risk-report-contract.md",
+      "description": "Analysis of regression risks from code changes with recommended regression test scope"
+    },
+    {
+      "contract_id": "RC-001",
+      "contract_name": "review-findings-report",
+      "producer_role": "reviewer",
+      "consumer_roles": ["acceptance", "docs", "security", "developer"],
+      "version": "1.0.0",
+      "schema_path": "contracts/pack/reviewer/review-findings-report.schema.json",
+      "markdown_path": "specs/006-reviewer-core/contracts/review-findings-report-contract.md",
+      "description": "Independent review report with severity-classified findings, governance alignment status, and actionable recommendations"
+    },
+    {
+      "contract_id": "RC-002",
+      "contract_name": "actionable-feedback-report",
+      "producer_role": "reviewer",
+      "consumer_roles": ["developer", "acceptance"],
+      "version": "1.0.0",
+      "schema_path": "contracts/pack/reviewer/actionable-feedback-report.schema.json",
+      "markdown_path": "specs/006-reviewer-core/contracts/actionable-feedback-report-contract.md",
+      "description": "Structured feedback for developer with must-fix items, improvement suggestions, and clear acceptance conditions"
+    },
+    {
+      "contract_id": "RC-003",
+      "contract_name": "acceptance-decision-record",
+      "producer_role": "reviewer",
+      "consumer_roles": ["docs", "management", "acceptance"],
+      "version": "1.0.0",
+      "schema_path": "contracts/pack/reviewer/acceptance-decision-record.schema.json",
+      "markdown_path": "specs/006-reviewer-core/contracts/acceptance-decision-record-contract.md",
+      "description": "Formal record of acceptance decision with conditions, evidence, and traceability to upstream artifacts"
+    },
+    {
+      "contract_id": "DOC-001",
+      "contract_name": "docs-sync-report",
+      "producer_role": "docs",
+      "consumer_roles": ["acceptance", "management", "OpenClaw"],
+      "version": "1.0.0",
+      "schema_path": "contracts/pack/docs/docs-sync-report.schema.json",
+      "markdown_path": "specs/007-docs-core/contracts/docs-sync-report-contract.md",
+      "description": "Documentation synchronization report recording changes made, evidence consumed, and downstream handoff recommendation"
+    },
+    {
+      "contract_id": "DOC-002",
+      "contract_name": "changelog-entry",
+      "producer_role": "docs",
+      "consumer_roles": ["management", "release"],
+      "version": "1.0.0",
+      "schema_path": "contracts/pack/docs/changelog-entry.schema.json",
+      "markdown_path": "specs/007-docs-core/contracts/changelog-entry-contract.md",
+      "description": "Structured changelog entry with change type classification, capability changes, and breaking changes notes"
+    },
+    {
+      "contract_id": "SEC-001",
+      "contract_name": "security-review-report",
+      "producer_role": "security",
+      "consumer_roles": ["developer", "reviewer", "management"],
+      "version": "1.0.0",
+      "schema_path": "contracts/pack/security/security-review-report.schema.json",
+      "markdown_path": "specs/008-security-core/contracts/security-review-report-contract.md",
+      "description": "Security review report with vulnerability findings, CWE/OWASP references, and gate decision"
+    },
+    {
+      "contract_id": "SEC-002",
+      "contract_name": "input-validation-review-report",
+      "producer_role": "security",
+      "consumer_roles": ["developer", "reviewer"],
+      "version": "1.0.0",
+      "schema_path": "contracts/pack/security/input-validation-review-report.schema.json",
+      "markdown_path": "specs/008-security-core/contracts/input-validation-review-report-contract.md",
+      "description": "Focused security review for input validation with attack vectors analysis and remediation guidance"
+    }
+  ]
+}

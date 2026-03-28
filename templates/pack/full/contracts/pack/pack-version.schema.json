@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "contracts/pack/pack-version.schema.json",
+  "title": "Schema Pack Version",
+  "description": "Schema for tracking schema pack version and changelog",
+  "type": "object",
+  "properties": {
+    "pack_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Schema pack version in semver format"
+    },
+    "base_contracts_version": {
+      "type": "string",
+      "description": "Version identifier for base markdown contracts"
+    },
+    "schema_spec_version": {
+      "type": "string",
+      "const": "draft/2020-12",
+      "description": "JSON Schema specification version used"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Pack creation timestamp"
+    },
+    "changelog": {
+      "type": "array",
+      "description": "Version history with changes",
+      "items": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "string",
+            "pattern": "^\\d+\\.\\d+\\.\\d+$",
+            "description": "Version number"
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "description": "Release date"
+          },
+          "changes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of changes in this version"
+          }
+        },
+        "required": ["version", "date", "changes"]
+      }
+    }
+  },
+  "required": ["pack_version", "base_contracts_version", "schema_spec_version", "created_at", "changelog"],
+  "additionalProperties": false
+}

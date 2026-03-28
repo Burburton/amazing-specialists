@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "contracts/pack/registry.schema.json",
+  "title": "Contract Registry Schema",
+  "description": "Schema for the unified contract registry - authoritative source for contract discovery",
+  "type": "object",
+  "properties": {
+    "pack_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Schema pack version in semver format"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Registry creation timestamp (ISO 8601)"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Registry last update timestamp (ISO 8601)"
+    },
+    "total_contracts": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Total number of contracts in registry"
+    },
+    "contracts": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Array of contract entries with metadata",
+      "items": {
+        "type": "object",
+        "properties": {
+          "contract_id": {
+            "type": "string",
+            "pattern": "^[A-Z]+-\\d+$",
+            "description": "Unique contract identifier (e.g., AC-001, DC-001, TC-001)"
+          },
+          "contract_name": {
+            "type": "string",
+            "pattern": "^[a-z-]+$",
+            "description": "Contract name in kebab-case (e.g., design-note, verification-report)"
+          },
+          "producer_role": {
+            "type": "string",
+            "enum": ["architect", "developer", "tester", "reviewer", "docs", "security"],
+            "description": "Role that produces this artifact"
+          },
+          "consumer_roles": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["architect", "developer", "tester", "reviewer", "docs", "security", "acceptance", "management", "OpenClaw"]
+            },
+            "description": "Roles that consume this artifact"
+          },
+          "version": {
+            "type": "string",
+            "pattern": "^\\d+\\.\\d+\\.\\d+$",
+            "description": "Contract version (semver format)"
+          },
+          "schema_path": {
+            "type": "string",
+            "pattern": "^contracts/pack/[a-z]+/[a-z-]+\\.schema\\.json$",
+            "description": "Relative path to JSON Schema file"
+          },
+          "markdown_path": {
+            "type": "string",
+            "description": "Relative path to markdown contract definition"
+          },
+          "description": {
+            "type": "string",
+            "minLength": 10,
+            "maxLength": 200,
+            "description": "Brief description of contract purpose"
+          }
+        },
+        "required": [
+          "contract_id",
+          "contract_name",
+          "producer_role",
+          "consumer_roles",
+          "version",
+          "schema_path",
+          "markdown_path",
+          "description"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "pack_version",
+    "created_at",
+    "updated_at",
+    "total_contracts",
+    "contracts"
+  ],
+  "additionalProperties": false
+}

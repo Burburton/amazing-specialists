@@ -1,0 +1,189 @@
+{
+  "$schema": "http://json-schema.org/draft-2020-12/schema#",
+  "title": "Template Content Index",
+  "description": "Classification of template content for minimal/full profiles",
+  "version": "1.0.0",
+  
+  "profiles": {
+    "minimal": {
+      "description": "Essential OpenCode execution layer with 21 MVP skills",
+      "target_files": 50,
+      "target_skills": 21
+    },
+    "full": {
+      "description": "Complete OpenCode execution layer with 37 skills including M4 enhancements",
+      "target_files": 150,
+      "target_skills": 37,
+      "extends": "minimal"
+    }
+  },
+
+  "content_classification": {
+    "required": {
+      "description": "Files that MUST be included in all profiles",
+      "files": [
+        ".opencode/commands/spec-start.md",
+        ".opencode/commands/spec-plan.md",
+        ".opencode/commands/spec-tasks.md",
+        ".opencode/commands/spec-implement.md",
+        ".opencode/commands/spec-audit.md",
+        "AGENTS.md",
+        "package-spec.md",
+        "role-definition.md",
+        "io-contract.md",
+        "quality-gate.md",
+        "collaboration-protocol.md",
+        "package-lifecycle.md",
+        "contracts/pack/registry.json",
+        "contracts/pack/registry.schema.json",
+        "contracts/pack/pack-version.json"
+      ],
+      "directories": [
+        ".opencode/skills/common/",
+        ".opencode/skills/architect/",
+        ".opencode/skills/developer/",
+        ".opencode/skills/tester/",
+        ".opencode/skills/reviewer/",
+        ".opencode/skills/docs/",
+        ".opencode/skills/security/",
+        "contracts/pack/"
+      ]
+    },
+    
+    "optional": {
+      "description": "Files included only in full profile",
+      "files": [
+        "docs/templates/",
+        "docs/rules/",
+        "docs/validation/",
+        "docs/traceability/",
+        "docs/enhanced-mode-guide.md",
+        "docs/enhanced-mode-selector.md"
+      ],
+      "m4_skills": [
+        ".opencode/skills/architect/interface-contract-design/",
+        ".opencode/skills/architect/migration-planning/",
+        ".opencode/skills/developer/refactor-safely/",
+        ".opencode/skills/developer/dependency-minimization/",
+        ".opencode/skills/tester/integration-test-design/",
+        ".opencode/skills/tester/flaky-test-diagnosis/",
+        ".opencode/skills/tester/performance-test-design/",
+        ".opencode/skills/tester/benchmark-analysis/",
+        ".opencode/skills/tester/load-test-orchestration/",
+        ".opencode/skills/tester/performance-regression-analysis/",
+        ".opencode/skills/reviewer/maintainability-review/",
+        ".opencode/skills/reviewer/risk-review/",
+        ".opencode/skills/docs/architecture-doc-sync/",
+        ".opencode/skills/docs/user-guide-update/",
+        ".opencode/skills/security/secret-handling-review/",
+        ".opencode/skills/security/dependency-risk-review/"
+      ]
+    },
+    
+    "source_only": {
+      "description": "Files NEVER included in templates (internal source repo only)",
+      "exclude_patterns": [
+        "specs/001-*/**",
+        "specs/002-*/**",
+        "specs/003-*/**",
+        "specs/004-*/**",
+        "specs/005-*/**",
+        "specs/006-*/**",
+        "specs/007-*/**",
+        "specs/008-*/**",
+        "specs/009-*/**",
+        "specs/010-*/**",
+        "specs/011-*/**",
+        "specs/012-*/**",
+        "specs/013-*/**",
+        "specs/014-*/**",
+        "specs/015-*/**",
+        "specs/016-*/**",
+        "specs/017-*/**",
+        "specs/018-*/**",
+        "docs/infra/**",
+        "docs/archive/**",
+        "templates/**"
+      ]
+    },
+    
+    "user_extensions": {
+      "description": "Patterns that are NEVER modified during install/upgrade",
+      "preserve_patterns": [
+        ".opencode/skills/**/examples/user-*",
+        ".opencode/commands/custom-*",
+        "specs/user-*/**",
+        "docs/project-specific/**"
+      ]
+    }
+  },
+
+  "mvp_skills": {
+    "common": [
+      "artifact-reading",
+      "context-summarization",
+      "failure-analysis",
+      "execution-reporting",
+      "retry-strategy"
+    ],
+    "architect": [
+      "requirement-to-design",
+      "module-boundary-design",
+      "tradeoff-analysis"
+    ],
+    "developer": [
+      "feature-implementation",
+      "bugfix-workflow",
+      "code-change-selfcheck"
+    ],
+    "tester": [
+      "unit-test-design",
+      "regression-analysis",
+      "edge-case-matrix"
+    ],
+    "reviewer": [
+      "code-review-checklist",
+      "spec-implementation-diff",
+      "reject-with-actionable-feedback"
+    ],
+    "docs": [
+      "readme-sync",
+      "changelog-writing"
+    ],
+    "security": [
+      "auth-and-permission-review",
+      "input-validation-review"
+    ]
+  },
+
+  "m4_skills": {
+    "architect": [
+      "interface-contract-design",
+      "migration-planning"
+    ],
+    "developer": [
+      "refactor-safely",
+      "dependency-minimization"
+    ],
+    "tester": [
+      "integration-test-design",
+      "flaky-test-diagnosis",
+      "performance-test-design",
+      "benchmark-analysis",
+      "load-test-orchestration",
+      "performance-regression-analysis"
+    ],
+    "reviewer": [
+      "maintainability-review",
+      "risk-review"
+    ],
+    "docs": [
+      "architecture-doc-sync",
+      "user-guide-update"
+    ],
+    "security": [
+      "secret-handling-review",
+      "dependency-risk-review"
+    ]
+  }
+}

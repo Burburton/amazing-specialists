@@ -197,8 +197,9 @@ User Input
 | `013-e2e-validation` | 端到端流程验证 | ✅ Complete | 5 commands, 6 roles, AH-001~AH-006 validated |
 | `014-enhanced-mode-validation` | Enhanced 模式验证 | ✅ Complete | 16 M4 skills trigger validation, Enhanced mode activated |
 | `015-historical-features-audit` | 历史功能审计 | ✅ Complete | 10 features audited, AH-001~AH-006 compliant |
+| `016-release-preparation` | 发布准备 | ✅ Complete | Document cleanup, governance verification, release checklist |
 
-> **当前进度**: `001-bootstrap` 至 `015-historical-features-audit` 已全部完成。**6-Role 正式执行模型完整实现并验证，Enhanced 模式已验证可用，历史功能审计通过**。
+> **当前进度**: `001-bootstrap` 至 `016-release-preparation` 已全部完成。**6-Role 正式执行模型完整实现并验证，Enhanced 模式已验证可用，历史功能审计通过，发布准备就绪**。
 
 ### 阶段 7：3-Skill 迁移 ✅ 已完成（010-3-skill-migration）
 
@@ -252,7 +253,18 @@ User Input
 **新增审计报告**：
 - `specs/015-historical-features-audit/consolidated-audit-report.md` - 综合审计报告
 
-> **当前进度**: `001-bootstrap` 至 `008-security-core` 完成 MVP 核心，`010-3-skill-migration` 完成骨架归档，`011-m4-enhancement-kit` 完成 M4 可选增强，`012-performance-testing-skills` 完成性能测试套件，`013-e2e-validation` 完成端到端验证，`014-enhanced-mode-validation` 完成 Enhanced 模式验证，`015-historical-features-audit` 完成历史功能审计。**Skills 总计 37 个（21 MVP + 16 M4）**，**Features 总计 17 个**。
+### 阶段 12：发布准备 ✅ 已完成（016-release-preparation）
+
+为 v1.0.0 正式发布做准备：
+- **文档一致性修复**: README/CHANGELOG 添加缺失 features
+- **临时产物清理**: 删除空目录，归档早期设计文档
+- **Governance 验证**: AH-001~AH-006 全部通过
+- **发布状态**: ✅ READY FOR v1.0.0
+
+**新增发布文档**：
+- `specs/016-release-preparation/release-checklist.md` - 发布检查清单
+
+> **当前进度**: `001-bootstrap` 至 `008-security-core` 完成 MVP 核心，`010-3-skill-migration` 完成骨架归档，`011-m4-enhancement-kit` 完成 M4 可选增强，`012-performance-testing-skills` 完成性能测试套件，`013-e2e-validation` 完成端到端验证，`014-enhanced-mode-validation` 完成 Enhanced 模式验证，`015-historical-features-audit` 完成历史功能审计，`016-release-preparation` 完成发布准备。**Skills 总计 37 个（21 MVP + 16 M4）**，**Features 总计 17 个**。
 
 ## Quick Start
 
@@ -272,6 +284,7 @@ User Input
 - [specs/013-e2e-validation/verification-report.md](specs/013-e2e-validation/verification-report.md) - 端到端流程验证
 - [specs/014-enhanced-mode-validation/verification-report.md](specs/014-enhanced-mode-validation/verification-report.md) - Enhanced 模式验证
 - [specs/015-historical-features-audit/consolidated-audit-report.md](specs/015-historical-features-audit/consolidated-audit-report.md) - 历史功能审计报告
+- [specs/016-release-preparation/release-checklist.md](specs/016-release-preparation/release-checklist.md) - 发布检查清单
 
 ### Skills 目录结构
 

@@ -227,6 +227,26 @@ Initial release of OpenCode 专家包 - A complete execution layer for automated
 
 ---
 
+#### [016-release-preparation] - 2026-03-28
+**发布准备**
+
+**Cleanup:**
+- Removed empty `docs/planning/` directory
+- Archived early design docs to `docs/archive/early-design/`
+- Updated README.md with missing features 001, 002, 002b
+
+**Verified:**
+- Document consistency (README, CHANGELOG, feature specs)
+- Skills inventory (37 skills confirmed)
+- Governance compliance (AH-001~AH-006 all pass)
+
+**Added:**
+- `release-checklist.md` - Pre-release verification checklist
+
+**Result:** READY FOR v1.0.0 RELEASE
+
+---
+
 ## Skills Summary
 
 ### MVP Core Skills (21)

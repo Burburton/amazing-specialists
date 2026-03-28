@@ -407,3 +407,45 @@ Legacy skills are archived in `docs/archive/legacy-skills/`.
 - Feature count updated from 19 to 20
 
 **Result:** COMPLETE - Establishes adapter layer for upstream/downstream integration
+
+---
+
+### Later Adapters (021)
+
+#### [021-github-issue-adapter] - 2026-03-29
+**GitHub Issue Orchestrator Adapter**
+
+**Added:**
+- `adapters/github-issue/` - Complete GitHub Issue Orchestrator Adapter implementation
+- `label-parser.js` - Parse Issue labels (milestone, role, command, task, risk)
+- `body-parser.js` - Parse Issue body sections (Context, Goal, Constraints, Inputs, Expected Outputs)
+- `issue-parser.js` - Main parser coordinating label + body parsing
+- `github-client.js` - GitHub REST API client with rate limiting
+- `webhook-handler.js` - Secure webhook handling (HMAC-SHA256 verification)
+- `comment-templates.js` - Markdown templates for escalation, retry, result comments
+- `retry-handler.js` - Retry decision logic with backoff
+- `index.js` - Main adapter implementing OrchestratorAdapter interface
+- `types.js` - TypeScript type definitions
+- `github-issue.config.json` - Adapter configuration
+- `README.md` - Complete adapter documentation
+
+**Tests:**
+- 7 test suites, 448 unit tests, all passing
+- `label-parser.test.js` - 103 tests (100% coverage)
+- `body-parser.test.js` - 42 tests
+- `issue-parser.test.js` - 3 tests
+- `github-client.test.js` - 92 tests
+- `webhook-handler.test.js` - 80 tests (98.7% coverage)
+- `retry-handler.test.js` - 68 tests
+- `index.test.js` - 60 tests (interface compliance)
+
+**Changed:**
+- `adapters/registry.json` - Updated github-issue status to "implemented"
+- Feature count updated from 20 to 21
+
+**Security:**
+- HMAC-SHA256 webhook signature verification
+- Timing-safe comparison (crypto.timingSafeEqual)
+- Rate limiting with exponential backoff
+
+**Result:** COMPLETE - Enables task dispatch via GitHub Issues

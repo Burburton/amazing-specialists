@@ -272,8 +272,9 @@ User Input
 | `018-template-and-bootstrap-foundation` | 模板化与 Bootstrap | ✅ Complete | Template pack (minimal/full), CLI (init/install/doctor) |
 | `019-versioning-and-compatibility-foundation` | 版本化与兼容性 | ✅ Complete | VERSIONING.md, compatibility-matrix.json, migration guide template |
 | `020-orchestrator-and-workspace-adapters` | Orchestrator 与 Workspace 适配层 | ✅ Complete | ADAPTERS.md, adapters/, io-contract.md §8, adapter usage guide |
+| `021-github-issue-adapter` | GitHub Issue 适配器 | ✅ Complete | adapters/github-issue/, 448 tests, webhook security |
 
-> **当前进度**: `001-bootstrap` 至 `020-orchestrator-and-workspace-adapters` 已全部完成。**6-Role 正式执行模型完整实现并验证，Enhanced 模式已验证可用，历史功能审计通过，发布准备就绪，契约 Schema Pack 完成，模板化基础包就绪，版本化体系建立，适配层架构完成**。
+> **当前进度**: `001-bootstrap` 至 `021-github-issue-adapter` 已全部完成。**6-Role 正式执行模型完整实现并验证，Enhanced 模式已验证可用，历史功能审计通过，发布准备就绪，契约 Schema Pack 完成，模板化基础包就绪，版本化体系建立，适配层架构完成，GitHub Issue 适配器实现**。
 
 ### 阶段 7：3-Skill 迁移 ✅ 已完成（010-3-skill-migration）
 
@@ -377,7 +378,7 @@ node templates/cli/doctor.js
 - `templates/cli/` - Bootstrap CLI (init/install/doctor)
 - `templates/*.md` - 使用文档
 
-> **当前进度**: `001-bootstrap` 至 `008-security-core` 完成 MVP 核心，`010-3-skill-migration` 完成骨架归档，`011-m4-enhancement-kit` 完成 M4 可选增强，`012-performance-testing-skills` 完成性能测试套件，`013-e2e-validation` 完成端到端验证，`014-enhanced-mode-validation` 完成 Enhanced 模式验证，`015-historical-features-audit` 完成历史功能审计，`016-release-preparation` 完成发布准备，`017-contract-schema-pack` 完成契约 Schema Pack，`018-template-and-bootstrap-foundation` 完成模板化基础包，`019-versioning-and-compatibility-foundation` 完成版本化体系，`020-orchestrator-and-workspace-adapters` 完成适配层架构。**Skills 总计 37 个（21 MVP + 16 M4）**，**Features 总计 20 个**。
+> **当前进度**: `001-bootstrap` 至 `008-security-core` 完成 MVP 核心，`010-3-skill-migration` 完成骨架归档，`011-m4-enhancement-kit` 完成 M4 可选增强，`012-performance-testing-skills` 完成性能测试套件，`013-e2e-validation` 完成端到端验证，`014-enhanced-mode-validation` 完成 Enhanced 模式验证，`015-historical-features-audit` 完成历史功能审计，`016-release-preparation` 完成发布准备，`017-contract-schema-pack` 完成契约 Schema Pack，`018-template-and-bootstrap-foundation` 完成模板化基础包，`019-versioning-and-compatibility-foundation` 完成版本化体系，`020-orchestrator-and-workspace-adapters` 完成适配层架构，`021-github-issue-adapter` 完成 GitHub Issue 适配器。**Skills 总计 37 个（21 MVP + 16 M4）**，**Features 总计 21 个**。
 
 ## Quick Start
 

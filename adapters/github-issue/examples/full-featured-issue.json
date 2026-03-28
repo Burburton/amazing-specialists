@@ -1,0 +1,112 @@
+{
+  "_comment": "Full-Featured GitHub Issue Example - Complete configuration with all sections",
+  "_description": "This example demonstrates all supported label types and body sections for maximum control over task execution.",
+  
+  "title": "Design and implement payment gateway integration",
+  
+  "body": "## Context\n\nThis task is part of the e-commerce milestone (M001). We need to integrate a payment gateway to process customer transactions securely. The current checkout flow ends without payment processing.\n\n## Goal\n\nDesign and implement a secure payment gateway integration supporting Stripe and PayPal with proper error handling and transaction logging.\n\n## Constraints\n\n- Must comply with PCI DSS Level 1 requirements\n- Maximum transaction timeout: 30 seconds\n- Support USD, EUR, and GBP currencies\n- Idempotent transaction requests\n\n## Inputs\n\n- design-note: `specs/001/design-note.md` - Architecture design for payment flow\n- api-keys: `config/stripe-test.keys` - Stripe test environment credentials\n- mock-data: `tests/fixtures/transactions.json` - Sample transaction data for testing\n\n## Expected Outputs\n\n- payment-service: implementation-summary - Payment service implementation\n- unit-tests: verification-report - Unit test coverage report\n- integration-guide: docs-sync-report - Integration documentation\n- security-review: security-review-report - Security assessment report",
+  
+  "labels": [
+    {
+      "_comment": "Role label: determines which expert role handles this task",
+      "name": "role:developer",
+      "description": "Assigns to developer role for implementation"
+    },
+    {
+      "_comment": "Milestone label: links task to project milestone",
+      "name": "milestone:M001",
+      "description": "Part of milestone M001 - E-commerce Core Features"
+    },
+    {
+      "_comment": "Task label: specific task identifier",
+      "name": "task:T015",
+      "description": "Task T015 - Payment Gateway Integration"
+    },
+    {
+      "_comment": "Command label: specific skill/command to invoke",
+      "name": "command:feature-implementation",
+      "description": "Uses feature-implementation skill"
+    },
+    {
+      "_comment": "Risk label: indicates task risk level (affects retry strategy)",
+      "name": "risk:high",
+      "description": "High-risk task due to security requirements"
+    }
+  ],
+  
+  "state": "open",
+  "number": 123,
+  
+  "user": {
+    "login": "product-manager",
+    "type": "User"
+  },
+  
+  "milestone": {
+    "_comment": "GitHub milestone can also be used if no milestone: label present",
+    "title": "M001 - E-commerce Core Features",
+    "number": 1
+  },
+  
+  "_resulting_dispatch_payload": {
+    "_comment": "Complete dispatch payload generated from this Issue",
+    "dispatch_id": "gh-issue-myorg-myrepo-123",
+    "project_id": "myorg/myrepo",
+    "milestone_id": "M001",
+    "task_id": "T015",
+    "role": "developer",
+    "command": "feature-implementation",
+    "goal": "Design and implement a secure payment gateway integration supporting Stripe and PayPal with proper error handling and transaction logging.",
+    "risk_level": "high",
+    "context": {
+      "task_scope": "This task is part of the e-commerce milestone (M001). We need to integrate a payment gateway to process customer transactions securely. The current checkout flow ends without payment processing."
+    },
+    "inputs": [
+      {
+        "artifact_id": "design-note",
+        "artifact_type": "design-note",
+        "path": "specs/001/design-note.md",
+        "summary": "Architecture design for payment flow"
+      },
+      {
+        "artifact_id": "api-keys",
+        "artifact_type": "config",
+        "path": "config/stripe-test.keys",
+        "summary": "Stripe test environment credentials"
+      },
+      {
+        "artifact_id": "mock-data",
+        "artifact_type": "test-data",
+        "path": "tests/fixtures/transactions.json",
+        "summary": "Sample transaction data for testing"
+      }
+    ],
+    "expected_outputs": [
+      "payment-service: implementation-summary",
+      "unit-tests: verification-report",
+      "integration-guide: docs-sync-report",
+      "security-review: security-review-report"
+    ],
+    "constraints": [
+      "Must comply with PCI DSS Level 1 requirements",
+      "Maximum transaction timeout: 30 seconds",
+      "Support USD, EUR, and GBP currencies",
+      "Idempotent transaction requests"
+    ],
+    "retry_context": null
+  },
+  
+  "_label_priority_rules": {
+    "_comment": "When multiple labels of same type exist, priority order is applied",
+    "role_priority": "architect > developer > tester > reviewer > docs > security",
+    "example": "If both role:developer and role:tester exist, architect is used (if present), otherwise developer"
+  },
+  
+  "_risk_level_impact": {
+    "_comment": "Risk level affects retry behavior",
+    "low": "Normal retry: max 1 attempt",
+    "medium": "Normal retry: max 1 attempt",
+    "high": "No automatic retry - escalates immediately",
+    "critical": "No automatic retry - escalates immediately"
+  }
+}

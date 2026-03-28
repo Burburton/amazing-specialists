@@ -1,0 +1,99 @@
+{
+  "$schema": "http://json-schema.org/draft-2020-12/schema#",
+  "title": "GitHub Issue Adapter Configuration",
+  "description": "Configuration for GitHub Issue Orchestrator Adapter",
+  
+  "adapter_id": "github-issue",
+  "adapter_type": "orchestrator",
+  "priority": "later",
+  "version": "1.0.0",
+  
+  "github_config": {
+    "api": {
+      "base_url": "https://api.github.com",
+      "graphql_url": "https://api.github.com/graphql",
+      "api_version": "2022-11-28",
+      "user_agent": "OpenCode-ExpertPack/1.0.0"
+    },
+    
+    "authentication": {
+      "primary_method": "github_app",
+      "fallback_method": "pat",
+      "token_env_var": "GITHUB_TOKEN",
+      "app_id_env_var": "GITHUB_APP_ID",
+      "app_private_key_env_var": "GITHUB_APP_PRIVATE_KEY"
+    },
+    
+    "webhook": {
+      "secret_env_var": "GITHUB_WEBHOOK_SECRET",
+      "signature_header": "X-Hub-Signature-256",
+      "event_header": "X-GitHub-Event",
+      "delivery_header": "X-GitHub-Delivery"
+    },
+    
+    "label_mappings": {
+      "milestone_prefix": "milestone:",
+      "role_prefix": "role:",
+      "command_prefix": "command:",
+      "task_prefix": "task:",
+      "risk_prefix": "risk:",
+      "escalation_prefix": "escalation:",
+      "status_prefix": "status:"
+    },
+    
+    "default_values": {
+      "role": "developer",
+      "command": "implement-task",
+      "risk_level": "medium"
+    },
+    
+    "retry_config": {
+      "strategy": "auto",
+      "max_retry": 1,
+      "backoff_seconds": 300,
+      "comment_on_retry": true,
+      "no_retry_for_risk": ["high", "critical"]
+    },
+    
+    "rate_limit": {
+      "enabled": true,
+      "warning_threshold": 100,
+      "backoff_multiplier": 2,
+      "max_backoff_seconds": 3600
+    },
+    
+    "events": {
+      "process": [
+        "issues.opened",
+        "issues.edited",
+        "issues.labeled",
+        "issue_comment.created"
+      ],
+      "ignore": [
+        "issues.closed",
+        "issues.deleted",
+        "issues.assigned",
+        "issues.unassigned"
+      ]
+    }
+  },
+  
+  "dispatch_config": {
+    "dispatch_id_format": "gh-issue-{owner}-{repo}-{number}",
+    "project_id_format": "{owner}/{repo}"
+  },
+  
+  "comment_templates": {
+    "acknowledgment": "templates/acknowledgment.md",
+    "escalation": "templates/escalation.md",
+    "retry": "templates/retry.md",
+    "result": "templates/result.md"
+  },
+  
+  "validation": {
+    "require_role_label": true,
+    "require_milestone": false,
+    "require_task_id": false,
+    "strict_body_parsing": false
+  }
+}

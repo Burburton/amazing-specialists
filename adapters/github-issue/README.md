@@ -1,0 +1,563 @@
+# GitHub Issue Orchestrator Adapter
+
+## Overview
+
+The GitHub Issue Orchestrator Adapter enables the Expert Pack to receive task dispatches via GitHub Issues. It parses Issue labels and body content to generate standardized Dispatch Payloads for execution by the 6-role expert system.
+
+## Status
+
+| Field | Value |
+|-------|-------|
+| **Adapter ID** | `github-issue` |
+| **Adapter Type** | `orchestrator` |
+| **Priority** | `later` |
+| **Version** | `1.0.0` |
+| **Status** | `implemented` |
+| **Interface** | `OrchestratorAdapter` |
+
+## Architecture
+
+```
+GitHub Issue (Webhook)
+    │
+    ├── Webhook Handler (signature verification, event filtering)
+    │       │
+    │       ▼
+    ├── Issue Parser
+    │       │
+    │       ├── Label Parser (milestone, role, command, task, risk)
+    │       │
+    │       ├── Body Parser (sections: Context, Goal, Constraints, Inputs, Outputs)
+    │       │
+    │       ▼
+    │   Dispatch Payload (io-contract.md §1)
+    │
+    ├── GitHub Client (REST API: comments, labels, milestones)
+    │
+    ├── Comment Templates (escalation, retry, result)
+    │
+    └── Retry Handler (backoff, max_retry, risk-level rules)
+```
+
+## Components
+
+| Component | File | Purpose |
+|-----------|------|---------|
+| **Types** | `types.js` | TypeScript type definitions |
+| **Config** | `github-issue.config.json` | Adapter configuration |
+| **Label Parser** | `label-parser.js` | Parse Issue labels to dispatch metadata |
+| **Body Parser** | `body-parser.js` | Parse Issue body sections to task details |
+| **Issue Parser** | `issue-parser.js` | Main parser orchestrating label + body |
+| **GitHub Client** | `github-client.js` | GitHub REST API client with rate limiting |
+| **Webhook Handler** | `webhook-handler.js` | Secure webhook handling (HMAC verification) |
+| **Comment Templates** | `comment-templates.js` | Markdown templates for comments |
+| **Retry Handler** | `retry-handler.js` | Retry decision logic |
+| **Main Adapter** | `index.js` | OrchestratorAdapter implementation |
+
+## Label Parsing
+
+### Supported Label Patterns
+
+| Pattern | Example | Maps To |
+|---------|---------|---------|
+| `milestone:M###` | `milestone:M001` | `milestone_id` |
+| `task:T###` | `task:T012` | `task_id` |
+| `role:{name}` | `role:developer` | `role` |
+| `command:{name}` | `command:feature-implementation` | `command` |
+| `risk:{level}` | `risk:high` | `risk_level` |
+
+### Role Values
+
+Valid role labels: `architect`, `developer`, `tester`, `reviewer`, `docs`, `security`
+
+### Risk Levels
+
+Valid risk labels: `low`, `medium`, `high`, `critical`
+
+### Business Rules
+
+- **BR-001**: If no `role:` label, use default from config (`developer`)
+- **BR-002**: If multiple role labels, use first in priority order (architect > developer > tester > reviewer > docs > security)
+
+## Body Section Parsing
+
+### Expected Sections
+
+| Section | Maps To | Required |
+|---------|---------|----------|
+| `## Context` | `context.task_scope` | Recommended |
+| `## Goal` | `goal` | **Required** |
+| `## Constraints` | `constraints[]` | Optional |
+| `## Inputs` | `inputs[]` (artifact references) | Optional |
+| `## Expected Outputs` | `expected_outputs[]` | Recommended |
+
+### Business Rules
+
+- **BR-003**: If `## Goal` missing, use Issue title as goal
+
+### Input Artifact Formats
+
+```markdown
+## Inputs
+
+- design-note: `specs/001/design-note.md` - Design specification
+- artifact_id: artifact_type `path` - summary
+```
+
+## Webhook Security
+
+### HMAC-SHA256 Verification
+
+The webhook handler uses **timing-safe comparison** (`crypto.timingSafeEqual`) to verify signatures:
+
+```javascript
+const expectedSignature = crypto
+  .createHmac('sha256', secret)
+  .update(payload)
+  .digest('hex');
+
+// Timing-safe comparison prevents timing attacks
+const sigBuffer = Buffer.from(signature, 'hex');
+const expectedBuffer = Buffer.from(expectedSignature, 'hex');
+const valid = crypto.timingSafeEqual(sigBuffer, expectedBuffer);
+```
+
+### Event Filtering
+
+| Rule | Events |
+|------|--------|
+| **BR-006** | Only `issues` event processed |
+| **BR-007** | Only `opened`, `edited`, `labeled` actions processed |
+
+## Configuration
+
+### Environment Variables
+
+| Variable | Purpose |
+|----------|---------|
+| `GITHUB_TOKEN` | Personal access token or OAuth token |
+| `GITHUB_WEBHOOK_SECRET` | Webhook HMAC secret |
+| `GITHUB_APP_ID` | GitHub App ID (optional) |
+| `GITHUB_APP_PRIVATE_KEY` | GitHub App private key (optional) |
+
+### Config File Structure
+
+See `github-issue.config.json` for full configuration options:
+
+```json
+{
+  "adapter_id": "github-issue",
+  "adapter_type": "orchestrator",
+  "priority": "later",
+  "version": "1.0.0",
+  "github_config": {
+    "api": { "base_url": "https://api.github.com" },
+    "authentication": { "primary_method": "token" },
+    "webhook": { "secret_env_var": "GITHUB_WEBHOOK_SECRET" },
+    "label_mappings": { "role_prefix": "role:" },
+    "retry_config": { "max_retry": 1 },
+    "rate_limit": { "enabled": true }
+  }
+}
+```
+
+## Usage
+
+### Webhook Endpoint
+
+```javascript
+const { GitHubIssueAdapter } = require('./adapters/github-issue');
+
+const adapter = new GitHubIssueAdapter(config);
+
+// Handle webhook request
+const result = await adapter.handleWebhook(request, process.env.GITHUB_WEBHOOK_SECRET);
+
+if (result.valid) {
+  const dispatch = adapter.normalizeInput(result.issue);
+  adapter.routeToExecution(dispatch);
+}
+```
+
+### Manual Issue Processing
+
+```javascript
+const adapter = new GitHubIssueAdapter(config);
+
+// Fetch and process an issue
+const issue = await adapter.githubClient.getIssue(owner, repo, issueNumber);
+const dispatch = adapter.normalizeInput(issue);
+
+// Validate dispatch
+const validation = adapter.validateDispatch(dispatch);
+if (validation.isValid) {
+  adapter.routeToExecution(dispatch);
+}
+```
+
+### Post Execution Result
+
+```javascript
+// After execution completes
+await adapter.postResult(executionResult, owner, repo, issueNumber);
+
+// Labels updated automatically:
+// - SUCCESS → status:completed
+// - FAILED_ESCALATE → status:needs-attention
+// - Other → status:in-progress
+```
+
+## OrchestratorAdapter Interface
+
+Implements all required methods from `io-contract.md §8`:
+
+| Method | Description |
+|--------|-------------|
+| `normalizeInput(issue)` | Convert GitHub Issue to Dispatch Payload |
+| `validateDispatch(dispatch)` | Validate Dispatch against io-contract.md §1 schema |
+| `routeToExecution(dispatch)` | Route dispatch to execution entry point |
+| `mapError(error)` | Map GitHub API error to ExecutionStatus |
+| `generateEscalation(context)` | Generate Escalation object |
+| `handleRetry(retryContext)` | Decide retry/abort/escalate |
+| `getAdapterInfo()` | Return adapter metadata |
+
+## Error Mapping
+
+| HTTP Status | ExecutionStatus |
+|-------------|-----------------|
+| 404, 403, 401 | `BLOCKED` |
+| 422 | `FAILED_RETRYABLE` |
+| 500, 502, 503 | `FAILED_RETRYABLE` |
+| Other | `FAILED_RETRYABLE` |
+
+## Retry Strategy
+
+- **Max Retry**: 1 (configurable)
+- **Backoff**: Exponential with multiplier
+- **Risk-Level Rules**: Critical tasks never retry automatically
+
+## Integration
+
+### Compatible Profiles
+
+- `minimal` (21 MVP skills)
+- `full` (37 skills)
+
+### Compatible Workspaces
+
+- `github-pr` (GitHub PR workspace adapter)
+- `local-repo` (Local filesystem workspace adapter)
+
+## Testing
+
+```bash
+# Run unit tests
+cd adapters/github-issue
+npm test
+
+# Run specific test
+npm test -- tests/unit/label-parser.test.js
+```
+
+## Troubleshooting
+
+### Common Issues
+
+#### Webhook Signature Verification Fails
+
+**Symptom**: `Webhook signature verification failed` error in logs
+
+**Cause**:
+- `GITHUB_WEBHOOK_SECRET` environment variable not set or incorrect
+- Webhook secret mismatch between GitHub app settings and environment
+- Payload modified in transit
+
+**Solution**:
+1. Verify `GITHUB_WEBHOOK_SECRET` matches the secret configured in your GitHub App/Webhook settings
+2. Ensure the secret is not wrapped in quotes in your environment
+3. Check that the `X-Hub-Signature-256` header is being passed through your proxy/load balancer
+
+**Prevention**: Use a secret management service (AWS Secrets Manager, GitHub Actions secrets) to store webhook secrets
+
+---
+
+#### Rate Limit Exceeded
+
+**Symptom**: `GitHubClient: Rate limit hit` warning, 403 errors from GitHub API
+
+**Cause**:
+- Too many API requests in short time
+- Multiple instances sharing same token without coordination
+
+**Solution**:
+1. Wait for rate limit reset (check `X-RateLimit-Reset` header)
+2. Reduce polling frequency
+3. Use conditional requests with `If-None-Match` headers
+4. Consider using GitHub App authentication for higher rate limits
+
+**Prevention**: Monitor `adapter.getRateLimitInfo()` and implement request throttling
+
+---
+
+#### Missing Required Labels (BR-001)
+
+**Symptom**: `Missing required label: role` warning in dispatch
+
+**Cause**: Issue created without `role:` label
+
+**Solution**:
+1. Add a role label: `role:architect`, `role:developer`, `role:tester`, `role:reviewer`, `role:docs`, or `role:security`
+2. Configure `require_role_label: false` in config to use default role
+
+**Prevention**: Use GitHub Issue templates that include required labels
+
+---
+
+#### Authentication Errors (401)
+
+**Symptom**: `HTTP 401: Bad credentials` error
+
+**Cause**:
+- `GITHUB_TOKEN` not set or expired
+- Token lacks required scope
+- Token revoked
+
+**Solution**:
+1. Verify `GITHUB_TOKEN` environment variable is set
+2. Check token has `repo` scope (private repos) or `public_repo` scope (public repos only)
+3. Regenerate token if expired/revoked
+
+**Prevention**: Use GitHub Apps instead of PATs for production; implement token rotation
+
+---
+
+#### 404 Not Found Errors
+
+**Symptom**: `HTTP 404: Not Found` when accessing issue
+
+**Cause**:
+- Repository doesn't exist
+- Issue number doesn't exist
+- Token doesn't have access to repository
+
+**Solution**:
+1. Verify repository exists and is accessible
+2. Verify issue number is valid
+3. Check token has access to the repository
+
+---
+
+#### Dispatch Validation Fails
+
+**Symptom**: `Dispatch payload validation failed` error
+
+**Cause**:
+- Missing required fields (goal, title)
+- Invalid field values
+- Schema mismatch
+
+**Solution**:
+1. Check `validation.errors` array for specific field errors
+2. Ensure Issue has required sections (`## Goal` is mandatory)
+3. Verify label formats match expected patterns
+
+---
+
+#### Retry Exhausted
+
+**Symptom**: Task escalated after multiple retry attempts
+
+**Cause**:
+- Persistent error (API, network, or logic)
+- Max retry limit reached (default: 1)
+
+**Solution**:
+1. Check `retry_count` in execution context
+2. Review error logs for root cause
+3. Increase `max_retry` in config if transient errors are common
+4. For critical risk tasks, manual intervention is required
+
+---
+
+### Debugging Tips
+
+1. **Enable Debug Logging**:
+   ```bash
+   DEBUG=github-issue-adapter:* npm start
+   ```
+
+2. **Validate Configuration**:
+   ```javascript
+   const config = require('./github-issue.config.json');
+   console.log(JSON.stringify(config, null, 2));
+   ```
+
+3. **Test Webhook Locally**:
+   ```bash
+   # Use smee.io for webhook proxy
+   npx smee-client --url https://smee.io/YOUR_CHANNEL --target localhost:3000/webhook
+   ```
+
+4. **Verify Token Scopes**:
+   ```bash
+   curl -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/user
+   # Check X-OAuth-Scopes header in response
+   ```
+
+---
+
+## Security Best Practices
+
+### Webhook Security
+
+#### HMAC-SHA256 Signature Verification
+
+The adapter verifies webhook authenticity using HMAC-SHA256:
+
+```javascript
+// Signature format: sha256=<hex-digest>
+const signature = headers['x-hub-signature-256'];
+const expected = crypto.createHmac('sha256', secret).update(payload).digest('hex');
+```
+
+**Why Timing-Safe Comparison Matters**:
+
+Standard string comparison (`===`) is vulnerable to timing attacks. Attackers can measure response time to guess characters one-by-one. The adapter uses `crypto.timingSafeEqual()` to prevent this:
+
+```javascript
+// Vulnerable to timing attacks
+if (signature === expected) { ... }
+
+// Secure - constant-time comparison
+const sigBuffer = Buffer.from(signature, 'hex');
+const expectedBuffer = Buffer.from(expected, 'hex');
+if (crypto.timingSafeEqual(sigBuffer, expectedBuffer)) { ... }
+```
+
+#### Secret Rotation Procedure
+
+1. Generate new secret: `openssl rand -hex 32`
+2. Add new secret to GitHub App/Webhook settings (keep old secret)
+3. Deploy adapter with both secrets (supporting grace period)
+4. Remove old secret from GitHub settings
+5. Remove old secret from adapter configuration
+
+#### IP Allowlisting
+
+GitHub publishes webhook IP ranges:
+```bash
+curl -s https://api.github.com/meta | jq '.hooks'
+```
+
+Consider allowlisting these IPs at your firewall/load balancer level.
+
+---
+
+### Token Management
+
+#### Scope Requirements
+
+| Use Case | Minimum Scope |
+|----------|---------------|
+| Public repositories | `public_repo` |
+| Private repositories | `repo` |
+| Organization webhooks | `admin:org_hook` |
+| GitHub Apps | No PAT needed (uses App JWT) |
+
+#### Storage Best Practices
+
+- **Never** commit tokens to version control
+- **Never** log tokens in error messages
+- Use environment variables or secret managers
+- Rotate tokens regularly (90 days recommended)
+
+#### GitHub App vs PAT Trade-offs
+
+| Aspect | GitHub App | Personal Access Token |
+|--------|------------|----------------------|
+| Rate Limit | 15,000 req/hr | 5,000 req/hr |
+| Scope | Fine-grained | Broad |
+| Expiry | 10 min tokens | No expiry (PAT v1) |
+| Audit | Per-installation | Per-user |
+| Recommendation | **Production** | Development only |
+
+---
+
+### Rate Limiting Protection
+
+The adapter includes built-in rate limit tracking:
+
+```javascript
+const rateLimitInfo = adapter.githubClient.getRateLimitInfo();
+// { limit: 5000, remaining: 4999, reset: 1234567890000, used: 1 }
+```
+
+**Rate Limit Response Strategy**:
+1. Check `remaining` before bulk operations
+2. Implement exponential backoff when `remaining < 100`
+3. Use `reset` timestamp to schedule retry
+
+---
+
+### Input Validation
+
+#### Label Sanitization
+
+Labels are validated against allowed patterns:
+- `role:` prefix → must be one of 6 valid roles
+- `risk:` prefix → must be `low`, `medium`, `high`, or `critical`
+- Unrecognized labels → collected but don't cause errors
+
+#### Body Content Validation
+
+- Section headers must be `## Title` format
+- Artifact references must match `artifact:ID (type) at path` pattern
+- Maximum body length: 1MB (GitHub limit)
+
+---
+
+### Audit Logging
+
+**Log What**:
+- Webhook receipt (event type, delivery ID, timestamp)
+- Dispatch generation (issue number, success/failure)
+- API operations (rate limit status, errors)
+- Retry attempts (count, reason)
+
+**Don't Log**:
+- Webhook secrets
+- API tokens
+- Request/response bodies with sensitive data
+
+---
+
+### Security Checklist
+
+Before deploying to production:
+
+- [ ] `GITHUB_WEBHOOK_SECRET` set via secret manager
+- [ ] `GITHUB_TOKEN` has minimum required scope
+- [ ] Webhook endpoint uses HTTPS
+- [ ] Rate limit monitoring configured
+- [ ] Error logs don't contain secrets
+- [ ] IP allowlisting configured (optional)
+- [ ] Token rotation schedule defined
+- [ ] Audit logging enabled
+
+---
+
+## References
+
+- `io-contract.md §1` - Dispatch Payload schema
+- `io-contract.md §8` - OrchestratorAdapter interface
+- `ADAPTERS.md` - Adapter architecture
+- `specs/021-github-issue-adapter/spec.md` - Feature specification
+- `docs/adapters/github-issue-adapter-design.md` - Design document
+- [GitHub Webhooks Documentation](https://docs.github.com/en/developers/webhooks-and-events/webhooks)
+- [OWASP API Security Top 10](https://owasp.org/www-project-api-security/)
+
+## Changelog
+
+| Version | Date | Changes |
+|---------|------|---------|
+| 1.0.0 | 2026-03-28 | Initial implementation (Feature 021) |

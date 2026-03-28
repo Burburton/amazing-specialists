@@ -1,0 +1,42 @@
+{
+  "_comment": "Simple GitHub Issue Example - Minimal configuration for triggering a task",
+  "_description": "This example shows the minimal fields needed to trigger a task via GitHub Issue. Only requires role label and a goal (title or body section).",
+  
+  "title": "Implement user authentication feature",
+  "body": "Implement a basic user authentication system with login and logout functionality.",
+  
+  "labels": [
+    {
+      "_comment": "Required: role label determines which expert role handles this task",
+      "name": "role:developer",
+      "description": "Assigns the task to the developer role"
+    },
+    {
+      "_comment": "Optional: milestone label for tracking progress",
+      "name": "milestone:M001",
+      "description": "Links to milestone M001"
+    }
+  ],
+  
+  "state": "open",
+  "number": 42,
+  
+  "_resulting_dispatch_payload": {
+    "_comment": "This is what the adapter will generate from this Issue",
+    "dispatch_id": "gh-issue-myorg-myrepo-42",
+    "project_id": "myorg/myrepo",
+    "milestone_id": "M001",
+    "task_id": null,
+    "role": "developer",
+    "command": "implement-task",
+    "goal": "Implement user authentication feature",
+    "risk_level": "medium",
+    "context": {
+      "task_scope": "Implement a basic user authentication system with login and logout functionality."
+    },
+    "inputs": [],
+    "expected_outputs": [],
+    "constraints": [],
+    "retry_context": null
+  }
+}

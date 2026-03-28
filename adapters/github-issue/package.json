@@ -1,0 +1,42 @@
+{
+  "name": "github-issue",
+  "version": "1.0.0",
+  "description": "GitHub Issue Orchestrator Adapter for OpenCode Expert Pack",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "test:unit": "jest tests/unit",
+    "test:e2e": "jest tests/e2e",
+    "test:watch": "jest --watch"
+  },
+  "keywords": [
+    "github",
+    "webhook",
+    "adapter",
+    "orchestrator"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^30.3.0"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "coverageDirectory": "coverage",
+    "collectCoverageFrom": [
+      "label-parser.js"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 90,
+        "functions": 90,
+        "lines": 90,
+        "statements": 90
+      }
+    }
+  }
+}

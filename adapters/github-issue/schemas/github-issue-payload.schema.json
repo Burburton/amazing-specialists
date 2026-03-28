@@ -1,0 +1,237 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opencode.ai/schemas/github-issue-payload.json",
+  "title": "GitHub Issue Webhook Payload",
+  "description": "JSON Schema for validating GitHub webhook payload for 'issues' event type. Supports action types: opened, edited, labeled.",
+  "type": "object",
+  "required": ["action", "issue", "repository"],
+  "properties": {
+    "action": {
+      "type": "string",
+      "description": "The action that triggered the event",
+      "enum": ["opened", "edited", "labeled"]
+    },
+    "issue": {
+      "type": "object",
+      "description": "The GitHub issue object",
+      "required": ["number", "title"],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Unique identifier for the issue"
+        },
+        "node_id": {
+          "type": "string",
+          "description": "Global node ID for GraphQL API"
+        },
+        "number": {
+          "type": "integer",
+          "description": "Issue number (repository-scoped)"
+        },
+        "title": {
+          "type": "string",
+          "description": "Issue title"
+        },
+        "body": {
+          "type": ["string", "null"],
+          "description": "Issue body content (markdown)"
+        },
+        "state": {
+          "type": "string",
+          "description": "Issue state",
+          "enum": ["open", "closed"]
+        },
+        "locked": {
+          "type": "boolean",
+          "description": "Whether the issue is locked"
+        },
+        "html_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL to view the issue on GitHub"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "API URL for the issue"
+        },
+        "labels": {
+          "type": "array",
+          "description": "Labels attached to the issue",
+          "items": {
+            "$ref": "#/$defs/label"
+          }
+        },
+        "milestone": {
+          "type": ["object", "null"],
+          "description": "Milestone associated with the issue"
+        },
+        "user": {
+          "$ref": "#/$defs/user",
+          "description": "User who created the issue"
+        },
+        "assignees": {
+          "type": "array",
+          "description": "Users assigned to the issue",
+          "items": {
+            "$ref": "#/$defs/user"
+          }
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 timestamp of issue creation"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 timestamp of last update"
+        },
+        "closed_at": {
+          "type": ["string", "null"],
+          "format": "date-time",
+          "description": "ISO 8601 timestamp of issue closure"
+        },
+        "comments": {
+          "type": "integer",
+          "description": "Number of comments on the issue"
+        },
+        "comments_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "API URL for issue comments"
+        }
+      },
+      "additionalProperties": true
+    },
+    "repository": {
+      "type": "object",
+      "description": "Repository where the issue was created",
+      "required": ["name", "full_name"],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Unique identifier for the repository"
+        },
+        "node_id": {
+          "type": "string",
+          "description": "Global node ID for GraphQL API"
+        },
+        "name": {
+          "type": "string",
+          "description": "Repository name"
+        },
+        "full_name": {
+          "type": "string",
+          "description": "Full repository name (owner/repo)"
+        },
+        "private": {
+          "type": "boolean",
+          "description": "Whether the repository is private"
+        },
+        "owner": {
+          "$ref": "#/$defs/user",
+          "description": "Repository owner"
+        },
+        "html_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL to view the repository on GitHub"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "API URL for the repository"
+        }
+      },
+      "additionalProperties": true
+    },
+    "sender": {
+      "$ref": "#/$defs/user",
+      "description": "User who triggered the event"
+    },
+    "label": {
+      "$ref": "#/$defs/label",
+      "description": "Label that was added (only present for 'labeled' action)"
+    },
+    "organization": {
+      "type": ["object", "null"],
+      "description": "Organization associated with the repository"
+    },
+    "installation": {
+      "type": ["object", "null"],
+      "description": "GitHub App installation context"
+    }
+  },
+  "additionalProperties": true,
+  "$defs": {
+    "label": {
+      "type": "object",
+      "description": "GitHub label object",
+      "required": ["name"],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Unique identifier for the label"
+        },
+        "node_id": {
+          "type": "string",
+          "description": "Global node ID for GraphQL API"
+        },
+        "name": {
+          "type": "string",
+          "description": "Label name (used for filtering and display)"
+        },
+        "description": {
+          "type": ["string", "null"],
+          "description": "Optional description of the label"
+        },
+        "color": {
+          "type": "string",
+          "description": "Hex color code (without #) for the label",
+          "pattern": "^[0-9a-fA-F]{6}$"
+        },
+        "default": {
+          "type": "boolean",
+          "description": "Whether this is a default GitHub label"
+        }
+      },
+      "additionalProperties": true
+    },
+    "user": {
+      "type": "object",
+      "description": "GitHub user or organization object",
+      "required": ["login", "id"],
+      "properties": {
+        "login": {
+          "type": "string",
+          "description": "Username or organization name"
+        },
+        "id": {
+          "type": "integer",
+          "description": "Unique identifier"
+        },
+        "node_id": {
+          "type": "string",
+          "description": "Global node ID for GraphQL API"
+        },
+        "avatar_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL to user's avatar image"
+        },
+        "html_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL to user's GitHub profile"
+        },
+        "type": {
+          "type": "string",
+          "description": "Type of account",
+          "enum": ["User", "Organization", "Bot"]
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}

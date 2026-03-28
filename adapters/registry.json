@@ -39,16 +39,18 @@
         "adapter_id": "github-issue",
         "adapter_type": "orchestrator",
         "priority": "later",
-        "status": "design-only",
-        "design_doc": "docs/adapters/github-issue-adapter-design.md",
+        "status": "implemented",
+        "version": "1.0.0",
+        "path": "adapters/github-issue/",
+        "config_file": "github-issue.config.json",
         "interface": "OrchestratorAdapter",
         "compatible_profiles": ["minimal", "full"],
         "compatible_workspaces": ["github-pr", "local-repo"],
-        "description": "GitHub Issue orchestrator adapter (design only)",
+        "description": "GitHub Issue orchestrator adapter - receives tasks via GitHub Issues",
         "dispatch_mapping": {
           "input_format": "GitHub Issue (number, body, labels)",
           "output_format": "Dispatch Payload (io-contract.md §1)",
-          "mapping_doc": "docs/adapters/github-issue-adapter-design.md"
+          "mapping_doc": "adapters/github-issue/README.md"
         },
         "escalation_mapping": {
           "channel": "github_comment",
@@ -58,6 +60,15 @@
           "strategy": "auto",
           "max_retry": 1,
           "trigger": "bot"
+        },
+        "components": {
+          "issue_parser": "issue-parser.js",
+          "label_parser": "label-parser.js",
+          "body_parser": "body-parser.js",
+          "github_client": "github-client.js",
+          "webhook_handler": "webhook-handler.js",
+          "comment_templates": "comment-templates.js",
+          "retry_handler": "retry-handler.js"
         }
       },
       {

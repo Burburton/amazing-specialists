@@ -17,6 +17,43 @@ Initial release of OpenCode 专家包 - A complete execution layer for automated
 
 ## Features
 
+### Bootstrap Features (001-002b)
+
+#### [001-bootstrap] - 2026-03-22
+**项目初始化**
+
+**Added:**
+- Project directory structure
+- Governance document framework
+- Initial skill development plan
+- Bootstrap verification
+
+---
+
+#### [002-role-model-alignment] - 2026-03-22
+**角色模型对齐**
+
+**Added:**
+- 6-role formal model definition (architect, developer, tester, reviewer, docs, security)
+- 3-skill transition skeleton mapping
+- Role model evolution documentation
+- Skill-to-role migration guide
+
+**Changed:**
+- Updated governance documents for 6-role terminology
+
+---
+
+#### [002b-governance-repair] - 2026-03-22
+**治理一致性修复**
+
+**Fixed:**
+- Governance drift between completion-report and actual state
+- 6-role/3-skill terminology inconsistency
+- Documentation sync issues
+
+---
+
 ### Core Role Features (003-008)
 
 #### [003-architect-core] - 2026-03-24
@@ -264,7 +301,7 @@ Legacy skills are archived in `docs/archive/legacy-skills/`.
 
 | Version | Date | Description |
 |---------|------|-------------|
-| 1.0.0 | 2026-03-28 | Initial release with 15 features, 37 skills, full governance compliance |
+| 1.0.0 | 2026-03-28 | Initial release with 17 features, 37 skills, full governance compliance |
 
 ---
 

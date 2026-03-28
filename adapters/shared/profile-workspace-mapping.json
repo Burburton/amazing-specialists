@@ -1,0 +1,232 @@
+{
+  "$schema": "http://json-schema.org/draft-2020-12/schema#",
+  "title": "Profile-Workspace Mapping Configuration",
+  "description": "Maps profiles to compatible workspace types, documenting Integration Rules IR-001~IR-004",
+  
+  "mapping_version": "1.0.0",
+  "last_updated": "2026-03-28",
+  
+  "profiles": {
+    "minimal": {
+      "profile_name": "minimal",
+      "skill_count": 21,
+      "skill_breakdown": {
+        "common": 5,
+        "architect": 3,
+        "developer": 3,
+        "tester": 3,
+        "reviewer": 3,
+        "docs": 2,
+        "security": 2
+      },
+      "description": "Essential execution layer with MVP skills",
+      "m4_enhanced": false,
+      "compatible_workspaces": ["local_repo", "github_repo"],
+      "workspace_capabilities": {
+        "local_repo": {
+          "output_format": "file_system_write",
+          "escalation_channel": "console",
+          "retry_strategy": "interactive"
+        },
+        "github_repo": {
+          "output_format": "pr_commit",
+          "escalation_channel": "github_comment",
+          "retry_strategy": "configurable"
+        }
+      }
+    },
+    
+    "full": {
+      "profile_name": "full",
+      "skill_count": 37,
+      "skill_breakdown": {
+        "common": 5,
+        "architect": 5,
+        "developer": 5,
+        "tester": 9,
+        "reviewer": 5,
+        "docs": 4,
+        "security": 4
+      },
+      "description": "Complete execution layer with M4 enhancements",
+      "m4_enhanced": true,
+      "compatible_workspaces": ["local_repo", "github_repo", "external_system"],
+      "workspace_capabilities": {
+        "local_repo": {
+          "output_format": "file_system_write",
+          "escalation_channel": "console",
+          "retry_strategy": "interactive"
+        },
+        "github_repo": {
+          "output_format": "pr_commit",
+          "escalation_channel": "github_comment",
+          "retry_strategy": "configurable"
+        },
+        "external_system": {
+          "output_format": "api_call",
+          "escalation_channel": "api",
+          "retry_strategy": "configurable",
+          "requires_full_profile": true
+        }
+      }
+    }
+  },
+  
+  "workspaces": {
+    "local_repo": {
+      "workspace_type": "local_repo",
+      "description": "Local filesystem workspace adapter",
+      "output_format": "file_system_write",
+      "compatible_profiles": ["minimal", "full"],
+      "adapter_id": "local-repo",
+      "adapter_priority": "must-have",
+      "escalation_config": {
+        "channel": "console",
+        "interactive": true,
+        "requires_acknowledgment": true
+      }
+    },
+    
+    "github_repo": {
+      "workspace_type": "github_repo",
+      "description": "GitHub PR workspace adapter",
+      "output_format": "pr_commit",
+      "compatible_profiles": ["minimal", "full"],
+      "adapter_id": "github-pr",
+      "adapter_priority": "later",
+      "escalation_config": {
+        "channel": "github_comment",
+        "review_status": true
+      }
+    },
+    
+    "external_system": {
+      "workspace_type": "external_system",
+      "description": "External system workspace adapter",
+      "output_format": "api_call",
+      "compatible_profiles": ["full"],
+      "adapter_id": "external-system",
+      "adapter_priority": "future",
+      "escalation_config": {
+        "channel": "api",
+        "requires_acknowledgment": true
+      },
+      "restriction": "Requires full profile with M4 enhancements"
+    }
+  },
+  
+  "integration_rules": {
+    "IR-001": {
+      "rule_id": "IR-001",
+      "title": "Profile Determines Skill Set",
+      "description": "Workspace adapter must determine available skill set based on profile",
+      "implementation": {
+        "minimal": "21 MVP skills (common: 5, architect: 3, developer: 3, tester: 3, reviewer: 3, docs: 2, security: 2)",
+        "full": "37 skills including 16 M4 enhancements"
+      },
+      "source": "ADAPTERS.md §Profile-Workspace Integration"
+    },
+    
+    "IR-002": {
+      "rule_id": "IR-002",
+      "title": "Workspace Determines Output Format",
+      "description": "Workspace type determines artifact output format",
+      "implementation": {
+        "local_repo": "File system write",
+        "github_repo": "PR/Commit",
+        "external_system": "API call"
+      },
+      "source": "ADAPTERS.md §Profile-Workspace Integration"
+    },
+    
+    "IR-003": {
+      "rule_id": "IR-003",
+      "title": "Profile Version Compatibility Check",
+      "description": "Workspace adapter must check profile version against package version compatibility",
+      "implementation_steps": [
+        "Read compatibility-matrix.json",
+        "Check profile version vs package version compatibility",
+        "Return BLOCKED status if incompatible",
+        "Prompt user for migration if needed"
+      ],
+      "validation": "Use adapters/shared/version-check.js",
+      "source": "ADAPTERS.md §Profile-Workspace Integration"
+    },
+    
+    "IR-004": {
+      "rule_id": "IR-004",
+      "title": "Profile-Adapter Interface",
+      "description": "Adapter must get profile configuration through unified interface",
+      "interface_sources": {
+        "template_pack": {
+          "path": "templates/pack/pack-version.json",
+          "interface": "getProfileConfig(profile_name)"
+        },
+        "contract_pack": {
+          "path": "contracts/pack/pack-version.json",
+          "interface": "getContractPackVersion()"
+        }
+      },
+      "implementation": "Use adapters/shared/profile-loader.js",
+      "source": "ADAPTERS.md §Profile-Workspace Integration"
+    }
+  },
+  
+  "compatibility_matrix": {
+    "profile_workspace_pairs": [
+      {
+        "profile": "minimal",
+        "workspace": "local_repo",
+        "compatible": true,
+        "notes": "MVP standard combination"
+      },
+      {
+        "profile": "minimal",
+        "workspace": "github_repo",
+        "compatible": true,
+        "notes": "MVP GitHub workflow"
+      },
+      {
+        "profile": "minimal",
+        "workspace": "external_system",
+        "compatible": false,
+        "reason": "External system requires M4 enhancements (full profile)"
+      },
+      {
+        "profile": "full",
+        "workspace": "local_repo",
+        "compatible": true,
+        "notes": "Full capability local workflow"
+      },
+      {
+        "profile": "full",
+        "workspace": "github_repo",
+        "compatible": true,
+        "notes": "Full capability GitHub workflow"
+      },
+      {
+        "profile": "full",
+        "workspace": "external_system",
+        "compatible": true,
+        "notes": "Full capability external system workflow"
+      }
+    ]
+  },
+  
+  "validation_rules": {
+    "profile_required": {
+      "description": "Workspace config must specify a valid profile",
+      "valid_profiles": ["minimal", "full"],
+      "invalid_action": "Return BLOCKED status"
+    },
+    "workspace_required": {
+      "description": "Workspace config must specify a valid workspace type",
+      "valid_workspaces": ["local_repo", "github_repo", "external_system"],
+      "invalid_action": "Return validation error"
+    },
+    "compatibility_required": {
+      "description": "Profile and workspace must be compatible per compatibility_matrix",
+      "incompatible_action": "Return BLOCKED status with reason"
+    }
+  }
+}

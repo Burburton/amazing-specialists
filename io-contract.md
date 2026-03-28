@@ -694,3 +694,249 @@ created_by: string               # 创建者（通常是 reviewer/acceptance 层
 - `Related: [task_id]`
 - `Based on: [spec_section]`
 - `Validates: [acceptance_criteria_id]`
+
+---
+
+## 8. Adapter Interface Contract
+
+### Contract Name
+Adapter Interface - 适配器接口契约
+
+### Purpose
+定义 Orchestrator Adapter 和 Workspace Adapter 的统一接口契约，确保所有适配器遵循标准化的输入输出规范。
+
+### OrchestratorAdapter Interface
+
+Orchestrator Adapter 负责将外部输入转换为标准 Dispatch Payload。
+
+#### Interface Definition
+
+```typescript
+interface OrchestratorAdapter {
+  // 核心方法
+  normalizeInput(externalInput: any): DispatchPayload;
+  validateDispatch(dispatch: DispatchPayload): ValidationResult;
+  routeToExecution(dispatch: DispatchPayload): void;
+  mapError(error: any): ExecutionStatus;
+  
+  // 可选方法
+  generateEscalation?(context: EscalationContext): Escalation;
+  handleRetry?(retryContext: RetryContext): RetryDecision;
+  
+  // 元数据
+  getAdapterInfo(): AdapterInfo;
+}
+```
+
+#### Method Specifications
+
+| Method | Input | Output | Description |
+|--------|-------|--------|-------------|
+| `normalizeInput` | 外部输入 (any) | DispatchPayload | 将外部格式转换为 Dispatch Payload (io-contract.md §1) |
+| `validateDispatch` | DispatchPayload | ValidationResult | 验证 Dispatch Payload 符合 schema |
+| `routeToExecution` | DispatchPayload | void | 路由到执行入口 |
+| `mapError` | Error | ExecutionStatus | 将错误映射为执行状态 |
+| `generateEscalation` | EscalationContext | Escalation | 生成升级请求 (io-contract.md §4) |
+| `handleRetry` | RetryContext | RetryDecision | 决定是否重试 |
+
+#### ValidationResult Schema
+
+```yaml
+ValidationResult:
+  isValid: boolean
+  errors:
+    - field: string
+      message: string
+      severity: enum (error | warning | info)
+```
+
+#### AdapterInfo Schema
+
+```yaml
+AdapterInfo:
+  adapter_id: string
+  adapter_type: enum (orchestrator)
+  version: string
+  priority: enum (must-have | later | future)
+  status: enum (implemented | design-only | planned)
+  description: string
+  compatible_profiles: [string]
+```
+
+### WorkspaceAdapter Interface
+
+Workspace Adapter 负责将 Execution Result 输出到目标工作区。
+
+#### Interface Definition
+
+```typescript
+interface WorkspaceAdapter {
+  // 核心方法
+  handleArtifacts(result: ExecutionResult): void;
+  handleChangedFiles(result: ExecutionResult): void;
+  handleEscalation(escalation: Escalation): void;
+  validateArtifactOutput(artifacts: Artifact[]): ValidationResult;
+  
+  // 可选方法
+  validatePaths?(paths: string[]): PathValidationResult[];
+  handleRetry?(retryContext: RetryContext): RetryDecision;
+  syncState?(result: ExecutionResult): void;
+  getOutputSummary?(): WorkspaceOutputResult;
+  
+  // 元数据
+  getAdapterInfo(): WorkspaceAdapterInfo;
+}
+```
+
+#### Method Specifications
+
+| Method | Input | Output | Description |
+|--------|-------|--------|-------------|
+| `handleArtifacts` | ExecutionResult | void | 将 artifacts 写入目标工作区 |
+| `handleChangedFiles` | ExecutionResult | void | 处理文件变更 (create/update/delete) |
+| `handleEscalation` | Escalation | void | 输出 escalation 到处理通道 |
+| `validateArtifactOutput` | Artifact[] | ValidationResult | 验证 artifacts 符合 schema (io-contract.md §3) |
+| `validatePaths` | string[] | PathValidationResult[] | 验证输出路径 (BR-006) |
+| `syncState` | ExecutionResult | void | 同步执行状态到工作区 |
+
+#### PathValidationResult Schema (BR-006)
+
+```yaml
+PathValidationResult:
+  path: string
+  exists: boolean
+  writable: boolean
+  conflict: boolean
+  profileMatch: boolean
+  errors: [string]
+```
+
+#### WorkspaceOutputResult Schema
+
+```yaml
+WorkspaceOutputResult:
+  success: boolean
+  artifacts_written: [string]
+  files_changed: [string]
+  console_output: boolean
+  errors: [string]
+  warnings: [string]
+```
+
+### Adapter Configuration Schema
+
+所有 adapter 配置必须符合 `adapters/schemas/workspace-configuration.schema.json`：
+
+```yaml
+WorkspaceConfiguration:
+  workspace_type: enum (local_repo | github_repo | external_system)
+  profile: enum (minimal | full)
+  
+  output_config:
+    artifact_path: string
+    changed_files_path: string
+    console_output: boolean
+    
+  escalation_config:
+    channel: enum (console | github_comment | api)
+    requires_acknowledgment: boolean
+    
+  retry_config:
+    max_retry: integer
+    strategy: enum (interactive | auto | disabled)
+```
+
+### Adapter Registry
+
+所有 adapter 必须在 `adapters/registry.json` 中注册：
+
+```yaml
+AdapterRegistry:
+  registry_version: string
+  adapters:
+    orchestrator: [OrchestratorAdapterConfig]
+    workspace: [WorkspaceAdapterConfig]
+  interfaces:
+    OrchestratorAdapter: { definition, contract_reference }
+    WorkspaceAdapter: { definition, contract_reference }
+```
+
+### Business Rules
+
+#### BR-001: Adapter Interface Contract
+所有 adapter 必须实现统一接口（OrchestratorAdapter 或 WorkspaceAdapter）。
+
+#### BR-002: Contract Schema Consumption
+- Orchestrator Adapter 使用 `io-contract.md §1` 的 Dispatch Payload schema
+- Workspace Adapter 使用 `io-contract.md §2, §3` 的 Execution Result 和 Artifact schema
+- 验证使用 `contracts/pack/validate-schema.js` 或等效逻辑
+
+#### BR-003: Version Compatibility Check
+Adapter 必须在初始化时检查版本兼容性：
+- 检查 `compatibility-matrix.json`
+- 不兼容时返回 BLOCKED 状态
+- 兼容但有 migration 时提示用户
+
+#### BR-004: Profile Configuration Load
+Adapter 必须根据 profile 加载配置：
+- 从 `templates/pack/pack-version.json` 获取 profile 版本
+- 从 profile 目录加载 skill 配置
+- Profile 不匹配时返回 BLOCKED 状态
+
+#### BR-005: Dispatch Payload Required Fields
+Orchestrator Adapter 必须确保 Dispatch Payload 包含所有必填字段（参考 io-contract.md §1）。
+
+#### BR-006: Artifact Output Path Validation
+Workspace Adapter 必须验证 artifact 输出路径：
+- 路径存在且可写
+- 路径不冲突（不覆盖未授权文件）
+- 路径符合 profile 配置
+
+#### BR-007: Escalation Channel Selection
+Adapter 必须根据 workspace_type 选择正确的 escalation channel：
+- `local_repo`: console + interactive prompt
+- `github_repo`: GitHub comment + label
+- `external_system`: API call
+
+#### BR-008: Retry Strategy Selection
+Adapter 必须根据 workspace_type 选择正确的 retry strategy：
+- `local_repo`: interactive（用户决策）
+- `github_repo`: auto（bot triggered）
+- `external_system`: configurable
+
+### Non-functional Requirements
+
+#### NFR-001: Adapter Discoverability
+Adapter 配置必须程序化可发现（`adapters/registry.json`）。
+
+#### NFR-002: Adapter Extensibility
+Adapter 必须支持扩展，Later adapters 可按统一接口添加。
+
+#### NFR-003: Adapter Isolation
+各 adapter 必须独立运行，Orchestrator 与 Workspace adapter 不相互依赖。
+
+#### NFR-004: Contract Validation Performance
+Adapter 验证必须高效（< 100ms 典型 dispatch/artifact）。
+
+#### NFR-005: Error Transparency
+Adapter 错误必须透明，明确说明错误来源和类型。
+
+### Interface File Locations
+
+| Interface | File Path |
+|-----------|-----------|
+| OrchestratorAdapter | `adapters/interfaces/orchestrator-adapter.interface.ts` |
+| WorkspaceAdapter | `adapters/interfaces/workspace-adapter.interface.ts` |
+| WorkspaceConfiguration Schema | `adapters/schemas/workspace-configuration.schema.json` |
+| Adapter Registry | `adapters/registry.json` |
+
+### References
+
+- `ADAPTERS.md` - Adapter architecture definition
+- `io-contract.md §1` - Dispatch Payload schema
+- `io-contract.md §2` - Execution Result schema
+- `io-contract.md §3` - Artifact schema
+- `io-contract.md §4` - Escalation schema
+- `contracts/pack/registry.json` - Contract Schema Pack
+- `templates/pack/pack-version.json` - Template Pack version
+- `compatibility-matrix.json` - Version compatibility matrix

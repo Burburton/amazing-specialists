@@ -1,0 +1,217 @@
+{
+  "$schema": "http://json-schema.org/draft-2020-12/schema#",
+  "title": "Workspace Configuration Schema",
+  "description": "Schema for workspace adapter configuration",
+  
+  "type": "object",
+  "required": ["workspace_type", "profile", "output_config", "escalation_config", "retry_config"],
+  
+  "properties": {
+    "workspace_type": {
+      "type": "string",
+      "enum": ["local_repo", "github_repo", "external_system"],
+      "description": "Type of workspace for artifact output"
+    },
+    
+    "profile": {
+      "type": "string",
+      "enum": ["minimal", "full"],
+      "description": "Profile type determining skill set (minimal: 21 MVP, full: 37)"
+    },
+    
+    "adapter_id": {
+      "type": "string",
+      "description": "Adapter identifier from registry.json"
+    },
+    
+    "output_config": {
+      "type": "object",
+      "required": ["artifact_path", "console_output"],
+      "properties": {
+        "artifact_path": {
+          "type": "string",
+          "description": "Base path for artifact output",
+          "default": "./artifacts"
+        },
+        "changed_files_path": {
+          "type": "string",
+          "description": "Base path for changed files output",
+          "default": "./"
+        },
+        "console_output": {
+          "type": "boolean",
+          "description": "Whether to output summary/issues to console",
+          "default": true
+        },
+        "log_file": {
+          "type": "string",
+          "description": "Optional log file path for execution output"
+        }
+      }
+    },
+    
+    "escalation_config": {
+      "type": "object",
+      "required": ["channel"],
+      "properties": {
+        "channel": {
+          "type": "string",
+          "enum": ["console", "github_comment", "api"],
+          "description": "Channel for escalation output"
+        },
+        "requires_acknowledgment": {
+          "type": "boolean",
+          "description": "Whether escalation requires user acknowledgment",
+          "default": true
+        },
+        "interactive_prompt": {
+          "type": "boolean",
+          "description": "Whether to use interactive prompt for decisions",
+          "default": true
+        }
+      }
+    },
+    
+    "retry_config": {
+      "type": "object",
+      "required": ["strategy"],
+      "properties": {
+        "strategy": {
+          "type": "string",
+          "enum": ["interactive", "auto", "disabled"],
+          "description": "Retry strategy type"
+        },
+        "max_retry": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 5,
+          "default": 2,
+          "description": "Maximum retry attempts"
+        },
+        "retry_on_error_types": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["validation_error", "execution_error", "external_error", "timeout_error"]
+          },
+          "description": "Error types that trigger retry"
+        }
+      }
+    },
+    
+    "validation_config": {
+      "type": "object",
+      "properties": {
+        "validate_paths": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether to validate output paths (BR-006)"
+        },
+        "validate_contract": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether to validate artifacts against contract schema (BR-002)"
+        },
+        "contract_schema_path": {
+          "type": "string",
+          "default": "contracts/pack/",
+          "description": "Path to contract schema pack"
+        }
+      }
+    },
+    
+    "version_config": {
+      "type": "object",
+      "properties": {
+        "check_compatibility": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether to check version compatibility (BR-003)"
+        },
+        "compatibility_matrix_path": {
+          "type": "string",
+          "default": "compatibility-matrix.json",
+          "description": "Path to compatibility matrix"
+        },
+        "package_version": {
+          "type": "string",
+          "description": "Package version to check against"
+        }
+      }
+    },
+    
+    "profile_config": {
+      "type": "object",
+      "properties": {
+        "load_profile": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether to load profile configuration (BR-004)"
+        },
+        "profile_path": {
+          "type": "string",
+          "default": "templates/pack/",
+          "description": "Path to template pack"
+        },
+        "skill_count_expected": {
+          "type": "integer",
+          "description": "Expected skill count for validation"
+        }
+      }
+    },
+    
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "created_by": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  
+  "definitions": {
+    "PathValidationResult": {
+      "type": "object",
+      "properties": {
+        "path": { "type": "string" },
+        "exists": { "type": "boolean" },
+        "writable": { "type": "boolean" },
+        "conflict": { "type": "boolean" },
+        "profile_match": { "type": "boolean" },
+        "errors": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    
+    "ValidationResult": {
+      "type": "object",
+      "properties": {
+        "isValid": { "type": "boolean" },
+        "errors": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "field": { "type": "string" },
+              "message": { "type": "string" },
+              "severity": {
+                "type": "string",
+                "enum": ["error", "warning", "info"]
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

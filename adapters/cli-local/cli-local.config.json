@@ -1,0 +1,52 @@
+{
+  "$schema": "../schemas/workspace-configuration.schema.json",
+  
+  "adapter_id": "cli-local",
+  "workspace_type": "local_repo",
+  "profile": "minimal",
+  
+  "output_config": {
+    "artifact_path": "./artifacts",
+    "changed_files_path": "./",
+    "console_output": true
+  },
+  
+  "escalation_config": {
+    "channel": "console",
+    "requires_acknowledgment": true,
+    "interactive_prompt": true
+  },
+  
+  "retry_config": {
+    "strategy": "interactive",
+    "max_retry": 2,
+    "retry_on_error_types": ["validation_error", "execution_error"]
+  },
+  
+  "validation_config": {
+    "validate_paths": true,
+    "validate_contract": true,
+    "contract_schema_path": "contracts/pack/"
+  },
+  
+  "version_config": {
+    "check_compatibility": true,
+    "compatibility_matrix_path": "compatibility-matrix.json"
+  },
+  
+  "profile_config": {
+    "load_profile": true,
+    "profile_path": "templates/pack/",
+    "skill_count_expected": 21
+  },
+  
+  "metadata": {
+    "adapter_type": "orchestrator",
+    "priority": "must-have",
+    "version": "1.0.0",
+    "description": "CLI/Local command-line adapter for local development workflow",
+    "compatible_profiles": ["minimal", "full"],
+    "created_at": "2026-03-28",
+    "created_by": "020-orchestrator-and-workspace-adapters"
+  }
+}

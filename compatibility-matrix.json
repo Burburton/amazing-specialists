@@ -91,6 +91,58 @@
           }
         }
       }
+    },
+    
+    "adapters": {
+      "1.0.0": {
+        "compatible_package_versions": ["1.0.0"],
+        "implemented_adapters": {
+          "cli-local": {
+            "adapter_type": "orchestrator",
+            "priority": "must-have",
+            "version": "1.0.0",
+            "compatible_profiles": ["minimal", "full"],
+            "compatible_workspaces": ["local-repo"]
+          },
+          "local-repo": {
+            "adapter_type": "workspace",
+            "priority": "must-have",
+            "version": "1.0.0",
+            "compatible_profiles": ["minimal", "full"],
+            "workspace_type": "local_repo"
+          }
+        },
+        "design_only_adapters": {
+          "github-issue": {
+            "adapter_type": "orchestrator",
+            "priority": "later",
+            "design_doc": "docs/adapters/github-issue-adapter-design.md"
+          },
+          "github-pr": {
+            "adapter_type": "workspace",
+            "priority": "later",
+            "design_doc": "docs/adapters/github-pr-adapter-design.md"
+          },
+          "openclaw": {
+            "adapter_type": "orchestrator",
+            "priority": "later",
+            "design_doc": "docs/adapters/openclaw-adapter-design.md"
+          },
+          "external-system": {
+            "adapter_type": "workspace",
+            "priority": "future",
+            "design_doc": "docs/adapters/external-adapter-design.md"
+          }
+        },
+        "breaking_changes": [],
+        "new_features": [
+          "CLI/Local Orchestrator Adapter (Must-Have)",
+          "Local Repo Workspace Adapter (Must-Have)",
+          "Adapter Registry for programmatic discovery",
+          "Adapter Interface Contracts (io-contract.md §8)",
+          "Design documents for Later/Future adapters"
+        ]
+      }
     }
   },
   

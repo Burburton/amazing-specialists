@@ -320,8 +320,8 @@ Legacy skills are archived in `docs/archive/legacy-skills/`.
 ## Version History
 
 | Version | Date | Description |
-|---------|------|-------------|
-| 1.0.0 | 2026-03-28 | Initial release with 19 features, 37 skills, full governance compliance, versioning system |
+|---------|------|---------|
+| 1.0.0 | 2026-03-28 | Initial release with 20 features, 37 skills, full governance compliance, adapter architecture, versioning system |
 
 ---
 
@@ -382,3 +382,28 @@ Legacy skills are archived in `docs/archive/legacy-skills/`.
 - `README.md` - Added feature 019 to feature table
 
 **Result:** PASS - Establishes versioning system for dependable, upgradeable package
+
+---
+
+### Adapter Features (020)
+
+#### [020-orchestrator-and-workspace-adapters] - 2026-03-28
+**Orchestrator 与 Workspace 适配层**
+
+**Added:**
+- `ADAPTERS.md` - Complete adapter architecture definition
+- `adapters/registry.json` - Adapter registry for programmatic discovery
+- `adapters/schemas/workspace-configuration.schema.json` - Workspace configuration schema
+- `adapters/interfaces/orchestrator-adapter.interface.ts` - OrchestratorAdapter TypeScript interface
+- `adapters/interfaces/workspace-adapter.interface.ts` - WorkspaceAdapter TypeScript interface
+- `io-contract.md §8` - Adapter Interface Contract section
+- `adapters/cli-local/` - CLI/Local Orchestrator Adapter (Must-Have, implemented)
+- `adapters/local-repo/` - Local Repo Workspace Adapter (Must-Have, implemented)
+- `adapters/shared/` - Shared utilities (version-check, profile-loader, workspace-config-validator)
+- Design documents for Later adapters (GitHub Issue, GitHub PR, OpenClaw, External)
+
+**Changed:**
+- `README.md` - Added Adapter Architecture section
+- Feature count updated from 19 to 20
+
+**Result:** COMPLETE - Establishes adapter layer for upstream/downstream integration

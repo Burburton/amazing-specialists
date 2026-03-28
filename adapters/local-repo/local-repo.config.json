@@ -1,0 +1,52 @@
+{
+  "$schema": "../schemas/workspace-configuration.schema.json",
+  "title": "Local Repo Workspace Adapter Configuration",
+  "description": "Configuration for local filesystem workspace adapter",
+  
+  "adapter_id": "local-repo",
+  "workspace_type": "local_repo",
+  "profile": "minimal",
+  
+  "output_config": {
+    "artifact_path": "./artifacts",
+    "changed_files_path": "./",
+    "console_output": true,
+    "log_file": null
+  },
+  
+  "escalation_config": {
+    "channel": "console",
+    "requires_acknowledgment": true,
+    "interactive_prompt": true
+  },
+  
+  "retry_config": {
+    "strategy": "interactive",
+    "max_retry": 2,
+    "retry_on_error_types": ["validation_error", "execution_error", "timeout_error"]
+  },
+  
+  "validation_config": {
+    "validate_paths": true,
+    "validate_contract": true,
+    "contract_schema_path": "contracts/pack/"
+  },
+  
+  "version_config": {
+    "check_compatibility": true,
+    "compatibility_matrix_path": "compatibility-matrix.json",
+    "package_version": "1.0.0"
+  },
+  
+  "profile_config": {
+    "load_profile": true,
+    "profile_path": "templates/pack/",
+    "skill_count_expected": 21
+  },
+  
+  "metadata": {
+    "created_at": "2026-03-28T00:00:00Z",
+    "created_by": "feature-020",
+    "description": "Local Repo workspace adapter configuration for MVP"
+  }
+}

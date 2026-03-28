@@ -55,6 +55,46 @@ cat contracts/pack/registry.json
 
 > **注**: 机器可读 schema 与 markdown 契约完全对应（BR-002）。markdown 契约仍为权威定义，schema 为派生格式。
 
+### Adapter Architecture
+
+Adapter 层是专家包与外部系统之间的集成层，解决上游接入和下游输出问题：
+
+- **ADAPTERS.md** - Adapter 架构定义文档
+- **adapters/registry.json** - Adapter 注册表（程序化发现）
+- **adapters/cli-local/** - CLI/Local Orchestrator Adapter (Must-Have)
+- **adapters/local-repo/** - Local Repo Workspace Adapter (Must-Have)
+- **docs/adapters/** - Later/Future adapter 设计文档
+
+**Adapter 类型**：
+
+| 类型 | 方向 | Must-Have | Later |
+|------|------|-----------|-------|
+| Orchestrator | 上游（外部 → Dispatch Payload） | CLI/Local | GitHub Issue, OpenClaw |
+| Workspace | 下游（Execution Result → 外部） | Local Repo | GitHub PR, External |
+
+**CLI/Local Adapter 使用**：
+```bash
+# 从 CLI 派发任务
+node adapters/cli-local/index.js --project my-project --role architect --command design-task "设计新功能"
+```
+
+**Local Repo Adapter 使用**：
+```bash
+# 输出 artifacts 到本地文件系统
+node adapters/local-repo/index.js --workspace ./output --profile minimal
+```
+
+**Adapter Registry 查询**：
+```bash
+# 查询所有 adapter
+cat adapters/registry.json
+
+# 查询特定 adapter 信息
+node adapters/shared/version-check.js
+```
+
+> **详见**: [ADAPTERS.md](ADAPTERS.md) 完整 Adapter 架构定义，[docs/adapters/adapter-usage-guide.md](docs/adapters/adapter-usage-guide.md) 使用指南。
+
 ### 关于 Skills 目录结构
 
 本专家包采用 **6-role 正式执行层模型**作为角色语义标准：
@@ -231,8 +271,9 @@ User Input
 | `017-contract-schema-pack` | Contract Schema Pack | ✅ Complete | 17 JSON Schemas, registry, validation utility |
 | `018-template-and-bootstrap-foundation` | 模板化与 Bootstrap | ✅ Complete | Template pack (minimal/full), CLI (init/install/doctor) |
 | `019-versioning-and-compatibility-foundation` | 版本化与兼容性 | ✅ Complete | VERSIONING.md, compatibility-matrix.json, migration guide template |
+| `020-orchestrator-and-workspace-adapters` | Orchestrator 与 Workspace 适配层 | ✅ Complete | ADAPTERS.md, adapters/, io-contract.md §8, adapter usage guide |
 
-> **当前进度**: `001-bootstrap` 至 `019-versioning-and-compatibility-foundation` 已全部完成。**6-Role 正式执行模型完整实现并验证，Enhanced 模式已验证可用，历史功能审计通过，发布准备就绪，契约 Schema Pack 完成，模板化基础包就绪，版本化体系建立**。
+> **当前进度**: `001-bootstrap` 至 `020-orchestrator-and-workspace-adapters` 已全部完成。**6-Role 正式执行模型完整实现并验证，Enhanced 模式已验证可用，历史功能审计通过，发布准备就绪，契约 Schema Pack 完成，模板化基础包就绪，版本化体系建立，适配层架构完成**。
 
 ### 阶段 7：3-Skill 迁移 ✅ 已完成（010-3-skill-migration）
 
@@ -336,7 +377,7 @@ node templates/cli/doctor.js
 - `templates/cli/` - Bootstrap CLI (init/install/doctor)
 - `templates/*.md` - 使用文档
 
-> **当前进度**: `001-bootstrap` 至 `008-security-core` 完成 MVP 核心，`010-3-skill-migration` 完成骨架归档，`011-m4-enhancement-kit` 完成 M4 可选增强，`012-performance-testing-skills` 完成性能测试套件，`013-e2e-validation` 完成端到端验证，`014-enhanced-mode-validation` 完成 Enhanced 模式验证，`015-historical-features-audit` 完成历史功能审计，`016-release-preparation` 完成发布准备，`017-contract-schema-pack` 完成契约 Schema Pack，`018-template-and-bootstrap-foundation` 完成模板化基础包。**Skills 总计 37 个（21 MVP + 16 M4）**，**Features 总计 19 个**。
+> **当前进度**: `001-bootstrap` 至 `008-security-core` 完成 MVP 核心，`010-3-skill-migration` 完成骨架归档，`011-m4-enhancement-kit` 完成 M4 可选增强，`012-performance-testing-skills` 完成性能测试套件，`013-e2e-validation` 完成端到端验证，`014-enhanced-mode-validation` 完成 Enhanced 模式验证，`015-historical-features-audit` 完成历史功能审计，`016-release-preparation` 完成发布准备，`017-contract-schema-pack` 完成契约 Schema Pack，`018-template-and-bootstrap-foundation` 完成模板化基础包，`019-versioning-and-compatibility-foundation` 完成版本化体系，`020-orchestrator-and-workspace-adapters` 完成适配层架构。**Skills 总计 37 个（21 MVP + 16 M4）**，**Features 总计 20 个**。
 
 ## Quick Start
 

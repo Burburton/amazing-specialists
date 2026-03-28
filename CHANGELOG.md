@@ -5,87 +5,272 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+---
 
-### Planned
-- Token refresh mechanism
-- Login audit logging
-- Rate limiting for brute force protection
-- User registration feature
+## [1.0.0] - 2026-03-28
 
-## [0.2.0] - 2024-01-17
+### Summary
 
-### Added
-
-#### User Authentication
-- **POST /api/auth/login** - User login endpoint with JWT token generation
-- JWT token generation with 24-hour expiration
-- Password encryption using bcrypt (salt rounds: 10)
-- Timing attack prevention with dummy bcrypt comparison
-- Unified error messages to prevent user enumeration attacks
-
-#### Security Features
-- JWT token signed with HS256 algorithm
-- Token payload includes: user_id, username, roles, exp
-- SQL injection protection
-- Password is never returned in API responses
-
-#### Testing
-- Unit tests for JwtTokenService (100% coverage)
-- Unit tests for AuthService (94% coverage)
-- Unit tests for AuthController (90% coverage)
-- Integration tests with in-memory database
-- Performance tests (P99 < 200ms, QPS > 1000)
-- Overall test coverage: 95%
-
-#### Documentation
-- API documentation for login endpoint
-- Architecture documentation
-- Security considerations
-
-### Technical Details
-
-#### New Files
-- `src/services/JwtTokenService.ts` - Token generation and verification
-- `src/services/JwtTokenService.test.ts` - Token service tests
-- `src/services/AuthService.ts` - Authentication business logic
-- `src/services/AuthService.test.ts` - Auth service tests
-- `src/controllers/AuthController.ts` - HTTP endpoint handler
-- `src/controllers/AuthController.test.ts` - Controller tests
-- `src/exceptions/AuthExceptions.ts` - Custom exception classes
-- `src/tests/integration/auth.integration.test.ts` - Integration tests
-- `src/tests/performance/auth.performance.test.ts` - Performance tests
-- `docs/api/auth.md` - API documentation
-
-#### Dependencies Added
-- `jsonwebtoken@^9.0.2` - JWT implementation
-- `bcrypt@^5.1.1` - Password hashing
-
-#### Configuration
-- Added `JWT_SECRET` environment variable
-- Added `JWT_EXPIRES_IN` environment variable (default: 24h)
-
-### Performance
-- Average response time: ~50ms
-- P99 response time: ~180ms
-- QPS: ~1200
-- Memory usage: Stable, no leaks detected
-
-### Security Audit
-- ✅ bcrypt password hashing
-- ✅ Timing attack prevention
-- ✅ SQL injection protection
-- ✅ No sensitive data exposure in errors
-- ✅ Token expiration enforced
-
-## [0.1.0] - 2024-01-15
-
-### Added
-- Project initialization
-- Directory structure setup
-- Dependencies installation (jsonwebtoken, bcrypt)
-- Environment configuration
+Initial release of OpenCode 专家包 - A complete execution layer for automated product development with 6-role model, 37 skills, and full governance compliance.
 
 ---
 
-**Full Changelog**: [View all changes](https://github.com/your-org/opencode-expert-pack/commits/main)
+## Features
+
+### Core Role Features (003-008)
+
+#### [003-architect-core] - 2026-03-24
+**architect 角色核心技能**
+
+**Added:**
+- 3 core skills: `requirement-to-design`, `module-boundary-design`, `tradeoff-analysis`
+- 4 artifact contracts: design-note, module-boundaries, risks-and-tradeoffs, open-questions
+- Validation layer with failure-mode checklist
+- Anti-pattern guidance
+
+---
+
+#### [004-developer-core] - 2026-03-25
+**developer 角色核心技能**
+
+**Added:**
+- 3 core skills: `feature-implementation`, `bugfix-workflow`, `code-change-selfcheck`
+- 3 artifact contracts: implementation-summary, bugfix-report, self-check-report
+- Validation layer with upstream/downstream consumability checklists
+- Anti-pattern guidance
+
+---
+
+#### [005-tester-core] - 2026-03-26
+**tester 角色核心技能**
+
+**Added:**
+- 3 core skills: `unit-test-design`, `regression-analysis`, `edge-case-matrix`
+- 3 artifact contracts: test-scope-report, verification-report, regression-risk-report
+- Validation layer with failure-mode checklist
+- Examples: feature-verification, bugfix-verification, blocked-test
+
+---
+
+#### [006-reviewer-core] - 2026-03-27
+**reviewer 角色核心技能**
+
+**Added:**
+- 3 core skills: `code-review-checklist`, `spec-implementation-diff`, `reject-with-actionable-feedback`
+- 3 artifact contracts: review-findings-report, acceptance-decision-record, actionable-feedback-report
+- Governance alignment checks (AH-006)
+- Examples: standard-feature-review, rejection-with-feedback, ambiguity-escalation
+
+---
+
+#### [007-docs-core] - 2026-03-27
+**docs 角色核心技能**
+
+**Added:**
+- 2 core skills: `readme-sync`, `changelog-writing`
+- 2 artifact contracts: docs-sync-report, changelog-entry
+- Validation layer with consistency review checklist
+- Quick reference and FAQ documentation
+
+---
+
+#### [008-security-core] - 2026-03-28
+**security 角色核心技能**
+
+**Added:**
+- 2 core skills: `auth-and-permission-review`, `input-validation-review`
+- 2 artifact contracts: security-review-report, input-validation-review-report
+- Validation layer with finding-quality checklist
+- **6-role model complete**
+
+---
+
+### Infrastructure Features (009-010)
+
+#### [009-command-hardening] - 2026-03-24
+**命令固化与验证**
+
+**Added:**
+- 5 core commands: `spec-start`, `spec-plan`, `spec-tasks`, `spec-implement`, `spec-audit`
+- 9 artifact templates (6 role + 3 common)
+- Quality gate check specification
+- Traceability methodology
+
+---
+
+#### [010-3-skill-migration] - 2026-03-28
+**3-Skill 迁移归档**
+
+**Changed:**
+- Archived legacy 3-skill skeleton to `docs/archive/legacy-skills/`
+- Mapping: `spec-writer` → architect + docs
+- Mapping: `architect-auditor` → architect + reviewer
+- Mapping: `task-executor` → developer + tester + docs + security
+
+---
+
+### Enhancement Features (011-012)
+
+#### [011-m4-enhancement-kit] - 2026-03-28
+**M4 可选增强套件**
+
+**Added:**
+- 12 M4 enhancement skills (2 per role)
+- `--enhanced` flag for commands
+- Enhanced mode detection logic
+- Metadata inheritance from `spec.md`
+
+**Skills Added:**
+- architect: `interface-contract-design`, `migration-planning`
+- developer: `refactor-safely`, `dependency-minimization`
+- tester: `integration-test-design`, `flaky-test-diagnosis`
+- reviewer: `maintainability-review`, `risk-review`
+- docs: `architecture-doc-sync`, `user-guide-update`
+- security: `secret-handling-review`, `dependency-risk-review`
+
+---
+
+#### [012-performance-testing-skills] - 2026-03-28
+**性能测试技能**
+
+**Added:**
+- 4 performance testing skills for tester role
+- `performance-test-design`: Design performance test plans
+- `benchmark-analysis`: Establish baselines and compare
+- `load-test-orchestration`: Orchestrate load tests
+- `performance-regression-analysis`: Detect performance regression
+
+**Skills Total:** 37 (21 MVP + 16 M4)
+
+---
+
+### Validation Features (013-014)
+
+#### [013-e2e-validation] - 2026-03-28
+**端到端流程验证**
+
+**Validated:**
+- 5 core commands execution
+- 6-role collaboration (architect, developer, tester, reviewer, docs, security)
+- Governance rules AH-001 through AH-006
+- All artifacts format compliance
+
+**Result:** PASS_WITH_WARNINGS (2 minor cosmetic issues)
+
+---
+
+#### [014-enhanced-mode-validation] - 2026-03-28
+**Enhanced 模式验证**
+
+**Validated:**
+- Enhanced mode activation via `enhanced: true` metadata
+- 16 M4 skills triggering mechanism (4 triggered, 8 correctly not triggered)
+- Integration test design scenarios
+- Maintainability review (Score: 8/10)
+- Risk review (Level: Low)
+
+**Result:** PASS
+
+---
+
+### Governance Features (015)
+
+#### [015-historical-features-audit] - 2026-03-28
+**历史功能审计**
+
+**Audited:**
+- 10 historical features (003-012)
+- AH-001~AH-006 governance compliance
+
+**Fixed:**
+- 4 major findings (AH-004 status truthfulness violations)
+- Features 004-007 spec.md status updated from "Draft" to "Complete"
+
+**Result:** All features governance-compliant
+
+---
+
+## Skills Summary
+
+### MVP Core Skills (21)
+
+| Role | Skills |
+|------|--------|
+| common (5) | artifact-reading, context-summarization, failure-analysis, execution-reporting, retry-strategy |
+| architect (3) | requirement-to-design, module-boundary-design, tradeoff-analysis |
+| developer (3) | feature-implementation, bugfix-workflow, code-change-selfcheck |
+| tester (3) | unit-test-design, regression-analysis, edge-case-matrix |
+| reviewer (3) | code-review-checklist, spec-implementation-diff, reject-with-actionable-feedback |
+| docs (2) | readme-sync, changelog-writing |
+| security (2) | auth-and-permission-review, input-validation-review |
+
+### M4 Enhancement Skills (16)
+
+| Role | Skills |
+|------|--------|
+| architect (2) | interface-contract-design, migration-planning |
+| developer (2) | refactor-safely, dependency-minimization |
+| tester (6) | integration-test-design, flaky-test-diagnosis, performance-test-design, benchmark-analysis, load-test-orchestration, performance-regression-analysis |
+| reviewer (2) | maintainability-review, risk-review |
+| docs (2) | architecture-doc-sync, user-guide-update |
+| security (2) | secret-handling-review, dependency-risk-review |
+
+---
+
+## Governance Documents
+
+| Document | Purpose |
+|----------|---------|
+| `package-spec.md` | Package specification and skill classifications |
+| `role-definition.md` | 6-role definitions and boundaries |
+| `io-contract.md` | I/O contract formats |
+| `quality-gate.md` | Quality gates and severity levels |
+| `collaboration-protocol.md` | Role collaboration protocols |
+| `package-lifecycle.md` | Version management and lifecycle |
+| `AGENTS.md` | Project-level execution rules |
+| `docs/audit-hardening.md` | Audit hardening specification (AH-001~AH-006) |
+
+---
+
+## Commands
+
+| Command | Description |
+|---------|-------------|
+| `/spec-start <feature>` | Create or refine a feature spec |
+| `/spec-plan <feature>` | Generate implementation plan |
+| `/spec-tasks <feature>` | Generate executable task list |
+| `/spec-implement <feature>` | Implement a feature |
+| `/spec-audit <feature>` | Audit feature governance compliance |
+
+All commands support `--enhanced` flag to enable M4 enhancement kit.
+
+---
+
+## Migration Notes
+
+### From 3-Skill to 6-Role Model
+
+The project has migrated from the legacy 3-skill skeleton to the formal 6-role execution model:
+
+- `spec-writer` → architect + docs collaboration
+- `architect-auditor` → architect + reviewer separation
+- `task-executor` → developer + tester + docs + security division
+
+Legacy skills are archived in `docs/archive/legacy-skills/`.
+
+---
+
+## Version History
+
+| Version | Date | Description |
+|---------|------|-------------|
+| 1.0.0 | 2026-03-28 | Initial release with 15 features, 37 skills, full governance compliance |
+
+---
+
+## References
+
+- [README.md](README.md) - Project overview
+- [docs/skills-usage-guide.md](docs/skills-usage-guide.md) - Skills usage guide
+- [docs/enhanced-mode-guide.md](docs/enhanced-mode-guide.md) - Enhanced mode guide
+- [specs/](specs/) - Feature specifications and reports

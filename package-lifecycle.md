@@ -8,7 +8,7 @@
 OpenCode 专家包 - 全自动产品研发闭环执行层
 
 ## Current Version
-0.1.0-MVP
+1.0.0
 
 ---
 

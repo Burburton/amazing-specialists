@@ -1,0 +1,223 @@
+{
+  "$schema": "http://json-schema.org/draft/2020-12/schema#",
+  "title": "Compatibility Matrix Schema",
+  "description": "Schema for validating compatibility-matrix.json",
+  "type": "object",
+  "required": [
+    "matrix_version",
+    "last_updated",
+    "version_history",
+    "compatibility",
+    "component_compatibility"
+  ],
+  "properties": {
+    "matrix_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Version of this compatibility matrix"
+    },
+    "last_updated": {
+      "type": "string",
+      "format": "date",
+      "description": "Date when matrix was last updated"
+    },
+    "version_history": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["version", "release_date", "release_type"],
+        "properties": {
+          "version": {
+            "type": "string",
+            "pattern": "^\\d+\\.\\d+\\.\\d+$"
+          },
+          "release_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "release_type": {
+            "type": "string",
+            "enum": ["initial", "patch", "minor", "major"]
+          },
+          "contract_pack_version": {
+            "type": "string"
+          },
+          "template_pack_version": {
+            "type": "string"
+          },
+          "tooling_version": {
+            "type": "string"
+          },
+          "changes": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "compatibility": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "compatible_with": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "migration_required_from": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "incompatible_with": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "component_compatibility": {
+      "type": "object",
+      "properties": {
+        "contract_pack": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "required": ["compatible_package_versions"],
+            "properties": {
+              "compatible_package_versions": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "breaking_changes": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "new_features": {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            }
+          }
+        },
+        "template_pack": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "required": ["compatible_package_versions", "profiles"],
+            "properties": {
+              "compatible_package_versions": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "profiles": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "object",
+                  "required": ["file_count", "skill_count", "compatible_with_package"],
+                  "properties": {
+                    "file_count": { "type": "integer" },
+                    "skill_count": { "type": "integer" },
+                    "compatible_with_package": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tooling": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "required": ["compatible_package_versions", "commands"],
+            "properties": {
+              "compatible_package_versions": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "commands": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "object",
+                  "required": ["version"],
+                  "properties": {
+                    "version": { "type": "string" },
+                    "supported_flags": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    },
+                    "supported_profiles": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    },
+                    "check_count": { "type": "integer" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "migration_paths": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["from_versions", "description"],
+        "properties": {
+          "from_versions": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "description": { "type": "string" },
+          "migration_guide": { "type": ["string", "null"] },
+          "estimated_effort": { "type": "string" }
+        }
+      }
+    },
+    "deprecation_schedule": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "feature": { "type": "string" },
+          "deprecated_in": { "type": "string" },
+          "removed_in": { "type": "string" },
+          "replacement": { "type": "string" }
+        }
+      }
+    },
+    "upgrade_rules": {
+      "type": "object",
+      "properties": {
+        "patch": {
+          "type": "object",
+          "required": ["description", "auto_upgradable", "migration_required", "rollback_supported"]
+        },
+        "minor": {
+          "type": "object",
+          "required": ["description", "auto_upgradable", "migration_required", "rollback_supported"]
+        },
+        "major": {
+          "type": "object",
+          "required": ["description", "auto_upgradable", "migration_required", "rollback_supported"]
+        }
+      }
+    },
+    "validation_rules": {
+      "type": "object",
+      "properties": {
+        "version_sync": {
+          "type": "object",
+          "required": ["description", "rules"]
+        },
+        "changelog_required": {
+          "type": "object",
+          "required": ["description", "required_sections"]
+        }
+      }
+    }
+  }
+}

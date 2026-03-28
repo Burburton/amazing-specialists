@@ -6,13 +6,13 @@
 
 ## What is Enhanced Mode?
 
-Enhanced Mode 启用 **M4 增强套件**，提供 12 个高级技能用于更深入的分析和审查：
+Enhanced Mode 启用 **M4 增强套件**，提供 16 个高级技能用于更深入的分析和审查：
 
 | 角色 | M4 Skills |
 |------|-----------|
 | architect | `interface-contract-design`, `migration-planning` |
 | developer | `refactor-safely`, `dependency-minimization` |
-| tester | `integration-test-design`, `flaky-test-diagnosis` |
+| tester | `integration-test-design`, `flaky-test-diagnosis`, `performance-test-design`, `benchmark-analysis`, `load-test-orchestration`, `performance-regression-analysis` |
 | reviewer | `maintainability-review`, `risk-review` |
 | docs | `architecture-doc-sync`, `user-guide-update` |
 | security | `secret-handling-review`, `dependency-risk-review` |

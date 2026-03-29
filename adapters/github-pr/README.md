@@ -228,6 +228,190 @@ npm run test:coverage
 
 ---
 
+## Troubleshooting
+
+### Common Issues
+
+#### Authentication Failed
+
+**Symptom**: `Failed to obtain valid authentication token`
+
+**Cause**: `GITHUB_TOKEN` not set or invalid
+
+**Solution**:
+1. Verify token is set: `echo $GITHUB_TOKEN`
+2. Check token has required scopes: `repo`, `pull_requests:write`, `contents:write`
+3. Generate new token at https://github.com/settings/tokens
+
+---
+
+#### Rate Limit Exceeded
+
+**Symptom**: `Rate limit exceeded` warning, 403 errors
+
+**Cause**: Too many API requests
+
+**Solution**:
+1. Wait for rate limit reset (check `X-RateLimit-Reset` header)
+2. Reduce request frequency
+3. Use GitHub App authentication for higher limits (15,000 req/hr vs 5,000 req/hr)
+
+---
+
+#### Branch Creation Failed
+
+**Symptom**: `Reference already exists` error
+
+**Cause**: Branch name already exists in repository
+
+**Solution**:
+1. Check if branch exists: `git ls-remote --heads origin`
+2. Use unique dispatch_id for each execution
+3. Delete old branch if needed: `git push origin --delete branch-name`
+
+---
+
+#### File Write Failed
+
+**Symptom**: `Path contains blocked entry` error
+
+**Cause**: Path validation blocked sensitive files
+
+**Solution**:
+1. Check path against blocklist (`.env`, `.git`, `node_modules`, etc.)
+2. Use allowed paths only
+3. Configure custom blocklist in `github-pr.config.json`
+
+---
+
+#### PR Not Found
+
+**Symptom**: `findPRByBranch` returns null
+
+**Cause**: PR doesn't exist for the branch
+
+**Solution**:
+1. Verify branch name matches expected pattern
+2. Check PR state (open/closed)
+3. Ensure correct owner/repo context
+
+---
+
+#### Review Status Not Applied
+
+**Symptom**: PR review status not changing
+
+**Cause**: Insufficient permissions or PR state issue
+
+**Solution**:
+1. Verify token has `pull_requests:write` scope
+2. Check PR is not already merged
+3. Ensure user has write access to repository
+
+---
+
+### Debug Mode
+
+Enable verbose logging:
+
+```bash
+DEBUG=github-pr:* npm test
+```
+
+---
+
+## Security Best Practices
+
+### Token Management
+
+#### Storage
+
+- **Never** commit tokens to version control
+- Use environment variables or secret managers
+- Rotate tokens regularly (90 days recommended)
+
+#### Scope Requirements
+
+| Use Case | Minimum Scope |
+|----------|---------------|
+| Public repositories | `public_repo` |
+| Private repositories | `repo` |
+| Organization access | `read:org` |
+
+#### GitHub App vs PAT
+
+| Aspect | GitHub App | PAT |
+|--------|------------|-----|
+| Rate Limit | 15,000 req/hr | 5,000 req/hr |
+| Scope | Fine-grained | Broad |
+| Expiry | 10 min tokens | No expiry (v1) |
+| Audit | Per-installation | Per-user |
+| **Recommendation** | **Production** | Development only |
+
+---
+
+### Path Validation
+
+The adapter blocks writes to sensitive paths:
+
+| Blocked Path | Reason |
+|--------------|--------|
+| `.env`, `.env.local`, `.env.production` | Environment secrets |
+| `.git` | Repository internals |
+| `node_modules` | Package dependencies |
+| `.npmrc`, `.netrc` | Credential files |
+| `id_rsa`, `id_ed25519` | SSH keys |
+| `credentials.json`, `secrets.json` | Credential files |
+
+Configure custom blocklist in `github-pr.config.json`:
+
+```json
+{
+  "github_pr_config": {
+    "validation": {
+      "path_blocklist": [".env", "secrets", "credentials"]
+    }
+  }
+}
+```
+
+---
+
+### Webhook Security (for future use)
+
+When receiving webhooks:
+
+1. **Verify HMAC signature**: Use timing-safe comparison
+2. **Validate IP origin**: Check against GitHub's IP ranges
+3. **Validate event type**: Process only expected events
+
+---
+
+### Secret Rotation
+
+Token rotation procedure:
+
+1. Generate new token
+2. Add to GitHub settings (keep old token during transition)
+3. Deploy with both tokens (grace period)
+4. Remove old token from GitHub settings
+5. Remove old token from configuration
+
+---
+
+### Security Checklist
+
+Before production deployment:
+
+- [ ] `GITHUB_TOKEN` stored in secret manager
+- [ ] Token has minimum required scope
+- [ ] Path validation enabled
+- [ ] Error logs don't contain secrets
+- [ ] Rate limit monitoring configured
+- [ ] Token rotation schedule defined
+
+---
+
 ## Changelog
 
 | Version | Date | Changes |

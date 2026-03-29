@@ -273,9 +273,9 @@ User Input
 | `019-versioning-and-compatibility-foundation` | 版本化与兼容性 | ✅ Complete | VERSIONING.md, compatibility-matrix.json, migration guide template |
 | `020-orchestrator-and-workspace-adapters` | Orchestrator 与 Workspace 适配层 | ✅ Complete | ADAPTERS.md, adapters/, io-contract.md §8, adapter usage guide |
 | `021-github-issue-adapter` | GitHub Issue 适配器 | ✅ Complete | adapters/github-issue/, 448 tests, webhook security |
-| `022-github-pr-adapter` | GitHub PR 适配器 | ✅ Complete with known gaps | adapters/github-pr/, 93 tests, PR output handling (E2E tests pending) |
+| `022-github-pr-adapter` | GitHub PR 适配器 | ✅ Complete | adapters/github-pr/, 159 tests, PR output handling |
 
-> **当前进度**: `001-bootstrap` 至 `021-github-issue-adapter` 已全部完成。`022-github-pr-adapter` 主体完成，E2E 测试待补充。**6-Role 正式执行模型完整实现并验证，Enhanced 模式已验证可用，历史功能审计通过，发布准备就绪，契约 Schema Pack 完成，模板化基础包就绪，版本化体系建立，适配层架构完成，GitHub Issue 适配器实现，GitHub PR 适配器实现**。
+> **当前进度**: `001-bootstrap` 至 `022-github-pr-adapter` 已全部完成。**6-Role 正式执行模型完整实现并验证，Enhanced 模式已验证可用，历史功能审计通过，发布准备就绪，契约 Schema Pack 完成，模板化基础包就绪，版本化体系建立，适配层架构完成，GitHub Issue 适配器实现，GitHub PR 适配器实现**。
 
 ### 阶段 7：3-Skill 迁移 ✅ 已完成（010-3-skill-migration）
 

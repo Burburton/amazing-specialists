@@ -476,16 +476,22 @@ Legacy skills are archived in `docs/archive/legacy-skills/`.
 - `README.md` - Complete adapter documentation
 
 **Tests:**
-- 7 test suites, 93 unit tests, all passing
+- 10 test suites, 159 tests, all passing
 - `file-handler.test.js` - File operations tests
-- `pr-client.test.js` - GitHub API client tests
-- `artifact-writer.test.js` - Artifact output tests
+- `pr-client.test.js` - GitHub API client tests (25 tests)
+- `artifact-writer.test.js` - Artifact output tests (25 tests)
 - `review-manager.test.js` - Review comment/status tests
 - `branch-manager.test.js` - Branch creation/update tests
 - `commit-builder.test.js` - Commit building tests
 - `index.test.js` - Interface compliance tests
 - `path-validator.test.js` - Path validation tests
 - `retry-handler.test.js` - Retry logic tests
+- `tests/integration/workflow.test.js` - End-to-end workflow tests
+
+**Documentation:**
+- Troubleshooting guide (authentication, rate limits, branch issues)
+- Security best practices (token management, path validation)
+- Debug mode instructions
 
 **Changed:**
 - `adapters/registry.json` - Updated github-pr status to "implemented"

@@ -130,7 +130,7 @@ All paths keep Issue OPEN.
 - [x] AH-004: Status Truthfulness - Completion status accurate, no hidden gaps
 - [x] AH-005: README Governance Status - README updated with skill count and feature entry
 - [x] AH-007: Version Declarations - Not applicable (no version change)
-- [x] AH-008: CHANGELOG Reflects Release - Pending (feature complete, changelog entry needed)
+- [x] AH-008: CHANGELOG Reflects Release - CHANGELOG v1.2.0 added with features 024-028
 
 ## Known Gaps
 
@@ -146,9 +146,9 @@ No migration required. This is a new skill.
 
 ## Follow-Up Tasks
 
-1. **Changelog Entry**: Add changelog entry for 028-issue-status-sync
-2. **Integration Test**: Add integration test for issue-status-sync skill
-3. **Documentation**: Update docs/skills-usage-guide.md to include issue-status-sync
+1. **Changelog Entry**: ✅ DONE - CHANGELOG v1.2.0 added with features 024-028
+2. **Integration Test**: ✅ DONE - 43 tests created, all passing (tests/skills/docs/issue-status-sync.test.js)
+3. **Documentation**: Update docs/skills-usage-guide.md to include issue-status-sync (optional)
 
 ## Metrics
 
@@ -159,8 +159,9 @@ No migration required. This is a new skill.
 | Business Rules | 5 |
 | Examples | 2 |
 | Anti-Examples | 1 |
-| Files Created | 8 |
-| Files Modified | 3 |
+| Test Cases | 43 (all passing) |
+| Files Created | 11 |
+| Files Modified | 6 |
 | Total Tasks | 21 |
 | Tasks Completed | 21 (100%) |
 
@@ -204,5 +205,13 @@ contracts/pack/docs/
 ```
 role-definition.md          # Added issue-status-sync skill
 contracts/pack/registry.json # Added DOC-003 contract
-README.md                   # Updated skills count and feature table
+README.md                   # Updated skills count (23 MVP, 39 total) and feature table
+CHANGELOG.md                # Added v1.2.0 with features 024-028
+package.json                # Added ajv dependency for schema tests
+package-lock.json           # Dependency lock file
+
+tests/skills/
+├── docs/issue-status-sync.test.js  # 43 test cases
+├── fixtures/skill-fixtures.js      # Test data factories
+└── helpers/schema-assertions.js    # AJV schema validation helpers
 ```

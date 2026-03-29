@@ -4,7 +4,7 @@
   "description": "Registry of all adapters for programmatic discovery",
   
   "registry_version": "1.0.0",
-  "last_updated": "2026-03-28",
+  "last_updated": "2026-03-29",
   
   "adapters": {
     "orchestrator": [
@@ -135,16 +135,18 @@
         "adapter_id": "github-pr",
         "adapter_type": "workspace",
         "priority": "later",
-        "status": "design-only",
-        "design_doc": "docs/adapters/github-pr-adapter-design.md",
+        "status": "implemented",
+        "version": "1.0.0",
+        "path": "adapters/github-pr/",
+        "config_file": "github-pr.config.json",
         "interface": "WorkspaceAdapter",
         "compatible_profiles": ["minimal", "full"],
         "workspace_type": "github_repo",
-        "description": "GitHub PR workspace adapter (design only)",
+        "description": "GitHub PR workspace adapter for outputting execution results to GitHub Pull Requests",
         "artifact_mapping": {
           "input_format": "Execution Result (io-contract.md §2)",
           "output_format": "GitHub PR (files, commits)",
-          "mapping_doc": "docs/adapters/github-pr-adapter-design.md"
+          "mapping_doc": "adapters/github-pr/README.md"
         },
         "escalation_mapping": {
           "channel": "github_comment",
@@ -154,6 +156,18 @@
           "strategy": "configurable",
           "max_retry": 2,
           "trigger": "user_decision"
+        },
+        "components": {
+          "pr_client": "src/pr-client.js",
+          "file_handler": "src/file-handler.js",
+          "artifact_writer": "src/artifact-writer.js",
+          "review_manager": "src/review-manager.js",
+          "branch_manager": "src/branch-manager.js",
+          "commit_builder": "src/commit-builder.js",
+          "escalation_handler": "src/escalation-handler.js",
+          "retry_handler": "src/retry-handler.js",
+          "path_validator": "src/path-validator.js",
+          "comment_templates": "src/comment-templates.js"
         }
       },
       {

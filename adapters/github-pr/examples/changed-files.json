@@ -1,0 +1,26 @@
+[
+  {
+    "path": "src/new-feature.js",
+    "change_type": "added",
+    "diff_summary": "Added new feature implementation",
+    "content": "export function newFeature() {\n  return true;\n}\n"
+  },
+  {
+    "path": "src/utils.js",
+    "change_type": "modified",
+    "diff_summary": "Updated utility functions",
+    "content": "export function util() {\n  return 'updated';\n}\n"
+  },
+  {
+    "path": "src/deprecated.js",
+    "change_type": "deleted",
+    "diff_summary": "Removed deprecated module"
+  },
+  {
+    "path": "src/renamed.js",
+    "change_type": "renamed",
+    "old_path": "src/old-name.js",
+    "diff_summary": "Renamed module for clarity",
+    "content": "export function renamed() {}\n"
+  }
+]

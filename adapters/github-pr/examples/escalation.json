@@ -1,0 +1,52 @@
+{
+  "escalation_id": "esc-001",
+  "dispatch_id": "dispatch-001",
+  "project_id": "owner/repo",
+  "milestone_id": "M001",
+  "task_id": "T001",
+  "role": "developer",
+  "level": "USER",
+  "reason_type": "HIGH_RISK_CHANGE",
+  "summary": "The proposed changes involve significant modifications to the authentication system that require user approval.",
+  "blocking_points": [
+    "Changes to auth middleware affect all API endpoints",
+    "No backward compatibility for existing tokens",
+    "Security implications need review"
+  ],
+  "evidence": {
+    "related_artifacts": ["art-001"],
+    "logs": [
+      "Warning: Auth middleware signature changed",
+      "Deprecation notice: Token format v1 will be unsupported"
+    ],
+    "failure_history": []
+  },
+  "attempted_actions": [
+    "Attempted to add backward compatibility layer",
+    "Reviewed security implications"
+  ],
+  "recommended_next_steps": [
+    "Review the authentication changes with security team",
+    "Decide on token migration strategy",
+    "Update documentation for API consumers"
+  ],
+  "options": [
+    {
+      "option_id": "A",
+      "description": "Proceed with breaking changes (recommended)",
+      "pros": ["Cleaner implementation", "Better security", "Future-proof"],
+      "cons": ["Breaking change for existing users", "Requires migration guide"]
+    },
+    {
+      "option_id": "B",
+      "description": "Add backward compatibility layer",
+      "pros": ["No breaking changes", "Existing users unaffected"],
+      "cons": ["Increased complexity", "Technical debt", "Performance overhead"]
+    }
+  ],
+  "recommended_option": "A",
+  "required_decision": "Choose between breaking changes or backward compatibility approach",
+  "requires_user_decision": true,
+  "created_at": "2026-03-29T12:00:00Z",
+  "created_by": "developer"
+}

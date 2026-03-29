@@ -339,17 +339,21 @@ interface WorkspaceAdapter {
 | Max Retry | 2 (user can override) |
 | Trigger | User decision |
 
-### Later: GitHub PR Adapter (Design Only)
+### Implemented: GitHub PR Adapter
 
-| Aspect | Design |
-|--------|--------|
+| Aspect | Implementation |
+|--------|----------------|
 | **Type** | Workspace |
 | **Priority** | Later |
+| **Status** | Implemented |
+| **Version** | 1.0.0 |
 | **Input** | Execution Result |
 | **Output** | GitHub PR (files, commits) |
-| **Design Doc** | `docs/adapters/github-pr-adapter-design.md` |
+| **Path** | `adapters/github-pr/` |
+| **Config** | `adapters/github-pr/github-pr.config.json` |
+| **README** | `adapters/github-pr/README.md` |
 
-**Artifact Output Mapping** (Design):
+**Artifact Output Mapping**:
 
 | Execution Result Field | GitHub PR Action |
 |------------------------|------------------|
@@ -448,9 +452,13 @@ Adapter Registry 位于 `adapters/registry.json`，提供所有 adapter 的程�
         "adapter_id": "github-pr",
         "adapter_type": "workspace",
         "priority": "later",
-        "status": "design-only",
-        "design_doc": "docs/adapters/github-pr-adapter-design.md",
-        "description": "GitHub PR workspace adapter (design only)"
+        "status": "implemented",
+        "version": "1.0.0",
+        "path": "adapters/github-pr/",
+        "config_file": "github-pr.config.json",
+        "interface": "WorkspaceAdapter",
+        "compatible_profiles": ["minimal", "full"],
+        "description": "GitHub PR workspace adapter for PR output handling"
       },
       {
         "adapter_id": "external-system",

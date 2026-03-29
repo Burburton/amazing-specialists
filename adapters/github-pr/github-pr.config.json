@@ -1,0 +1,137 @@
+{
+  "$schema": "../schemas/workspace-configuration.schema.json",
+  "title": "GitHub PR Workspace Adapter Configuration",
+  "description": "Configuration for GitHub PR Workspace Adapter",
+  
+  "adapter_id": "github-pr",
+  "adapter_type": "workspace",
+  "workspace_type": "github_repo",
+  "priority": "later",
+  "version": "1.0.0",
+  
+  "profile": "minimal",
+  
+  "output_config": {
+    "artifact_path": "docs/artifacts/",
+    "changed_files_path": "./",
+    "console_output": false,
+    "commit_strategy": "single"
+  },
+  
+  "escalation_config": {
+    "channel": "github_comment",
+    "requires_acknowledgment": true,
+    "review_status_on_escalation": "COMMENT"
+  },
+  
+  "retry_config": {
+    "strategy": "configurable",
+    "max_retry": 2,
+    "trigger": "user_decision",
+    "retry_labels": {
+      "approved": "retry-approved",
+      "aborted": "retry-aborted"
+    }
+  },
+  
+  "github_pr_config": {
+    "api": {
+      "base_url": "https://api.github.com",
+      "api_version": "2022-11-28",
+      "user_agent": "OpenCode-ExpertPack/1.0.0"
+    },
+    
+    "authentication": {
+      "primary_method": "github_app",
+      "fallback_method": "pat",
+      "token_env_var": "GITHUB_TOKEN",
+      "app_id_env_var": "GITHUB_APP_ID",
+      "app_private_key_env_var": "GITHUB_APP_PRIVATE_KEY"
+    },
+    
+    "branch_config": {
+      "default_base_branch": "main",
+      "branch_prefix": "expert-pack/",
+      "branch_name_format": "expert-pack/{dispatch_id}"
+    },
+    
+    "pr_config": {
+      "title_format": {
+        "design-note": "[Design] {title}",
+        "implementation-summary": "[Implement] {title}",
+        "test-report": "[Test] {title}",
+        "review-report": "[Review] {title}",
+        "bugfix-report": "[Fix] {title}",
+        "default": "[Expert Pack] {title}"
+      },
+      "default_body_template": "Automated output from OpenCode Expert Pack execution.",
+      "draft_by_default": false
+    },
+    
+    "review_config": {
+      "status_mapping": {
+        "SUCCESS": "APPROVE",
+        "SUCCESS_WITH_WARNINGS": "APPROVE",
+        "PARTIAL": "REQUEST_CHANGES",
+        "BLOCKED": "COMMENT",
+        "FAILED_RETRYABLE": "REQUEST_CHANGES",
+        "FAILED_ESCALATE": "COMMENT"
+      },
+      "auto_approve_on_success": false,
+      "request_changes_on_failure": true
+    },
+    
+    "labels": {
+      "success": "expert-pack:success",
+      "warning": "expert-pack:warning",
+      "partial": "expert-pack:partial",
+      "failed": "expert-pack:failed",
+      "escalation": "escalation:needs-decision",
+      "retry_approved": "retry-approved",
+      "retry_aborted": "retry-aborted"
+    },
+    
+    "rate_limit": {
+      "enabled": true,
+      "warning_threshold": 100,
+      "backoff_multiplier": 2,
+      "max_backoff_seconds": 3600
+    },
+    
+    "validation": {
+      "path_blocklist": [
+        ".git",
+        ".env",
+        ".env.local",
+        ".env.production",
+        "node_modules",
+        ".npmrc",
+        ".netrc",
+        "id_rsa",
+        "id_ed25519",
+        "credentials.json",
+        "secrets.json"
+      ],
+      "max_file_size_bytes": 10485760,
+      "validate_paths": true
+    }
+  },
+  
+  "validation_config": {
+    "validate_paths": true,
+    "validate_contract": true,
+    "contract_schema_path": "contracts/pack/"
+  },
+  
+  "version_config": {
+    "check_compatibility": true,
+    "compatibility_matrix_path": "compatibility-matrix.json",
+    "package_version": "1.0.0"
+  },
+  
+  "metadata": {
+    "created_at": "2026-03-29T00:00:00Z",
+    "created_by": "feature-022",
+    "description": "GitHub PR workspace adapter configuration for v1.1"
+  }
+}

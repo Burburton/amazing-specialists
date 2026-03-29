@@ -1,0 +1,50 @@
+{
+  "name": "github-pr",
+  "version": "1.0.0",
+  "description": "GitHub PR Workspace Adapter for OpenCode Expert Pack",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "test:unit": "jest tests/unit",
+    "test:integration": "jest tests/integration",
+    "test:e2e": "jest tests/e2e",
+    "test:watch": "jest --watch",
+    "test:config": "node -e \"console.log(JSON.stringify(require('./github-pr.config.json'), null, 2))\"",
+    "validate:registry": "node -e \"const r = require('../registry.json'); console.log(JSON.stringify(r.adapters.workspace.find(a => a.adapter_id === 'github-pr'), null, 2))\""
+  },
+  "keywords": [
+    "github",
+    "pull-request",
+    "adapter",
+    "workspace"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@octokit/rest": "^20.0.0"
+  },
+  "devDependencies": {
+    "jest": "^30.3.0",
+    "nock": "^14.0.0"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "coverageDirectory": "coverage",
+    "collectCoverageFrom": [
+      "src/**/*.js",
+      "index.js"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 90,
+        "functions": 90,
+        "lines": 90,
+        "statements": 90
+      }
+    }
+  }
+}

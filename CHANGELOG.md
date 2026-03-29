@@ -449,3 +449,55 @@ Legacy skills are archived in `docs/archive/legacy-skills/`.
 - Rate limiting with exponential backoff
 
 **Result:** COMPLETE - Enables task dispatch via GitHub Issues
+
+---
+
+### Later Adapters (022)
+
+#### [022-github-pr-adapter] - 2026-03-29
+**GitHub PR Workspace Adapter**
+
+**Added:**
+- `adapters/github-pr/` - Complete GitHub PR Workspace Adapter implementation
+- `src/file-handler.js` - Handle changed_files (add/modify/delete/rename)
+- `src/pr-client.js` - GitHub REST API client for PR operations
+- `src/artifact-writer.js` - Write Execution Result artifacts to PR files
+- `src/review-manager.js` - Post review comments and set review status
+- `src/branch-manager.js` - Create/update PR branches
+- `src/commit-builder.js` - Build commits from file changes
+- `src/escalation-handler.js` - Output escalation to PR review comments
+- `src/retry-handler.js` - Handle output failures with retry logic
+- `src/path-validator.js` - Validate file paths before writing (BR-006)
+- `src/comment-templates.js` - Markdown templates for PR comments
+- `src/utils/` - Token manager, rate limit tracker, error classifier
+- `index.js` - Main adapter implementing WorkspaceAdapter interface
+- `types/github-pr.types.ts` - TypeScript type definitions
+- `github-pr.config.json` - Adapter configuration
+- `README.md` - Complete adapter documentation
+
+**Tests:**
+- 7 test suites, 93 unit tests, all passing
+- `file-handler.test.js` - File operations tests
+- `pr-client.test.js` - GitHub API client tests
+- `artifact-writer.test.js` - Artifact output tests
+- `review-manager.test.js` - Review comment/status tests
+- `branch-manager.test.js` - Branch creation/update tests
+- `commit-builder.test.js` - Commit building tests
+- `index.test.js` - Interface compliance tests
+- `path-validator.test.js` - Path validation tests
+- `retry-handler.test.js` - Retry logic tests
+
+**Changed:**
+- `adapters/registry.json` - Updated github-pr status to "implemented"
+- `ADAPTERS.md` - Updated GitHub PR section to "Implemented"
+- Feature count updated from 21 to 22
+
+**Features:**
+- Artifact output to PR files
+- Changed files handling with commit creation
+- PR status mapping (SUCCESS→APPROVE, PARTIAL→REQUEST_CHANGES, etc.)
+- Escalation comment formatting
+- Retry flow with user decision labels
+- Path validation for security
+
+**Result:** COMPLETE - Enables execution result output to GitHub Pull Requests

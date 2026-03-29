@@ -2,7 +2,7 @@
   "pack_version": "1.0.0",
   "created_at": "2026-03-28T00:00:00Z",
   "updated_at": "2026-03-28T00:00:00Z",
-  "total_contracts": 17,
+  "total_contracts": 18,
   "contracts": [
     {
       "contract_id": "AC-001",
@@ -153,6 +153,16 @@
       "schema_path": "contracts/pack/docs/changelog-entry.schema.json",
       "markdown_path": "specs/007-docs-core/contracts/changelog-entry-contract.md",
       "description": "Structured changelog entry with change type classification, capability changes, and breaking changes notes"
+    },
+    {
+      "contract_id": "DOC-003",
+      "contract_name": "issue-progress-report",
+      "producer_role": "docs",
+      "consumer_roles": ["management", "acceptance"],
+      "version": "1.0.0",
+      "schema_path": "contracts/pack/docs/issue-progress-report.schema.json",
+      "markdown_path": "",
+      "description": "Progress report posted to GitHub Issue after execution completion, signaling pending acceptance without closing the Issue"
     },
     {
       "contract_id": "SEC-001",

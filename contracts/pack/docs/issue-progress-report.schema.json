@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "contracts/pack/docs/issue-progress-report.schema.json",
+  "title": "Issue Progress Report Contract",
+  "description": "Progress report posted to GitHub Issue after execution completion, signaling pending acceptance without closing the Issue",
+  "type": "object",
+  "properties": {
+    "contract_id": { "type": "string", "const": "DOC-003" },
+    "dispatch_id": { "type": "string" },
+    "created_at": { "type": "string", "format": "date-time" },
+    "created_by": { "type": "string", "const": "docs" },
+    "skill_used": { "type": "string", "const": "issue-status-sync" },
+    "issue_number": { "type": "integer", "minimum": 1 },
+    "repository": { "type": "string", "pattern": "^[^/]+/[^/]+$" },
+    "execution_status": {
+      "type": "string",
+      "enum": ["SUCCESS", "PARTIAL", "FAILED", "BLOCKED"]
+    },
+    "roles_completed": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": ["architect", "developer", "tester", "reviewer", "docs", "security"]
+          },
+          "status": {
+            "type": "string",
+            "enum": ["COMPLETE", "PARTIAL", "SKIPPED"]
+          },
+          "key_output": { "type": "string" }
+        },
+        "required": ["role", "status", "key_output"]
+      }
+    },
+    "artifacts_produced": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "contract_id": { "type": "string" },
+          "file_path": { "type": "string" },
+          "summary": { "type": "string" }
+        },
+        "required": ["contract_id", "file_path", "summary"]
+      }
+    },
+    "consumed_artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "properties": {
+          "artifact_type": {
+            "type": "string",
+            "enum": ["acceptance-decision-record", "verification-report", "execution-result", "design-note"]
+          },
+          "contract_id": { "type": "string" },
+          "artifact_path": { "type": "string" },
+          "fields_used": { "type": "array", "items": { "type": "string" } }
+        },
+        "required": ["artifact_type", "artifact_path", "fields_used"]
+      }
+    },
+    "recommendation": {
+      "type": "string",
+      "enum": ["PENDING_ACCEPTANCE", "NEEDS_REWORK", "BLOCKED_ESCALATION"]
+    },
+    "recommendation_reason": { "type": "string" },
+    "quality_summary": {
+      "type": "object",
+      "properties": {
+        "tests_passed": { "type": ["boolean", "null"] },
+        "review_status": {
+          "type": ["string", "null"],
+          "enum": ["APPROVED", "REJECTED", "WARN", null]
+        },
+        "security_gate": {
+          "type": ["string", "null"],
+          "enum": ["PASSED", "FAILED", null]
+        }
+      }
+    },
+    "next_steps": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "properties": {
+          "action": { "type": "string" },
+          "responsible_party": { "type": "string" }
+        },
+        "required": ["action", "responsible_party"]
+      }
+    },
+    "issue_state_after": {
+      "type": "string",
+      "const": "OPEN",
+      "description": "BR-003: Issue must remain OPEN after skill execution. Premature closure is forbidden."
+    },
+    "comment_url": { "type": "string", "format": "uri" },
+    "warnings": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "required": [
+    "contract_id", "dispatch_id", "created_at", "created_by", "skill_used",
+    "issue_number", "repository", "execution_status", "roles_completed",
+    "artifacts_produced", "consumed_artifacts", "recommendation",
+    "recommendation_reason", "quality_summary", "next_steps",
+    "issue_state_after", "comment_url"
+  ],
+  "additionalProperties": false
+}

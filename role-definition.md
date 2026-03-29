@@ -515,6 +515,7 @@ architect → developer → tester → reviewer → docs
 |----------|------------|------|
 | SKILL-001 | readme-sync | 同步 README 和仓库文档与实际实现状态 |
 | SKILL-002 | changelog-writing | 为完成工作和修复生成结构化 changelog 条目 |
+| SKILL-003 | issue-status-sync | 同步任务执行状态到 GitHub Issue，发布进度评论，**不关闭 Issue**（等待管理层验收） |
 
 ### 输出 Artifacts
 
@@ -522,6 +523,7 @@ architect → developer → tester → reviewer → docs
 |----------|------|----------|
 | docs-sync-report | 主要结构化文档同步报告 | OpenClaw, maintainers |
 | changelog-entry | 结构化 changelog 条目 | Maintainers, users |
+| issue-progress-report | Issue 进度报告（DOC-003） | Management, acceptance |
 
 ## Out of Scope
 
@@ -556,13 +558,14 @@ architect → developer → tester → reviewer → docs
 
 以下情况应调用 docs：
 
-| Trigger | 描述 | Priority |
-|---------|------|----------|
-| Feature 完成信号 | Feature 通过 reviewer 验收 | High |
-| 状态漂移检测 | README 状态与 completion-report 不匹配 | High |
-| Changelog 条目需求 | 发布准备或 milestone 完成 | High |
-| 文档债务识别 | 仓库文档已知缺口 | Medium |
-| 治理同步需求 | 治理文档变更后 | Medium |
+| Trigger | 描述 | Priority | Related Skill |
+|---------|------|----------|---------------|
+| Feature 完成信号 | Feature 通过 reviewer 验收 | High | readme-sync, changelog-writing |
+| Issue 进度同步 | 任务通过 GitHub Issue 触发，执行完成后同步进度 | High | issue-status-sync |
+| 状态漂移检测 | README 状态与 completion-report 不匹配 | High | readme-sync |
+| Changelog 条目需求 | 发布准备或 milestone 完成 | High | changelog-writing |
+| 文档债务识别 | 仓库文档已知缺口 | Medium | readme-sync |
+| 治理同步需求 | 治理文档变更后 | Medium | readme-sync |
 
 ## Required Inputs
 

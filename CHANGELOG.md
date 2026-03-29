@@ -7,6 +7,70 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.2.0] - 2026-03-30
+
+### Summary
+
+**E2E Testing & Issue Workflow Complete** - Full end-to-end testing infrastructure, GitHub Issue adapter workflow verification, and Issue status sync skill for automated progress reporting.
+
+### Added
+
+#### E2E Testing Infrastructure
+- **E2E Integration Tests** (`tests/e2e/`) - 64 tests covering full command workflow
+  - Mock server infrastructure for adapter testing
+  - 5 command execution tests
+  - 6-role collaboration tests
+  - Governance rule validation (AH-001~AH-006)
+
+#### E2E Adapter Integration
+- **E2E Adapter Integration Tests** (`tests/e2e/adapters/`) - 46 tests with real adapter code
+  - GitHub Issue adapter real-code tests
+  - GitHub PR adapter real-code tests
+  - OpenClaw adapter real-code tests
+  - Cross-adapter workflow tests
+
+#### GitHub Issue Workflow
+- **GitHub Issue Adapter Workflow Test** - Verified complete workflow from Issue dispatch to PR output
+  - Workflow verification report documenting all steps
+  - Issue label parsing → Dispatch Payload → Execution → PR output flow
+  - Error handling and retry scenarios
+
+#### GitHub Issue Adapter Enhancements
+- **setup-labels CLI** - Automated label setup for GitHub repositories
+  - Milestone labels (M1-M4)
+  - Role labels (6-role model)
+  - Command labels (5 core commands)
+  - Task labels and risk labels
+- **git-client utility** - Git operations for automation scripts
+- **generateResultComment** - Template generator for execution result comments
+- **automation script** - End-to-end automation helper
+
+#### Issue Status Sync Skill
+- **issue-status-sync skill** (`docs/issue-status-sync/`) - MVP skill for docs role
+  - DOC-003 artifact contract (`issue-progress-report`)
+  - BR-003: No Premature Closure - Issue must remain OPEN
+  - Evidence-based progress reporting from upstream artifacts
+  - Recommendation field: PENDING_ACCEPTANCE, NEEDS_REWORK, BLOCKED_ESCALATION
+  - Examples (example-001, example-002) and anti-examples (anti-example-001)
+  - Validation checklist for BR-003 compliance
+
+### Changed
+- `contracts/pack/registry.json` - Added DOC-003 contract metadata
+- `contracts/pack/docs/issue-progress-report.schema.json` - New schema for DOC-003
+- `role-definition.md` - Added issue-status-sync to docs skills
+- `README.md` - Updated skills count: 23 MVP + 16 M4 = 39 total
+- Docs Skills: 2 → 3 (added issue-status-sync)
+
+### Stats
+| Metric | v1.1.0 | v1.2.0 |
+|--------|--------|--------|
+| Features | 23 | 28 |
+| Skills | 38 | 39 |
+| MVP Skills | 22 | 23 |
+| Tests | 676+ | 726+ |
+
+---
+
 ## [1.1.0] - 2026-03-29
 
 ### Summary
@@ -288,7 +352,7 @@ Initial release of OpenCode 专家包 - A complete execution layer for automated
 | developer (3) | feature-implementation, bugfix-workflow, code-change-selfcheck |
 | tester (3) | unit-test-design, regression-analysis, edge-case-matrix |
 | reviewer (3) | code-review-checklist, spec-implementation-diff, reject-with-actionable-feedback |
-| docs (2) | readme-sync, changelog-writing |
+| docs (3) | readme-sync, changelog-writing, issue-status-sync |
 | security (2) | auth-and-permission-review, input-validation-review |
 
 ### M4 Enhancement Skills (16)

@@ -36,6 +36,8 @@
     ]
   },
   "devDependencies": {
+    "ajv": "^8.18.0",
+    "ajv-formats": "^3.0.1",
     "jest": "^30.0.0",
     "jsonwebtoken": "^9.0.3",
     "nock": "^13.5.0"

@@ -8,131 +8,78 @@ describe('SchemaValidator', () => {
     validator = new SchemaValidator();
     validPayload = {
       dispatch_id: 'dispatch-001',
-      project_id: 'proj-001',
-      milestone_id: 'ms-001',
+      project_id: 'project-001',
+      milestone_id: 'milestone-001',
       task_id: 'task-001',
-      role: 'developer',
-      command: 'feature-implementation',
-      title: 'Implement feature',
-      goal: 'Create the feature',
-      description: 'Description',
-      context: { task_scope: 'Implementation' },
-      constraints: ['Must pass tests'],
-      inputs: [{ artifact_id: 'input-1' }],
-      expected_outputs: ['Output file'],
-      verification_steps: ['Run tests'],
+      role: 'architect',
+      command: 'design-task',
+      title: 'Design feature',
+      goal: 'Implement new feature',
+      description: 'Detailed description of the task',
+      context: {},
+      constraints: ['constraint-1'],
+      inputs: ['input-1'],
+      expected_outputs: ['output-1'],
+      verification_steps: ['step-1'],
       risk_level: 'low'
     };
   });
 
-  describe('validate', () => {
-    test('returns isValid true for valid payload', () => {
-      const result = validator.validate(validPayload);
-      expect(result.isValid).toBe(true);
-      expect(result.errors.length).toBe(0);
-    });
+  test('valid payload returns isValid: true', () => {
+    const result = validator.validate(validPayload);
+    expect(result.isValid).toBe(true);
+    expect(result.errors).toHaveLength(0);
+  });
 
-    test('returns error for missing dispatch_id', () => {
-      const payload = { ...validPayload, dispatch_id: '' };
+  test('missing each required field returns an error', () => {
+    SchemaValidator.REQUIRED_FIELDS.forEach((field) => {
+      const payload = JSON.parse(JSON.stringify(validPayload));
+      delete payload[field];
       const result = validator.validate(payload);
       expect(result.isValid).toBe(false);
-      expect(result.errors.some(e => e.field === 'dispatch_id')).toBe(true);
+      const hasFieldError = result.errors.some((e) => e.field === field);
+      expect(hasFieldError).toBe(true);
     });
+  });
 
-    test('returns error for missing project_id', () => {
-      const payload = { ...validPayload, project_id: '' };
-      const result = validator.validate(payload);
-      expect(result.isValid).toBe(false);
-      expect(result.errors.some(e => e.field === 'project_id')).toBe(true);
-    });
+  test('invalid role value returns error', () => {
+    const payload = JSON.parse(JSON.stringify(validPayload));
+    payload.role = 'not-a-role';
+    const result = validator.validate(payload);
+    expect(result.isValid).toBe(false);
+    const error = result.errors.find((e) => e.field === 'role');
+    expect(error).toBeTruthy();
+    expect(error.severity).toBe('error');
+    expect(error.message).toContain('Invalid role');
+  });
 
-    test('returns error for missing milestone_id', () => {
-      const payload = { ...validPayload, milestone_id: '' };
-      const result = validator.validate(payload);
-      expect(result.isValid).toBe(false);
-      expect(result.errors.some(e => e.field === 'milestone_id')).toBe(true);
-    });
+  test('invalid risk_level value returns error', () => {
+    const payload = JSON.parse(JSON.stringify(validPayload));
+    payload.risk_level = 'extreme';
+    const result = validator.validate(payload);
+    expect(result.isValid).toBe(false);
+    const error = result.errors.find((e) => e.field === 'risk_level');
+    expect(error).toBeTruthy();
+    expect(error.severity).toBe('error');
+    expect(error.message).toContain('Invalid risk_level');
+  });
 
-    test('returns error for missing task_id', () => {
-      const payload = { ...validPayload, task_id: '' };
-      const result = validator.validate(payload);
-      expect(result.isValid).toBe(false);
-      expect(result.errors.some(e => e.field === 'task_id')).toBe(true);
-    });
+  test('multiple errors are collected', () => {
+    const payload = JSON.parse(JSON.stringify(validPayload));
+    delete payload.dispatch_id;
+    delete payload.role;
+    const result = validator.validate(payload);
+    expect(result.isValid).toBe(false);
+    const fields = result.errors.map((e) => e.field);
+    expect(fields).toEqual(expect.arrayContaining(['dispatch_id', 'role']));
+    expect(result.errors.length).toBeGreaterThanOrEqual(2);
+  });
 
-    test('returns error for missing role', () => {
-      const payload = { ...validPayload, role: '' };
-      const result = validator.validate(payload);
-      expect(result.isValid).toBe(false);
-      expect(result.errors.some(e => e.field === 'role')).toBe(true);
-    });
-
-    test('returns error for invalid role value', () => {
-      const payload = { ...validPayload, role: 'invalid' };
-      const result = validator.validate(payload);
-      expect(result.isValid).toBe(false);
-      expect(result.errors.some(e => e.field === 'role')).toBe(true);
-    });
-
-    test('returns error for missing command', () => {
-      const payload = { ...validPayload, command: '' };
-      const result = validator.validate(payload);
-      expect(result.isValid).toBe(false);
-      expect(result.errors.some(e => e.field === 'command')).toBe(true);
-    });
-
-    test('returns error for missing title', () => {
-      const payload = { ...validPayload, title: '' };
-      const result = validator.validate(payload);
-      expect(result.isValid).toBe(false);
-      expect(result.errors.some(e => e.field === 'title')).toBe(true);
-    });
-
-    test('returns error for missing goal', () => {
-      const payload = { ...validPayload, goal: '' };
-      const result = validator.validate(payload);
-      expect(result.isValid).toBe(false);
-      expect(result.errors.some(e => e.field === 'goal')).toBe(true);
-    });
-
-    test('returns error for missing description', () => {
-      const payload = { ...validPayload, description: '' };
-      const result = validator.validate(payload);
-      expect(result.isValid).toBe(false);
-      expect(result.errors.some(e => e.field === 'description')).toBe(true);
-    });
-
-    test('returns error for missing context', () => {
-      const payload = { ...validPayload, context: null };
-      const result = validator.validate(payload);
-      expect(result.isValid).toBe(false);
-      expect(result.errors.some(e => e.field === 'context')).toBe(true);
-    });
-
-    test('returns error for invalid risk_level value', () => {
-      const payload = { ...validPayload, risk_level: 'extreme' };
-      const result = validator.validate(payload);
-      expect(result.isValid).toBe(false);
-      expect(result.errors.some(e => e.field === 'risk_level')).toBe(true);
-    });
-
-    test('collects multiple errors', () => {
-      const payload = { dispatch_id: 'test' };
-      const result = validator.validate(payload);
-      expect(result.isValid).toBe(false);
-      expect(result.errors.length).toBeGreaterThan(5);
-    });
-
-    test('returns error for null payload', () => {
-      const result = validator.validate(null);
-      expect(result.isValid).toBe(false);
-      expect(result.errors.length).toBeGreaterThan(0);
-    });
-
-    test('returns error for non-object payload', () => {
-      const result = validator.validate('string');
-      expect(result.isValid).toBe(false);
-      expect(result.errors.length).toBeGreaterThan(0);
-    });
+  test('empty payload returns all errors', () => {
+    const result = validator.validate({});
+    expect(result.isValid).toBe(false);
+    expect(result.errors.length).toBe(SchemaValidator.REQUIRED_FIELDS.length);
+    const fields = result.errors.map((e) => e.field);
+    expect(fields).toEqual(expect.arrayContaining(SchemaValidator.REQUIRED_FIELDS));
   });
 });

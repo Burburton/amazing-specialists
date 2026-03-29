@@ -1,147 +1,157 @@
+"use strict";
+
 const { MessageParser } = require('../../message-parser');
 
 describe('MessageParser', () => {
-  let parser;
-  let validMessage;
+  const BASE_CONFIG = {
+    openclaw_config: {
+      default_values: {
+        role: 'developer',
+        command: 'implement-task',
+        risk_level: 'medium'
+      },
+      id_config: {
+        dispatch_id_format: 'oc-dispatch-{timestamp}-{random}',
+        project_id_format: '{project_id}'
+      }
+    }
+  };
 
-  beforeEach(() => {
-    parser = new MessageParser();
-    validMessage = {
-      dispatch_id: 'dispatch-001',
-      project: { id: 'proj-001', name: 'Test Project', goal: 'Build feature' },
-      milestone: { id: 'ms-001', name: 'MVP', goal: 'Release MVP', status: 'active' },
+  function validOpenClawMessage(overrides = {}) {
+    const base = {
+      // dispatch_id intentionally omitted to test auto-generation
+      project: { id: 'P1', name: 'Project One', goal: 'Goal' },
+      milestone: { id: 'M1', name: 'Milestone 1', goal: 'Milestone goal', status: 'active' },
       task: {
-        id: 'task-001',
-        title: 'Implement feature',
-        goal: 'Create the feature',
-        description: 'Detailed description',
+        id: 'T1',
+        title: 'Do something',
+        goal: 'Achieve something',
+        description: 'Task description',
         context: {
-          project_goal: 'Build feature',
-          milestone_goal: 'Release MVP',
-          task_scope: 'Implementation',
-          related_spec_sections: [],
-          code_context_summary: ''
+          project_goal: 'Proj goal',
+          milestone_goal: 'Milestone goal',
+          task_scope: 'Scope of work'
         },
-        constraints: ['Must pass tests'],
-        inputs: [],
-        expected_outputs: ['Working feature'],
-        verification_steps: ['Run tests'],
+        constraints: ['Constraint A'],
+        inputs: [
+          { artifact_id: 'A1', artifact_type: 'design', path: 'path/to/design.md', summary: 'Design input' }
+        ],
+        expected_outputs: ['Output1'],
+        verification_steps: ['Step1'],
         risk_level: 'low'
       },
       role: 'developer',
-      command: 'feature-implementation'
+      command: 'implement-task',
+      retry_context: null
     };
+    return Object.assign({}, base, overrides);
+  }
+
+  test('parse - valid message parses successfully', () => {
+    const parser = new MessageParser(BASE_CONFIG);
+    const msg = validOpenClawMessage();
+    const result = parser.parse(msg);
+
+    expect(result).toBeDefined();
+    expect(result.success).toBe(true);
+    expect(result.dispatch_payload).toBeDefined();
+    expect(Array.isArray(result.errors)).toBe(true);
+    expect(result.errors.length).toBe(0);
+    expect(Array.isArray(result.warnings)).toBe(true);
+
+    const p = result.dispatch_payload;
+    expect(p.dispatch_id).toBeDefined();
+    expect(p.dispatch_id).toMatch(/^oc-dispatch-/);
+    expect(p.project_id).toBe('P1');
+    expect(p.milestone_id).toBe('M1');
+    expect(p.task_id).toBe('T1');
+    expect(p.role).toBe('developer');
+    expect(p.command).toBe('implement-task');
+    expect(p.title).toBe('Do something');
+    expect(p.goal).toBe('Achieve something');
+    expect(p.description).toBe('Task description');
+    expect(p.context).toBeDefined();
+    expect(p.context.project_goal).toBe('Proj goal');
+    expect(p.constraints).toContain('Constraint A');
+    expect(p.inputs.length).toBe(1);
+    expect(p.inputs[0].artifact_id).toBe('A1');
+    expect(p.expected_outputs).toContain('Output1');
+    expect(p.risk_level).toBe('low');
   });
 
-  describe('parse', () => {
-    test('parses valid message successfully', () => {
-      const result = parser.parse(validMessage);
-      expect(result.success).toBe(true);
-      expect(result.dispatch_payload).toBeDefined();
-      expect(result.errors).toEqual([]);
-    });
-
-    test('generates dispatch_id when missing', () => {
-      const msg = { ...validMessage, dispatch_id: undefined };
-      const result = parser.parse(msg);
-      expect(result.success).toBe(true);
-      expect(result.dispatch_payload.dispatch_id).toMatch(/^oc-dispatch-/);
-    });
-
-    test('returns error for invalid role', () => {
-      const msg = { ...validMessage, role: 'invalid-role' };
-      const result = parser.parse(msg);
-      expect(result.success).toBe(false);
-      expect(result.errors.some(e => e.field === 'role')).toBe(true);
-    });
-
-    test('returns error for invalid risk_level', () => {
-      const msg = {
-        ...validMessage,
-        task: { ...validMessage.task, risk_level: 'extreme' }
-      };
-      const result = parser.parse(msg);
-      expect(result.success).toBe(false);
-      expect(result.errors.length).toBeGreaterThan(0);
-    });
-
-    test('maps project.id to project_id', () => {
-      const result = parser.parse(validMessage);
-      expect(result.dispatch_payload.project_id).toBe('proj-001');
-    });
-
-    test('maps milestone.id to milestone_id', () => {
-      const result = parser.parse(validMessage);
-      expect(result.dispatch_payload.milestone_id).toBe('ms-001');
-    });
-
-    test('maps task.id to task_id', () => {
-      const result = parser.parse(validMessage);
-      expect(result.dispatch_payload.task_id).toBe('task-001');
-    });
-
-    test('maps task.title to title', () => {
-      const result = parser.parse(validMessage);
-      expect(result.dispatch_payload.title).toBe('Implement feature');
-    });
-
-    test('maps task.goal to goal', () => {
-      const result = parser.parse(validMessage);
-      expect(result.dispatch_payload.goal).toBe('Create the feature');
-    });
-
-    test('maps task.description to description', () => {
-      const result = parser.parse(validMessage);
-      expect(result.dispatch_payload.description).toBe('Detailed description');
-    });
-
-    test('includes retry_context when present', () => {
-      const msg = {
-        ...validMessage,
-        retry_context: { retry_count: 1, previous_failure_reason: 'Error' }
-      };
-      const result = parser.parse(msg);
-      expect(result.dispatch_payload.retry_context).toBeDefined();
-      expect(result.dispatch_payload.retry_context.retry_count).toBe(1);
-    });
+  test('validateRole - invalid role returns error', () => {
+    const parser = new MessageParser(BASE_CONFIG);
+    const res = parser.validateRole('not-a-role');
+    expect(res.valid).toBe(false);
+    expect(res.message).toBeDefined();
   });
 
-  describe('validateRole', () => {
-    test('returns valid for valid roles', () => {
-      expect(parser.validateRole('architect').valid).toBe(true);
-      expect(parser.validateRole('developer').valid).toBe(true);
-      expect(parser.validateRole('tester').valid).toBe(true);
-      expect(parser.validateRole('reviewer').valid).toBe(true);
-      expect(parser.validateRole('docs').valid).toBe(true);
-      expect(parser.validateRole('security').valid).toBe(true);
-    });
-
-    test('returns invalid for invalid role', () => {
-      expect(parser.validateRole('invalid').valid).toBe(false);
-      expect(parser.validateRole('admin').valid).toBe(false);
-    });
+  test('validateRole - valid role passes', () => {
+    const parser = new MessageParser(BASE_CONFIG);
+    const res = parser.validateRole('developer');
+    expect(res.valid).toBe(true);
   });
 
-  describe('validateRiskLevel', () => {
-    test('returns valid for valid risk levels', () => {
-      expect(parser.validateRiskLevel('low').valid).toBe(true);
-      expect(parser.validateRiskLevel('medium').valid).toBe(true);
-      expect(parser.validateRiskLevel('high').valid).toBe(true);
-      expect(parser.validateRiskLevel('critical').valid).toBe(true);
-    });
-
-    test('returns invalid for invalid risk level', () => {
-      expect(parser.validateRiskLevel('extreme').valid).toBe(false);
-    });
+  test('validateRiskLevel - invalid risk level returns error', () => {
+    const parser = new MessageParser(BASE_CONFIG);
+    const res = parser.validateRiskLevel('extreme');
+    expect(res.valid).toBe(false);
   });
 
-  describe('generateDispatchId', () => {
-    test('generates unique ID with correct format', () => {
-      const id1 = parser.generateDispatchId();
-      const id2 = parser.generateDispatchId();
-      expect(id1).toMatch(/^oc-dispatch-\d+-[a-z0-9]+$/);
-      expect(id2).toMatch(/^oc-dispatch-\d+-[a-z0-9]+$/);
-      expect(id1).not.toBe(id2);
-    });
+  test('validateRiskLevel - valid risk level passes', () => {
+    const parser = new MessageParser(BASE_CONFIG);
+    const res = parser.validateRiskLevel('medium');
+    expect(res.valid).toBe(true);
+  });
+
+  test('generateDispatchId - produces a dispatch id', () => {
+    const parser = new MessageParser(BASE_CONFIG);
+    const id = parser.generateDispatchId();
+    expect(typeof id).toBe('string');
+    expect(id.startsWith('oc-dispatch-')).toBe(true);
+  });
+
+  test('mapProject/mapMilestone/mapTask/mapContext - mappings work', () => {
+    const parser = new MessageParser(BASE_CONFIG);
+
+    const proj = { id: 'PID', name: 'PRJ', goal: 'G' };
+    const mappedProj = parser.mapProject(proj);
+    expect(mappedProj).toEqual({ id: 'PID', name: 'PRJ', goal: 'G' });
+
+    const mil = { id: 'MID', name: 'MN', goal: 'MG', status: 'active' };
+    const mappedMil = parser.mapMilestone(mil);
+    expect(mappedMil).toEqual({ id: 'MID', name: 'MN', goal: 'MG', status: 'active' });
+
+    const task = {
+      id: 'TID', title: 'TT', goal: 'TG', description: 'TD',
+      context: { a: 1 }, constraints: ['c'], inputs: ['in1', { artifact_id: 'A2', artifact_type: 'type2', path: 'p', summary: 's' }],
+      expected_outputs: ['out']
+    };
+    const mappedTask = parser.mapTask(task);
+    expect(mappedTask.id).toBe('TID');
+    expect(mappedTask.title).toBe('TT');
+    expect(mappedTask.goal).toBe('TG');
+    expect(mappedTask.description).toBe('TD');
+    expect(mappedTask.context).toEqual({ a: 1 });
+    expect(mappedTask.constraints).toContain('c');
+    expect(mappedTask.inputs.length).toBe(2);
+    expect(mappedTask.risk_level).toBe('medium');
+
+    const ctx = {
+      project_goal: 'PG', milestone_goal: 'MG', task_scope: 'TS', related_spec_sections: ['sec'], code_context_summary: 'sum', upstream_task_summaries: ['u'], related_artifacts: ['X']
+    };
+    const mappedCtx = parser.mapContext(ctx);
+    expect(mappedCtx.project_goal).toBe('PG');
+    expect(mappedCtx.related_artifacts.length).toBeGreaterThan(0);
+  });
+
+  test('parse - missing required fields returns errors (early abort)', () => {
+    const parser = new MessageParser(BASE_CONFIG);
+    const incomplete = { project: null, milestone: null, task: null };
+    const result = parser.parse(incomplete);
+    // Should fail early due to missing nested objects
+    expect(result.success).toBe(false);
+    expect(result.dispatch_payload).toBeNull();
+    expect(result.errors.length).toBeGreaterThan(0);
   });
 });

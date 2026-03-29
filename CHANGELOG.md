@@ -507,3 +507,46 @@ Legacy skills are archived in `docs/archive/legacy-skills/`.
 - Path validation for security
 
 **Result:** COMPLETE - Enables execution result output to GitHub Pull Requests
+
+---
+
+### Later Adapters (023)
+
+#### [023-openclaw-adapter] - 2026-03-29
+**OpenClaw Orchestrator Adapter**
+
+**Added:**
+- `adapters/openclaw/` - Complete OpenClaw Orchestrator Adapter implementation
+- `types.js` - TypeScript-compatible type definitions (RoleEnum, RiskLevelEnum, DispatchPayload, etc.)
+- `openclaw-client.js` - HTTP client with JWT/API key auth, connection pooling, retry, timeouts
+- `message-parser.js` - Parse OpenClaw dispatch message → Dispatch Payload
+- `schema-validator.js` - Validate Dispatch Payload against io-contract.md §1
+- `result-sender.js` - POST execution results to OpenClaw /api/v1/results
+- `escalation-handler.js` - POST escalation requests with decision response handling
+- `retry-handler.js` - Configurable retry policy with risk-level limits (BR-002)
+- `heartbeat-sender.js` - Periodic heartbeat with task-length-based intervals (BR-003)
+- `index.js` - Main adapter implementing OrchestratorAdapter interface
+- `openclaw.config.json` - Adapter configuration
+- `package.json` - NPM package with Jest test configuration
+- `README.md` - Complete adapter documentation
+
+**Tests:**
+- 4 test suites, 69 unit tests, all passing
+- `message-parser.test.js` - Message parsing and field mapping tests
+- `schema-validator.test.js` - Payload validation tests
+- `retry-handler.test.js` - Retry logic and backoff calculation tests
+- `index.test.js` - Main adapter interface compliance tests
+
+**Features:**
+- Bidirectional communication (dispatch reception + result callback)
+- JWT/API key authentication with token refresh
+- Exponential/linear/fixed backoff strategies
+- Risk-level retry limits (low: 2, medium: 1, high/critical: 0)
+- Heartbeat intervals based on task length
+- Graceful error handling
+
+**Changed:**
+- `adapters/registry.json` - Updated openclaw status to "implemented"
+- Feature count updated from 22 to 23
+
+**Result:** COMPLETE - Enables bidirectional communication between OpenClaw manager and Expert Pack

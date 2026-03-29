@@ -18,25 +18,37 @@ The GitHub Issue Orchestrator Adapter enables the Expert Pack to receive task di
 ## Architecture
 
 ```
-GitHub Issue (Webhook)
+GitHub Issue (Webhook/Manual)
     │
     ├── Webhook Handler (signature verification, event filtering)
     │       │
     │       ▼
-    ├── Issue Parser
+    ├── Issue Parser [ENHANCED: project_id extraction]
     │       │
     │       ├── Label Parser (milestone, role, command, task, risk)
     │       │
     │       ├── Body Parser (sections: Context, Goal, Constraints, Inputs, Outputs)
+    │       │
+    │       ├── Repository URL Parser [NEW]
     │       │
     │       ▼
     │   Dispatch Payload (io-contract.md §1)
     │
     ├── GitHub Client (REST API: comments, labels, milestones)
     │
-    ├── Comment Templates (escalation, retry, result)
+    ├── Git Client [NEW: retry wrapper for git CLI]
     │
-    └── Retry Handler (backoff, max_retry, risk-level rules)
+    ├── Comment Templates [ENHANCED: result auto-generation]
+    │       │
+    │       ├── result() - existing
+    │       ├── generateResultComment() [NEW]
+    │       └── escalate(), retry() - existing
+    │
+    ├── Retry Handler (backoff, max_retry, risk-level rules)
+    │
+    ├── Label Setup CLI [NEW: setup-labels.js]
+    │
+    └── Automation Script [NEW: scripts/process-issue.js]
 ```
 
 ## Components
@@ -47,11 +59,14 @@ GitHub Issue (Webhook)
 | **Config** | `github-issue.config.json` | Adapter configuration |
 | **Label Parser** | `label-parser.js` | Parse Issue labels to dispatch metadata |
 | **Body Parser** | `body-parser.js` | Parse Issue body sections to task details |
-| **Issue Parser** | `issue-parser.js` | Main parser orchestrating label + body |
+| **Issue Parser** | `issue-parser.js` | Main parser orchestrating label + body + repository URL |
 | **GitHub Client** | `github-client.js` | GitHub REST API client with rate limiting |
+| **Git Client** | `git-client.js` | Git CLI operations with retry (NEW) |
 | **Webhook Handler** | `webhook-handler.js` | Secure webhook handling (HMAC verification) |
-| **Comment Templates** | `comment-templates.js` | Markdown templates for comments |
+| **Comment Templates** | `comment-templates.js` | Markdown templates for comments (enhanced) |
 | **Retry Handler** | `retry-handler.js` | Retry decision logic |
+| **Label Setup** | `setup-labels.js` | CLI for creating standard labels (NEW) |
+| **Label Config** | `labels.json` | Standard label definitions (NEW) |
 | **Main Adapter** | `index.js` | OrchestratorAdapter implementation |
 
 ## Label Parsing
@@ -560,4 +575,111 @@ Before deploying to production:
 
 | Version | Date | Changes |
 |---------|------|---------|
+| 1.1.0 | 2026-03-29 | Enhanced with setup-labels, git-client, generateResultComment, automation script, issue template (Feature 027) |
 | 1.0.0 | 2026-03-28 | Initial implementation (Feature 021) |
+
+## Authentication Setup
+
+### Creating a GitHub Personal Access Token
+
+1. Go to GitHub Settings → Developer settings → Personal access tokens → Tokens (classic)
+2. Click "Generate new token (classic)"
+3. Set token name (e.g., "OpenCode Expert Pack")
+4. Select required scopes:
+   - **Public repos**: `public_repo`
+   - **Private repos**: `repo` (includes `public_repo`)
+5. Click "Generate token"
+6. Copy token and store securely
+
+### Setting the Environment Variable
+
+```bash
+# Linux/Mac
+export GITHUB_TOKEN="ghp_xxxxxxxxxxxx"
+
+# Windows (PowerShell)
+$env:GITHUB_TOKEN="ghp_xxxxxxxxxxxx"
+
+# Windows (CMD)
+set GITHUB_TOKEN=ghp_xxxxxxxxxxxx
+```
+
+### Token Scope Requirements
+
+| Use Case | Minimum Scope |
+|----------|---------------|
+| Public repositories only | `public_repo` |
+| Private repositories | `repo` |
+| Organization webhooks | `admin:org_hook` |
+| Label management | `repo` (includes write access) |
+
+### GitHub App Alternative (Production)
+
+For production deployments, use GitHub Apps instead of PATs:
+- Higher rate limits (15,000 req/hr vs 5,000 req/hr)
+- Fine-grained permissions
+- Built-in token rotation
+- Per-installation audit trail
+
+## CLI Commands
+
+### Label Setup
+
+Create standard labels in a repository:
+
+```bash
+node adapters/github-issue/setup-labels.js --owner <owner> --repo <repo>
+
+# Example:
+node adapters/github-issue/setup-labels.js --owner Burburton --repo amazing-specialist-face
+```
+
+**Output**:
+```
+Label Setup Report:
+- Created: 27 (role:architect, role:developer, ...)
+- Skipped: 0
+- Failed: 0
+```
+
+**Custom Labels**: Modify `adapters/github-issue/labels.json` to add custom labels.
+
+### Issue Processing Automation
+
+Process an issue end-to-end:
+
+```bash
+node scripts/process-issue.js --owner <owner> --repo <repo> --issue <number>
+
+# Example:
+node scripts/process-issue.js --owner Burburton --repo amazing-specialist-face --issue 42
+```
+
+**Flow**: Fetch Issue → Parse → Validate → Execute → Post Comment → Close (if SUCCESS)
+
+## Issue Template Usage
+
+### Using the Task Template
+
+When creating a new Issue on GitHub:
+
+1. Click "New Issue"
+2. Select "Task" template
+3. Fill in required sections:
+   - **Context**: Background and task context
+   - **Goal**: What needs to be achieved (required)
+   - **Constraints**: Any limitations
+   - **Inputs**: Required artifacts/files
+   - **Expected Outputs**: Deliverables
+   - **Acceptance Criteria**: Success checklist
+
+### Template Location
+
+`.github/ISSUE_TEMPLATE/task.md`
+
+### Required Labels
+
+The template includes `role:developer` by default. Add additional labels:
+- `milestone:MXXX` - Target milestone
+- `task:TXXX` - Task ID
+- `risk:low|medium|high|critical` - Risk level

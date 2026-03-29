@@ -1,0 +1,31 @@
+{
+  "labels": [
+    { "name": "role:architect", "color": "0075ca", "description": "Architect role task" },
+    { "name": "role:developer", "color": "1d76db", "description": "Developer role task" },
+    { "name": "role:tester", "color": "fbca04", "description": "Tester role task" },
+    { "name": "role:reviewer", "color": "5319e7", "description": "Reviewer role task" },
+    { "name": "role:docs", "color": "bfd4f2", "description": "Docs role task" },
+    { "name": "role:security", "color": "b60205", "description": "Security role task" },
+    { "name": "milestone:M001", "color": "d4c5f9", "description": "Milestone M001" },
+    { "name": "milestone:M002", "color": "d4c5f9", "description": "Milestone M002" },
+    { "name": "milestone:M003", "color": "d4c5f9", "description": "Milestone M003" },
+    { "name": "milestone:M004", "color": "d4c5f9", "description": "Milestone M004" },
+    { "name": "phase:phase-1", "color": "c2e0c6", "description": "Phase 1" },
+    { "name": "phase:phase-2", "color": "c2e0c6", "description": "Phase 2" },
+    { "name": "phase:phase-3", "color": "c2e0c6", "description": "Phase 3" },
+    { "name": "phase:phase-4", "color": "c2e0c6", "description": "Phase 4" },
+    { "name": "priority:high", "color": "b60205", "description": "High priority" },
+    { "name": "priority:medium", "color": "fbca04", "description": "Medium priority" },
+    { "name": "priority:low", "color": "c5def5", "description": "Low priority" },
+    { "name": "status:pending", "color": "e99695", "description": "Pending status" },
+    { "name": "status:in-progress", "color": "fbca04", "description": "In progress" },
+    { "name": "status:completed", "color": "0e8a16", "description": "Completed" },
+    { "name": "status:blocked", "color": "b60205", "description": "Blocked" },
+    { "name": "escalation:needs-decision", "color": "d93f0b", "description": "Needs decision" },
+    { "name": "escalation:needs-attention", "color": "e99695", "description": "Needs attention" },
+    { "name": "risk:low", "color": "c5def5", "description": "Low risk" },
+    { "name": "risk:medium", "color": "fbca04", "description": "Medium risk" },
+    { "name": "risk:high", "color": "d93f0b", "description": "High risk" },
+    { "name": "risk:critical", "color": "b60205", "description": "Critical risk" }
+  ]
+}

@@ -81,10 +81,14 @@ class IssueParser {
     const owner = issue.repository?.owner?.login || issue.repository?.owner || 'unknown';
     const repo = issue.repository?.name || issue.repository?.repo || 'unknown';
     
+    const projectId = this._extractProjectId(issue);
+    const effectiveOwner = projectId !== 'unknown/unknown' ? projectId.split('/')[0] : owner;
+    const effectiveRepo = projectId !== 'unknown/unknown' ? projectId.split('/')[1] : repo;
+    
     return {
       // Required fields
-      dispatch_id: this.buildDispatchId(owner, repo, issue.number),
-      project_id: this.buildProjectId(owner, repo),
+      dispatch_id: this.buildDispatchId(effectiveOwner, effectiveRepo, issue.number),
+      project_id: projectId,
       milestone_id: labelResult.milestone_id || issue.milestone?.title || null,
       task_id: labelResult.task_id || null,
       
@@ -141,6 +145,32 @@ class IssueParser {
    */
   buildProjectId(owner, repo) {
     return `${owner}/${repo}`;
+  }
+
+/**
+    * Extract project_id from Issue's repository_url field or repository object
+    * @param {object} issue - GitHub Issue object
+    * @returns {string} project_id in format {owner}/{repo}
+    */
+  _extractProjectId(issue) {
+    const repositoryUrl = issue.repository_url;
+    if (repositoryUrl) {
+      const match = repositoryUrl.match(/repos\/([^/]+)\/([^/]+)$/);
+      if (match) {
+        return `${match[1]}/${match[2]}`;
+      }
+    }
+    
+    const repository = issue.repository;
+    if (repository) {
+      const owner = repository.owner?.login || repository.owner;
+      const name = repository.name || repository.repo;
+      if (owner && name) {
+        return `${owner}/${name}`;
+      }
+    }
+    
+    return 'unknown/unknown';
   }
 
   /**

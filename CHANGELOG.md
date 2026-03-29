@@ -7,6 +7,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.1.0] - 2026-03-29
+
+### Summary
+
+**Adapter Layer Complete** - All orchestrator and workspace adapters implemented, enabling full bidirectional integration with external systems (GitHub, OpenClaw).
+
+### Added
+
+#### Adapters
+- **OpenClaw Orchestrator Adapter** (`adapters/openclaw/`) - Bidirectional communication between OpenClaw manager and Expert Pack
+  - 8 core components: types, client, parser, validator, result-sender, escalation-handler, retry-handler, heartbeat-sender
+  - 69 unit tests, all passing
+  - JWT/API key authentication with token refresh
+  - Configurable retry with risk-level limits
+  - Heartbeat mechanism with task-length-based intervals
+
+### Changed
+- `adapters/registry.json` - Updated openclaw status to "implemented"
+- `README.md` - Updated feature table and adapter architecture section
+- Feature count: 22 → 23
+
+### Stats
+| Metric | v1.0.0 | v1.1.0 |
+|--------|--------|--------|
+| Features | 22 | 23 |
+| Adapters | 4 | 5 |
+| Tests | 607+ | 676+ |
+
+---
+
 ## [1.0.0] - 2026-03-28
 
 ### Summary

@@ -7,6 +7,12 @@
     "test": "jest",
     "test:unit": "jest tests/unit/",
     "test:e2e": "jest tests/e2e/ --testTimeout=60000",
+    "test:e2e:adapters": "jest tests/e2e/adapters/ --testTimeout=60000",
+    "test:e2e:scenarios": "jest tests/e2e/scenarios/ --testTimeout=60000",
+    "test:e2e:github-issue": "jest tests/e2e/adapters/github-issue-adapter.test.js --testTimeout=60000",
+    "test:e2e:openclaw": "jest tests/e2e/adapters/openclaw-adapter.test.js --testTimeout=60000",
+    "test:e2e:github-pr": "jest tests/e2e/adapters/github-pr-adapter.test.js --testTimeout=60000",
+    "test:e2e:local-repo": "jest tests/e2e/adapters/local-repo-adapter.test.js --testTimeout=60000",
     "test:all": "jest"
   },
   "jest": {
@@ -31,6 +37,7 @@
   },
   "devDependencies": {
     "jest": "^30.0.0",
+    "jsonwebtoken": "^9.0.3",
     "nock": "^13.5.0"
   },
   "keywords": [

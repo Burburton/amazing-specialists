@@ -6,18 +6,32 @@ End-to-end integration tests for the OpenCode Expert Pack adapters using Mock Se
 
 ## Test Architecture
 
+### Three-Level Testing Strategy
+
 ```
-┌────────────────────────────────────────────────────────────────┐
-│                        Test Environment                        │
-├────────────────────────────────────────────────────────────────┤
-│  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐     │
-│  │ Mock GitHub  │    │ Mock OpenClaw│    │ Expert Pack  │     │
-│  │ API Server   │    │ API Server   │    │   Adapters   │     │
-│  │   (Nock)     │    │   (Nock)     │    │   (Real)     │     │
-│  └──────────────┘    └──────────────┘    └──────────────┘     │
-│                         Jest Test Runner                      │
-└────────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────┐
+│  Level 3: True E2E Adapter Integration (adapters/)           │
+│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐      │
+│  │ Mock HTTP   │ ←→ │ Real Adapter│ → │ Real Parser │      │
+│  │   (Nock)    │    │   Code      │    │   Code      │      │
+│  └─────────────┘    └─────────────┘    └─────────────┘      │
+│  Tests: webhook → adapter.normalizeInput() → dispatch        │
+├──────────────────────────────────────────────────────────────┤
+│  Level 2: E2E Logic Tests (scenarios/)                       │
+│  Tests data structures, parsing logic (no adapter calls)      │
+├──────────────────────────────────────────────────────────────┤
+│  Level 1: Adapter Unit Tests (adapters/*/tests/)             │
+│  Tests individual components (label-parser, body-parser, etc) │
+└──────────────────────────────────────────────────────────────┘
 ```
+
+### Key Differences
+
+| Level | Target | Invocation | Validation |
+|-------|--------|------------|------------|
+| Level 3 | Real adapter code | `adapter.normalizeInput()` | Full flow |
+| Level 2 | Data structures | Manual construction | Field correctness |
+| Level 1 | Components | Direct method calls | Unit isolation |
 
 ## Directory Structure
 
@@ -34,7 +48,18 @@ tests/e2e/
 │   ├── assertions.js            # Custom test assertions
 │   └── report-generator.js      # E2E report generator
 │
-├── scenarios/
+├── adapters/                    # Level 3: True E2E Adapter Tests
+│   ├── fixtures/
+│   │   └── adapter-fixtures.js  # Adapter test data factories
+│   ├── helpers/
+│   │   ├── mock-config.js       # Nock setup helpers
+│   │   └── adapter-assertions.js# Adapter-specific assertions
+│   ├── github-issue-adapter.test.js  # 15 tests
+│   ├── openclaw-adapter.test.js      # 14 tests
+│   ├── github-pr-adapter.test.js     # 10 tests
+│   └── local-repo-adapter.test.js    # 7 tests
+│
+├── scenarios/                   # Level 2: E2E Logic Tests
 │   ├── github-issue-to-pr.test.js
 │   ├── openclaw-dispatch-callback.test.js
 │   ├── escalation-flow.test.js
@@ -50,8 +75,20 @@ tests/e2e/
 ## Running Tests
 
 ```bash
-# Run all E2E tests
+# Run all E2E tests (Level 2 + Level 3)
 npm run test:e2e
+
+# Run Level 3: True E2E Adapter Tests only
+npm run test:e2e:adapters
+
+# Run specific adapter tests
+npm run test:e2e:github-issue    # GitHub Issue adapter (15 tests)
+npm run test:e2e:openclaw        # OpenClaw adapter (14 tests)
+npm run test:e2e:github-pr       # GitHub PR adapter (10 tests)
+npm run test:e2e:local-repo      # Local Repo adapter (7 tests)
+
+# Run Level 2: E2E Logic Tests only
+npm test -- tests/e2e/scenarios/
 
 # Run specific scenario
 npm test -- tests/e2e/scenarios/github-issue-to-pr.test.js
@@ -61,6 +98,88 @@ npm run test:e2e -- --coverage
 ```
 
 ## Test Scenarios
+
+### Level 3: True E2E Adapter Tests (46 tests)
+
+Tests REAL adapter code with Nock HTTP mocking. No mock adapter implementations.
+
+#### GitHub Issue Adapter (15 tests)
+
+Tests webhook handling, parsing, error mapping, escalation, and retry flows:
+
+| Test ID | Description |
+|---------|-------------|
+| TC-GI-001 | Webhook with valid signature → dispatch created |
+| TC-GI-002 | Webhook signature verification timing-safe |
+| TC-GI-003 | Invalid webhook signature rejected |
+| TC-GI-004 | Issue labels parsed via LabelParser |
+| TC-GI-005 | Issue body parsed via BodyParser |
+| TC-GI-006 | Dispatch payload validated |
+| TC-GI-007 | Dispatch routed to execution |
+| TC-GI-008 | Error mapping: 404 → BLOCKED |
+| TC-GI-009 | Error mapping: 500 → FAILED_RETRYABLE |
+| TC-GI-010 | Escalation generation |
+| TC-GI-011 | Escalation posted via GitHub API |
+| TC-GI-012 | Retry decision: low risk allowed |
+| TC-GI-013 | Retry decision: critical risk denied |
+| TC-GI-014 | Execution result posted |
+| TC-GI-015 | Adapter info returned |
+
+#### OpenClaw Adapter (14 tests)
+
+Tests JWT auth, bidirectional communication, and decision responses:
+
+| Test ID | Description |
+|---------|-------------|
+| TC-OC-001 | JWT token validated |
+| TC-OC-002 | JWT expired rejected |
+| TC-OC-003 | JWT invalid signature rejected |
+| TC-OC-004 | Message parsed to dispatch payload |
+| TC-OC-005 | Execution result callback sent |
+| TC-OC-006 | Escalation callback sent |
+| TC-OC-007 | Retry callback sent |
+| TC-OC-008 | Heartbeat sent during execution |
+| TC-OC-009 | Decision response: acknowledged |
+| TC-OC-010 | Decision response: decision_made |
+| TC-OC-011 | Decision response: abort |
+| TC-OC-012 | Decision response: escalate_further |
+| TC-OC-013 | API error mapping |
+| TC-OC-014 | Adapter info returned |
+
+#### GitHub PR Adapter (10 tests)
+
+Tests PR creation, Git operations, and artifact writing:
+
+| Test ID | Description |
+|---------|-------------|
+| TC-PR-001 | PR created from execution result |
+| TC-PR-002 | Branch created for PR |
+| TC-PR-003 | Tree created with files |
+| TC-PR-004 | Commit created |
+| TC-PR-005 | Artifacts written to PR |
+| TC-PR-006 | PR description includes execution summary |
+| TC-PR-007 | Review requested on PR |
+| TC-PR-008 | Labels added to PR |
+| TC-PR-009 | Execution result output formatted |
+| TC-PR-010 | Adapter info returned |
+
+#### Local Repo Adapter (7 tests)
+
+Tests workspace operations and filesystem handling:
+
+| Test ID | Description |
+|---------|-------------|
+| TC-LR-001 | Workspace initialized |
+| TC-LR-002 | Artifacts written to filesystem |
+| TC-LR-003 | Execution result logged |
+| TC-LR-004 | Changelog updated |
+| TC-LR-005 | README synced |
+| TC-LR-006 | Cleanup performed |
+| TC-LR-007 | Adapter info returned |
+
+---
+
+### Level 2: E2E Logic Tests (28 tests)
 
 ### Scenario 1: GitHub Issue → PR Workflow (8 tests)
 

@@ -1,0 +1,41 @@
+{
+  "adapter_id": "openclaw",
+  "adapter_type": "orchestrator",
+  "priority": "later",
+  "version": "1.0.0",
+  
+  "openclaw_config": {
+    "api_base_url": "${OPENCLAW_API_URL}",
+    "authentication": {
+      "type": "jwt",
+      "token_env_var": "OPENCLAW_JWT_TOKEN",
+      "refresh_threshold_seconds": 300
+    },
+    "endpoints": {
+      "result": "/api/v1/results",
+      "escalation": "/api/v1/escalations",
+      "retry": "/api/v1/retries",
+      "heartbeat": "/api/v1/heartbeat"
+    },
+    "retry_config": {
+      "strategy": "auto",
+      "max_retry": 2,
+      "backoff_type": "exponential",
+      "backoff_initial_seconds": 60
+    },
+    "heartbeat_config": {
+      "enabled": true,
+      "interval_seconds": 120,
+      "task_length_thresholds": {
+        "short": 300,
+        "medium": 1800,
+        "long": 3600
+      }
+    },
+    "timeout_config": {
+      "connection_timeout_ms": 5000,
+      "request_timeout_ms": 30000,
+      "max_wait_for_decision_ms": 300000
+    }
+  }
+}

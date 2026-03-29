@@ -1,0 +1,31 @@
+{
+  "name": "openclaw-adapter",
+  "version": "1.0.0",
+  "description": "OpenClaw Orchestrator Adapter for OpenCode Expert Pack",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "test:unit": "jest tests/unit/",
+    "test:integration": "jest tests/integration/",
+    "test:coverage": "jest --coverage"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testMatch": [
+      "**/tests/**/*.test.js"
+    ],
+    "collectCoverageFrom": [
+      "*.js",
+      "!**/node_modules/**"
+    ],
+    "coverageDirectory": "coverage",
+    "verbose": true
+  },
+  "keywords": [
+    "openclaw",
+    "adapter",
+    "orchestrator",
+    "opencode"
+  ],
+  "license": "MIT"
+}

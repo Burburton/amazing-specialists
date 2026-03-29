@@ -75,16 +75,18 @@
         "adapter_id": "openclaw",
         "adapter_type": "orchestrator",
         "priority": "later",
-        "status": "design-only",
-        "design_doc": "docs/adapters/openclaw-adapter-design.md",
+        "status": "implemented",
+        "version": "1.0.0",
+        "path": "adapters/openclaw/",
+        "config_file": "openclaw.config.json",
         "interface": "OrchestratorAdapter",
         "compatible_profiles": ["minimal", "full"],
         "compatible_workspaces": ["github-pr", "local-repo", "external-system"],
-        "description": "OpenClaw manager adapter (design only)",
+        "description": "OpenClaw orchestrator adapter - bidirectional communication between OpenClaw manager and Expert Pack",
         "dispatch_mapping": {
           "input_format": "OpenClaw dispatch message",
           "output_format": "Dispatch Payload (io-contract.md §1)",
-          "mapping_doc": "docs/adapters/openclaw-adapter-design.md"
+          "mapping_doc": "adapters/openclaw/README.md"
         },
         "escalation_mapping": {
           "channel": "api_callback",
@@ -95,6 +97,15 @@
           "max_retry": 2,
           "trigger": "openclaw_policy",
           "configurable": true
+        },
+        "components": {
+          "openclaw_client": "openclaw-client.js",
+          "message_parser": "message-parser.js",
+          "schema_validator": "schema-validator.js",
+          "result_sender": "result-sender.js",
+          "escalation_handler": "escalation-handler.js",
+          "retry_handler": "retry-handler.js",
+          "heartbeat_sender": "heartbeat-sender.js"
         }
       }
     ],

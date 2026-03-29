@@ -1,0 +1,54 @@
+{
+  "timestamp": "2026-03-29T20:00:00Z",
+  "duration_ms": 1008,
+  "summary": {
+    "total": 82,
+    "passed": 68,
+    "failed": 0,
+    "skipped": 14
+  },
+  "scenarios": [
+    {
+      "name": "github-issue-to-pr",
+      "passed": 16,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "name": "openclaw-dispatch-callback",
+      "passed": 16,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "name": "escalation-flow",
+      "passed": 14,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "name": "retry-flow",
+      "passed": 18,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "name": "github-workflow (existing)",
+      "passed": 4,
+      "failed": 0,
+      "skipped": 14
+    }
+  ],
+  "failures": [],
+  "environment": {
+    "node_version": "v20.10.0",
+    "platform": "win32",
+    "arch": "x64"
+  },
+  "issues": [],
+  "resolution": {
+    "issue": "Missing nock dependency",
+    "solution": "Installed nock@13.5.0 at project root level",
+    "status": "resolved"
+  }
+}

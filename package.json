@@ -1,0 +1,43 @@
+{
+  "name": "opencode-expert-pack",
+  "version": "1.1.0",
+  "description": "OpenCode Expert Pack - Execution layer for automated product development",
+  "private": true,
+  "scripts": {
+    "test": "jest",
+    "test:unit": "jest tests/unit/",
+    "test:e2e": "jest tests/e2e/ --testTimeout=60000",
+    "test:all": "jest"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testMatch": [
+      "**/tests/**/*.test.js"
+    ],
+    "collectCoverageFrom": [
+      "adapters/**/*.js",
+      "!**/node_modules/**"
+    ],
+    "coverageDirectory": "coverage",
+    "verbose": true,
+    "testTimeout": 30000,
+    "modulePaths": [
+      "<rootDir>/adapters/github-issue/node_modules"
+    ],
+    "moduleDirectories": [
+      "node_modules",
+      "adapters/github-issue/node_modules"
+    ]
+  },
+  "devDependencies": {
+    "jest": "^30.0.0",
+    "nock": "^13.5.0"
+  },
+  "keywords": [
+    "opencode",
+    "expert-pack",
+    "ai-agent",
+    "automation"
+  ],
+  "license": "MIT"
+}

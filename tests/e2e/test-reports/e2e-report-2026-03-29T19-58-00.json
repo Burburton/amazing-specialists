@@ -1,0 +1,98 @@
+{
+  "timestamp": "2026-03-29T19:58:00Z",
+  "duration_ms": 5000,
+  "summary": {
+    "total": 28,
+    "passed": 0,
+    "failed": 4,
+    "skipped": 24
+  },
+  "scenarios": [
+    {
+      "name": "github-issue-to-pr",
+      "passed": 0,
+      "failed": 1,
+      "skipped": 7
+    },
+    {
+      "name": "openclaw-dispatch-callback",
+      "passed": 0,
+      "failed": 1,
+      "skipped": 7
+    },
+    {
+      "name": "escalation-flow",
+      "passed": 0,
+      "failed": 1,
+      "skipped": 5
+    },
+    {
+      "name": "retry-flow",
+      "passed": 0,
+      "failed": 1,
+      "skipped": 5
+    }
+  ],
+  "failures": [
+    {
+      "test_id": "SUITE-001",
+      "test_name": "github-issue-to-pr.test.js",
+      "error": "Cannot find module 'nock' from 'tests/e2e/scenarios/github-issue-to-pr.test.js'",
+      "stack": "at Resolver._throwModNotFoundError (adapters/github-issue/node_modules/jest-resolve/build/index.js:863:11)",
+      "file": "tests/e2e/scenarios/github-issue-to-pr.test.js",
+      "resolution": "Install nock dependency: npm install --save-dev nock"
+    },
+    {
+      "test_id": "SUITE-002",
+      "test_name": "openclaw-dispatch-callback.test.js",
+      "error": "Cannot find module 'nock' from 'tests/e2e/scenarios/openclaw-dispatch-callback.test.js'",
+      "stack": "at Resolver._throwModNotFoundError (adapters/github-issue/node_modules/jest-resolve/build/index.js:863:11)",
+      "file": "tests/e2e/scenarios/openclaw-dispatch-callback.test.js",
+      "resolution": "Install nock dependency: npm install --save-dev nock"
+    },
+    {
+      "test_id": "SUITE-003",
+      "test_name": "escalation-flow.test.js",
+      "error": "Cannot find module 'nock' from 'tests/e2e/scenarios/escalation-flow.test.js'",
+      "stack": "at Resolver._throwModNotFoundError (adapters/github-issue/node_modules/jest-resolve/build/index.js:863:11)",
+      "file": "tests/e2e/scenarios/escalation-flow.test.js",
+      "resolution": "Install nock dependency: npm install --save-dev nock"
+    },
+    {
+      "test_id": "SUITE-004",
+      "test_name": "retry-flow.test.js",
+      "error": "Cannot find module 'nock' from 'tests/e2e/scenarios/retry-flow.test.js'",
+      "stack": "at Resolver._throwModNotFoundError (adapters/github-issue/node_modules/jest-resolve/build/index.js:863:11)",
+      "file": "tests/e2e/scenarios/retry-flow.test.js",
+      "resolution": "Install nock dependency: npm install --save-dev nock"
+    }
+  ],
+  "environment": {
+    "node_version": "v20.10.0",
+    "platform": "win32",
+    "arch": "x64"
+  },
+  "issues": [
+    {
+      "id": "ISSUE-001",
+      "severity": "blocker",
+      "category": "dependency",
+      "description": "Missing required dependency 'nock' for HTTP mocking",
+      "impact": "All 28 E2E tests cannot run",
+      "resolution": "Run: npm install --save-dev nock (or use adapters/github-issue/node_modules as path)",
+      "status": "open"
+    }
+  ],
+  "recommendations": [
+    {
+      "priority": 1,
+      "action": "Install nock dependency at project root or configure module resolution",
+      "details": "The E2E tests require 'nock' module for HTTP mocking. Either: (1) install nock at root level, (2) configure jest modulePaths, or (3) use npm link"
+    },
+    {
+      "priority": 2,
+      "action": "Configure jest to use modulePaths for shared dependencies",
+      "details": "Add modulePaths: ['<rootDir>/adapters/github-issue/node_modules'] to jest config"
+    }
+  ]
+}

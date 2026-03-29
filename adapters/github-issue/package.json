@@ -22,7 +22,8 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "jest": "^30.3.0"
+    "jest": "^30.3.0",
+    "nock": "^13.5.0"
   },
   "jest": {
     "testEnvironment": "node",

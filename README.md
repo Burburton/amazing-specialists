@@ -61,16 +61,19 @@ Adapter 层是专家包与外部系统之间的集成层，解决上游接入和
 
 - **ADAPTERS.md** - Adapter 架构定义文档
 - **adapters/registry.json** - Adapter 注册表（程序化发现）
-- **adapters/cli-local/** - CLI/Local Orchestrator Adapter (Must-Have)
-- **adapters/local-repo/** - Local Repo Workspace Adapter (Must-Have)
-- **docs/adapters/** - Later/Future adapter 设计文档
+- **adapters/cli-local/** - CLI/Local Orchestrator Adapter (Must-Have) ✅
+- **adapters/local-repo/** - Local Repo Workspace Adapter (Must-Have) ✅
+- **adapters/github-issue/** - GitHub Issue Orchestrator Adapter (Later) ✅
+- **adapters/github-pr/** - GitHub PR Workspace Adapter (Later) ✅
+- **adapters/openclaw/** - OpenClaw Orchestrator Adapter (Later) ✅
+- **docs/adapters/** - Future adapter 设计文档
 
 **Adapter 类型**：
 
-| 类型 | 方向 | Must-Have | Later |
-|------|------|-----------|-------|
-| Orchestrator | 上游（外部 → Dispatch Payload） | CLI/Local | GitHub Issue, OpenClaw |
-| Workspace | 下游（Execution Result → 外部） | Local Repo | GitHub PR, External |
+| 类型 | 方向 | Must-Have | Later | Future |
+|------|------|-----------|-------|--------|
+| Orchestrator | 上游（外部 → Dispatch Payload） | CLI/Local ✅ | GitHub Issue ✅, OpenClaw ✅ | - |
+| Workspace | 下游（Execution Result → 外部） | Local Repo ✅ | GitHub PR ✅ | External System |
 
 **CLI/Local Adapter 使用**：
 ```bash
@@ -274,8 +277,9 @@ User Input
 | `020-orchestrator-and-workspace-adapters` | Orchestrator 与 Workspace 适配层 | ✅ Complete | ADAPTERS.md, adapters/, io-contract.md §8, adapter usage guide |
 | `021-github-issue-adapter` | GitHub Issue 适配器 | ✅ Complete | adapters/github-issue/, 448 tests, webhook security |
 | `022-github-pr-adapter` | GitHub PR 适配器 | ✅ Complete | adapters/github-pr/, 159 tests, PR output handling |
+| `023-openclaw-adapter` | OpenClaw 适配器 | ✅ Complete | adapters/openclaw/, 69 tests, bidirectional API callback |
 
-> **当前进度**: `001-bootstrap` 至 `022-github-pr-adapter` 已全部完成。**6-Role 正式执行模型完整实现并验证，Enhanced 模式已验证可用，历史功能审计通过，发布准备就绪，契约 Schema Pack 完成，模板化基础包就绪，版本化体系建立，适配层架构完成，GitHub Issue 适配器实现，GitHub PR 适配器实现**。
+> **当前进度**: `001-bootstrap` 至 `023-openclaw-adapter` 已全部完成。**6-Role 正式执行模型完整实现并验证，Enhanced 模式已验证可用，历史功能审计通过，发布准备就绪，契约 Schema Pack 完成，模板化基础包就绪，版本化体系建立，适配层架构完成，GitHub Issue 适配器实现，GitHub PR 适配器实现，OpenClaw 适配器实现**。
 
 ### 阶段 7：3-Skill 迁移 ✅ 已完成（010-3-skill-migration）
 

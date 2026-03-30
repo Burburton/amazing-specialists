@@ -7,6 +7,54 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.3.0] - 2026-03-31
+
+### Summary
+
+**Plugin Architecture Complete** - Pluggable architecture for tech-stack-specific capabilities, enabling users to install and use plugins for their project type.
+
+### Added
+
+#### Plugin Infrastructure
+- **Plugin Registry** (`plugins/registry.json`) - Central registry for all available plugins
+- **Plugin Loader** (`plugins/loader.js`) - CLI tool for plugin lifecycle management
+  - `list` command - Display all available plugins with status
+  - `install` command - Install plugin to target project (templates, skills, hooks)
+  - `uninstall` command - Remove plugin from project
+- **Plugin Specification** (`plugins/PLUGIN-SPEC.md`) - Developer guide for creating new plugins
+
+#### vite-react-ts Plugin
+- **vite-setup skill** - Vite + Vitest + TypeScript configuration guidance
+  - tsconfig separation strategy (app/node/test)
+  - defineConfig import source guidance
+  - triple-slash directive handling
+- **css-module-test skill** - CSS Module testing patterns
+  - Mock CSS imports
+  - className resolution
+  - Vitest configuration
+- **Template files** (5 files)
+  - `tsconfig.app.json` - Application code TypeScript config
+  - `tsconfig.node.json` - Node/Vite tooling TypeScript config
+  - `tsconfig.test.json` - Test environment TypeScript config
+  - `vite-env.d.ts` - Vite type declarations
+  - `vite.config.ts` - Vite configuration template
+- **docstring-exclusions hook** - Exclude triple-slash directives from docstring policy
+
+#### Documentation
+- **Plugin Usage Guide** (`docs/plugin-usage-guide.md`) - User guide for plugin operations
+
+### Changed
+- `README.md` - Added Plugin Architecture section, updated features table (30 features)
+
+### Stats
+| Metric | v1.2.0 | v1.3.0 |
+|--------|--------|--------|
+| Features | 28 | 30 |
+| Plugin Skills | 0 | 2 |
+| Plugins | 0 | 1 (vite-react-ts) |
+
+---
+
 ## [1.2.0] - 2026-03-30
 
 ### Summary

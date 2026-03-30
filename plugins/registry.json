@@ -1,0 +1,42 @@
+{
+  "version": "1.0.0",
+  "plugins": [
+    {
+      "id": "vite-react-ts",
+      "path": "vite-react-ts/",
+      "status": "available",
+      "core_compatibility": ">=1.0.0"
+    },
+    {
+      "id": "nextjs",
+      "path": "nextjs/",
+      "status": "planned",
+      "core_compatibility": ">=1.0.0"
+    },
+    {
+      "id": "vue-vite",
+      "path": "vue-vite/",
+      "status": "planned",
+      "core_compatibility": ">=1.0.0"
+    },
+    {
+      "id": "python-fastapi",
+      "path": "python-fastapi/",
+      "status": "planned",
+      "core_compatibility": ">=1.0.0"
+    },
+    {
+      "id": "go-mod",
+      "path": "go-mod/",
+      "status": "planned",
+      "core_compatibility": ">=1.0.0"
+    },
+    {
+      "id": "rust-cargo",
+      "path": "rust-cargo/",
+      "status": "planned",
+      "core_compatibility": ">=1.0.0"
+    }
+  ],
+  "loader_version": "1.0.0"
+}

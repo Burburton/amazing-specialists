@@ -98,6 +98,50 @@ node adapters/shared/version-check.js
 
 > **详见**: [ADAPTERS.md](ADAPTERS.md) 完整 Adapter 架构定义，[docs/adapters/adapter-usage-guide.md](docs/adapters/adapter-usage-guide.md) 使用指南。
 
+### Plugin Architecture
+
+Plugin 层是专家包的可插拔扩展层，提供技术栈特定能力：
+
+- **plugins/PLUGIN-SPEC.md** - Plugin 规格定义文档
+- **plugins/registry.json** - Plugin 注册表（程序化发现）
+- **plugins/loader.js** - Plugin 加载器 CLI
+- **plugins/vite-react-ts/** - Vite + React + TypeScript Plugin ✅
+
+**Plugin 类型**：
+
+| Plugin | Tech Stack | Status | Skills |
+|--------|------------|--------|--------|
+| vite-react-ts | Vite + React + TypeScript | ✅ Available | vite-setup, css-module-test |
+| nextjs | Next.js | 📋 Planned | - |
+| vue-vite | Vue + Vite | 📋 Planned | - |
+| python-fastapi | Python FastAPI | 📋 Planned | - |
+| go-mod | Go Modules | 📋 Planned | - |
+| rust-cargo | Rust Cargo | 📋 Planned | - |
+
+**Plugin vs Core**：
+
+| 能力 | 核心层提供 | Plugin 提供 |
+|------|-----------|-------------|
+| 开发流程指导 | ✅ feature-implementation | ❌ |
+| 测试方法论 | ✅ unit-test-design | ❌ |
+| 项目配置模板 | ❌ | ✅ tsconfig, vite.config |
+| 技术栈特定技能 | ❌ | ✅ vite-setup, css-module-test |
+| 质量门禁 | ✅ quality-gate.md | ❌ |
+
+**Plugin 使用**：
+```bash
+# 列出可用 plugins
+node plugins/loader.js list
+
+# 安装 plugin 到项目
+node plugins/loader.js install vite-react-ts --project ./my-project
+
+# 卸载 plugin
+node plugins/loader.js uninstall vite-react-ts --project ./my-project
+```
+
+> **详见**: [docs/plugin-usage-guide.md](docs/plugin-usage-guide.md) Plugin 使用指南，[plugins/PLUGIN-SPEC.md](plugins/PLUGIN-SPEC.md) Plugin 规格定义。
+
 ### 关于 Skills 目录结构
 
 本专家包采用 **6-role 正式执行层模型**作为角色语义标准：
@@ -284,8 +328,10 @@ User Input
 | `026-github-issue-adapter-workflow-test` | GitHub Issue Workflow 测试 | ✅ Complete | Workflow verification report |
 | `027-github-issue-adapter-enhancements` | GitHub Issue Adapter 增强 | ✅ Complete | setup-labels, git-client, generateResultComment, automation script |
 | `028-issue-status-sync` | Issue 状态同步 | ✅ Complete | issue-status-sync skill, DOC-003 contract, BR-003 no premature closure |
+| `029-real-world-validation` | 实战验证 | ✅ Complete | Core vs Plugin distinction, validation-report.md |
+| `030-plugin-architecture` | Plugin 架构 | ✅ Complete | plugins/, loader.js, vite-react-ts plugin, 2 skills |
 
-> **当前进度**: `001-bootstrap` 至 `028-issue-status-sync` 已全部完成。**6-Role 正式执行模型完整实现并验证，Enhanced 模式已验证可用，历史功能审计通过，发布准备就绪，契约 Schema Pack 完成，模板化基础包就绪，版本化体系建立，适配层架构完成，GitHub Issue 适配器实现并增强，GitHub PR 适配器实现，OpenClaw 适配器实现，E2E 集成测试完成，E2E Adapter 真实集成测试完成**。
+> **当前进度**: `001-bootstrap` 至 `030-plugin-architecture` 已全部完成。**6-Role 正式执行模型完整实现并验证，Enhanced 模式已验证可用，历史功能审计通过，发布准备就绪，契约 Schema Pack 完成，模板化基础包就绪，版本化体系建立，适配层架构完成，GitHub Issue 适配器实现并增强，GitHub PR 适配器实现，OpenClaw 适配器实现，E2E 集成测试完成，E2E Adapter 真实集成测试完成，Plugin 架构完成**。
 
 ### 阶段 7：3-Skill 迁移 ✅ 已完成（010-3-skill-migration）
 
@@ -389,7 +435,7 @@ node templates/cli/doctor.js
 - `templates/cli/` - Bootstrap CLI (init/install/doctor)
 - `templates/*.md` - 使用文档
 
-> **当前进度**: `001-bootstrap` 至 `008-security-core` 完成 MVP 核心，`010-3-skill-migration` 完成骨架归档，`011-m4-enhancement-kit` 完成 M4 可选增强，`012-performance-testing-skills` 完成性能测试套件，`013-e2e-validation` 完成端到端验证，`014-enhanced-mode-validation` 完成 Enhanced 模式验证，`015-historical-features-audit` 完成历史功能审计，`016-release-preparation` 完成发布准备，`017-contract-schema-pack` 完成契约 Schema Pack，`018-template-and-bootstrap-foundation` 完成模板化基础包，`019-versioning-and-compatibility-foundation` 完成版本化体系，`020-orchestrator-and-workspace-adapters` 完成适配层架构，`021-github-issue-adapter` 完成 GitHub Issue 适配器，`022-github-pr-adapter` 完成 GitHub PR 适配器，`023-openclaw-adapter` 完成 OpenClaw 适配器，`024-e2e-integration-tests` 完成 E2E 集成测试，`025-e2e-adapter-integration-tests` 完成 E2E Adapter 真实集成测试，`026-github-issue-adapter-workflow-test` 完成 Workflow 测试，`027-github-issue-adapter-enhancements` 完成 GitHub Issue Adapter 增强，`028-issue-status-sync` 完成 Issue 状态同步 skill。**Skills 总计 39 个（23 MVP + 16 M4）**，**Features 总计 28 个**。
+> **当前进度**: `001-bootstrap` 至 `008-security-core` 完成 MVP 核心，`010-3-skill-migration` 完成骨架归档，`011-m4-enhancement-kit` 完成 M4 可选增强，`012-performance-testing-skills` 完成性能测试套件，`013-e2e-validation` 完成端到端验证，`014-enhanced-mode-validation` 完成 Enhanced 模式验证，`015-historical-features-audit` 完成历史功能审计，`016-release-preparation` 完成发布准备，`017-contract-schema-pack` 完成契约 Schema Pack，`018-template-and-bootstrap-foundation` 完成模板化基础包，`019-versioning-and-compatibility-foundation` 完成版本化体系，`020-orchestrator-and-workspace-adapters` 完成适配层架构，`021-github-issue-adapter` 完成 GitHub Issue 适配器，`022-github-pr-adapter` 完成 GitHub PR 适配器，`023-openclaw-adapter` 完成 OpenClaw 适配器，`024-e2e-integration-tests` 完成 E2E 集成测试，`025-e2e-adapter-integration-tests` 完成 E2E Adapter 真实集成测试，`026-github-issue-adapter-workflow-test` 完成 Workflow 测试，`027-github-issue-adapter-enhancements` 完成 GitHub Issue Adapter 增强，`028-issue-status-sync` 完成 Issue 状态同步 skill，`029-real-world-validation` 完成实战验证，`030-plugin-architecture` 完成 Plugin 架构。**Skills 总计 41 个（23 MVP + 16 M4 + 2 Plugin）**，**Features 总计 30 个**。
 
 ## Quick Start
 

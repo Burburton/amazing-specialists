@@ -1,0 +1,27 @@
+{
+  "id": "vite-react-ts",
+  "name": "Vite + React + TypeScript",
+  "version": "1.0.0",
+  "description": "Tech stack adapter for Vite + React + TypeScript projects: configuration guidance, CSS Module testing patterns, TypeScript config best practices",
+  "author": "amazing_agent_specialist",
+  "compatibility": {
+    "core_version": ">=1.0.0",
+    "node_version": ">=18.0.0"
+  },
+  "skills": [
+    "vite-setup",
+    "css-module-test"
+  ],
+  "templates": [
+    "tsconfig.app.json",
+    "tsconfig.node.json",
+    "tsconfig.test.json",
+    "vite-env.d.ts",
+    "vite.config.ts"
+  ],
+  "hooks": [
+    "docstring-exclusions"
+  ],
+  "dependencies": [],
+  "tags": ["frontend", "react", "typescript", "vite", "vitest", "css-modules", "testing"]
+}

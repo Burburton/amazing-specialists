@@ -36,7 +36,15 @@
 
 ### Phase 0: Issue 准备 (Issue Preparation)
 
-> **前置条件**: 当使用 GitHub Issue 驱动方式时，必须先执行此 Phase。
+> **触发条件**: 以下情况必须执行此 Phase：
+> - dispatch payload 包含 `issue_id` 字段
+> - 从 `/spec-start` 命令启动的 GitHub Issue 驱动流程
+> - 任务明确要求 "GitHub Issue 驱动方式"
+>
+> **跳过条件**: 以下情况可跳过此 Phase：
+> - 从 CLI 直接触发，无 Issue ID
+> - 任务明确指定不使用 Issue 驱动
+> - 紧急修复场景（后续补充 Issue）
 
 #### Step 0: 检查 GitHub Issues
 
@@ -71,6 +79,10 @@
 - [ ] 已搜索与重构任务相关的 Issue
 - [ ] 已确认 Issue 状态（使用现有或创建新的）
 - [ ] 已记录 Issue ID 用于后续关联
+
+**常见错误**:
+- ❌ 未检查现有 Issue，直接创建新 Issue → 导致重复 Issue
+- ❌ 未记录 Issue ID → 后续无法关联 PR 和 Issue
 
 ---
 

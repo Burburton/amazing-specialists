@@ -27,8 +27,10 @@
 | File | Size | Purpose |
 |------|------|---------|
 | `plugins/registry.json` | 42 lines | Plugin 注册表 (6 plugins) |
-| `plugins/loader.js` | 401 lines | Plugin CLI (list/install/uninstall) |
-| `plugins/PLUGIN-SPEC.md` | 453 lines | Plugin 规格定义文档 |
+| `plugins/loader.js` | 725 lines | Plugin CLI (list/install/uninstall/sync-skills/enable-skill/disable-skill) |
+| `plugins/lib/skill-linker.js` | 200 lines | 跨平台符号链接管理 |
+| `plugins/lib/skill-registry.js` | 150 lines | skill-registry.json CRUD |
+| `plugins/PLUGIN-SPEC.md` | 500 lines | Plugin 规格定义文档 |
 
 ### vite-react-ts Plugin Instance
 
@@ -37,12 +39,53 @@
 | `plugins/vite-react-ts/plugin.json` | 27 lines | Plugin 元数据 |
 | `plugins/vite-react-ts/skills/vite-setup/SKILL.md` | 279 lines | Vite + TypeScript 配置指导 |
 | `plugins/vite-react-ts/skills/css-module-test/SKILL.md` | 257 lines | CSS Module 测试模式 |
-| `plugins/vite-react-ts/templates/tsconfig.app.json` | 29 lines | 应用 TypeScript 配置 |
-| `plugins/vite-react-ts/templates/tsconfig.node.json` | 25 lines | Node/Vite TypeScript 配置 |
-| `plugins/vite-react-ts/templates/tsconfig.test.json` | 27 lines | 测试 TypeScript 配置 |
-| `plugins/vite-react-ts/templates/vite-env.d.ts` | 37 bytes | Vite 类型声明 |
-| `plugins/vite-react-ts/templates/vite.config.ts` | 240 bytes | Vite 配置模板 |
+| `plugins/vite-react-ts/templates/*` | 5 files | tsconfig configs, vite-env.d.ts, vite.config.ts |
 | `plugins/vite-react-ts/hooks/docstring-exclusions.md` | 99 lines | Triple-slash directive 排除规则 |
+
+### nextjs Plugin Instance
+
+| File | Size | Purpose |
+|------|------|---------|
+| `plugins/nextjs/plugin.json` | 25 lines | Plugin 元数据 |
+| `plugins/nextjs/skills/nextjs-setup/SKILL.md` | 316 lines | Next.js 配置指导 (App Router, Server Components) |
+| `plugins/nextjs/templates/*` | 5 files | next.config.mjs, middleware.ts, tsconfig.json, env.d.ts, app/layout.tsx |
+| `plugins/nextjs/hooks/nextjs-exclusions.md` | 50 lines | Next.js 指令排除规则 |
+
+### vue-vite Plugin Instance
+
+| File | Size | Purpose |
+|------|------|---------|
+| `plugins/vue-vite/plugin.json` | 25 lines | Plugin 元数据 |
+| `plugins/vue-vite/skills/vue-setup/SKILL.md` | 380 lines | Vue 3 配置指导 (Composition API, Pinia, Vue Router) |
+| `plugins/vue-vite/templates/*` | 5 files | vite.config.ts, tsconfig.json, env.d.ts, src/main.ts, src/App.vue |
+| `plugins/vue-vite/hooks/vue-exclusions.md` | 50 lines | Vue 指令排除规则 |
+
+### python-fastapi Plugin Instance
+
+| File | Size | Purpose |
+|------|------|---------|
+| `plugins/python-fastapi/plugin.json` | 23 lines | Plugin 元数据 |
+| `plugins/python-fastapi/skills/fastapi-setup/SKILL.md` | 159 lines | FastAPI 配置指导 (REST API, Pydantic, async) |
+| `plugins/python-fastapi/templates/*` | 4 files | pyproject.toml, main.py, config.py, requirements.txt |
+| `plugins/python-fastapi/hooks/python-exclusions.md` | 30 lines | Python 指令排除规则 |
+
+### go-mod Plugin Instance
+
+| File | Size | Purpose |
+|------|------|---------|
+| `plugins/go-mod/plugin.json` | 22 lines | Plugin 元数据 |
+| `plugins/go-mod/skills/go-setup/SKILL.md` | 128 lines | Go 项目配置指导 (error handling, testing) |
+| `plugins/go-mod/templates/*` | 3 files | go.mod, main.go, Makefile |
+| `plugins/go-mod/hooks/go-exclusions.md` | 30 lines | Go 指令排除规则 |
+
+### rust-cargo Plugin Instance
+
+| File | Size | Purpose |
+|------|------|---------|
+| `plugins/rust-cargo/plugin.json` | 23 lines | Plugin 元数据 |
+| `plugins/rust-cargo/skills/rust-setup/SKILL.md` | 120 lines | Rust 项目配置指导 (Result, tokio, testing) |
+| `plugins/rust-cargo/templates/*` | 3 files | Cargo.toml, src/main.rs, src/lib.rs |
+| `plugins/rust-cargo/hooks/rust-exclusions.md` | 30 lines | Rust 指令排除规则 |
 
 ### Documentation
 

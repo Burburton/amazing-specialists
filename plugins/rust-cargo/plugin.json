@@ -1,0 +1,16 @@
+{
+  "id": "rust-cargo",
+  "name": "Rust Cargo",
+  "version": "1.0.0",
+  "description": "Tech stack adapter for Rust projects: project structure, error handling with Result, async patterns with tokio, and testing",
+  "author": "amazing_agent_specialist",
+  "compatibility": {
+    "core_version": ">=1.0.0",
+    "rust_version": ">=1.75"
+  },
+  "skills": ["rust-setup"],
+  "templates": ["Cargo.toml", "src/main.rs", "src/lib.rs"],
+  "hooks": ["rust-exclusions"],
+  "dependencies": [],
+  "tags": ["backend", "rust", "cargo", "async", "tokio", "testing"]
+}

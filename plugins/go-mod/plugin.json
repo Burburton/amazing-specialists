@@ -1,0 +1,16 @@
+{
+  "id": "go-mod",
+  "name": "Go Modules",
+  "version": "1.0.0",
+  "description": "Tech stack adapter for Go projects: project structure, error handling, testing patterns, and best practices",
+  "author": "amazing_agent_specialist",
+  "compatibility": {
+    "core_version": ">=1.0.0",
+    "go_version": ">=1.21"
+  },
+  "skills": ["go-setup"],
+  "templates": ["go.mod", "main.go", "Makefile"],
+  "hooks": ["go-exclusions"],
+  "dependencies": [],
+  "tags": ["backend", "go", "golang", "modules", "testing"]
+}

@@ -7,6 +7,60 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.5.0] - 2026-03-31
+
+### Summary
+
+**5 Additional Plugins Released** - Extended plugin library with nextjs, vue-vite, python-fastapi, go-mod, and rust-cargo plugins, covering major frontend and backend tech stacks.
+
+### Added
+
+#### Frontend Plugins
+
+- **nextjs** - Next.js plugin with App Router, Server Components, API Routes guidance
+  - `nextjs-setup` skill - Next.js 14+ configuration best practices
+  - Templates: next.config.mjs, middleware.ts, tsconfig.json, env.d.ts, app/layout.tsx
+  - Hook: nextjs-exclusions for 'use client'/'use server' directives
+
+- **vue-vite** - Vue 3 + Vite plugin with Composition API, Pinia, Vue Router
+  - `vue-setup` skill - Vue 3 SFC patterns, composables, state management
+  - Templates: vite.config.ts, tsconfig.json, env.d.ts, src/main.ts, src/App.vue
+  - Hook: vue-exclusions for Vue-specific directives
+
+#### Backend Plugins
+
+- **python-fastapi** - Python FastAPI plugin for async REST API development
+  - `fastapi-setup` skill - REST API design, Pydantic models, async patterns
+  - Templates: pyproject.toml, main.py, config.py, requirements.txt
+  - Hook: python-exclusions for Python type ignore comments
+
+- **go-mod** - Go Modules plugin with project structure and testing patterns
+  - `go-setup` skill - Error handling, testing best practices
+  - Templates: go.mod, main.go, Makefile
+  - Hook: go-exclusions for go:generate/go:build directives
+
+- **rust-cargo** - Rust Cargo plugin with tokio async and Result error handling
+  - `rust-setup` skill - Async patterns, error handling, testing
+  - Templates: Cargo.toml, src/main.rs, src/lib.rs
+  - Hook: rust-exclusions for lint allow/deny attributes
+
+### Changed
+
+- `README.md` - Updated plugin table to show all 6 plugins as Available
+- `specs/030-plugin-architecture/completion-report.md` - Documented all 6 plugin instances
+- `plugins/registry.json` - Updated loader_version to 1.4.0
+
+### Stats
+
+| Metric | v1.4.0 | v1.5.0 |
+|--------|--------|--------|
+| Plugins | 1 | 6 |
+| Plugin Skills | 2 | 8 |
+| Frontend Plugins | 1 | 3 |
+| Backend Plugins | 0 | 3 |
+
+---
+
 ## [1.4.0] - 2026-03-31
 
 ### Summary

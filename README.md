@@ -112,11 +112,11 @@ Plugin 层是专家包的可插拔扩展层，提供技术栈特定能力：
 | Plugin | Tech Stack | Status | Skills |
 |--------|------------|--------|--------|
 | vite-react-ts | Vite + React + TypeScript | ✅ Available | vite-setup, css-module-test |
-| nextjs | Next.js | 📋 Planned | - |
-| vue-vite | Vue + Vite | 📋 Planned | - |
-| python-fastapi | Python FastAPI | 📋 Planned | - |
-| go-mod | Go Modules | 📋 Planned | - |
-| rust-cargo | Rust Cargo | 📋 Planned | - |
+| nextjs | Next.js | ✅ Available | nextjs-setup |
+| vue-vite | Vue + Vite | ✅ Available | vue-setup |
+| python-fastapi | Python FastAPI | ✅ Available | fastapi-setup |
+| go-mod | Go Modules | ✅ Available | go-setup |
+| rust-cargo | Rust Cargo | ✅ Available | rust-setup |
 
 **Plugin vs Core**：
 

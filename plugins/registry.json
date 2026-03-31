@@ -10,33 +10,33 @@
     {
       "id": "nextjs",
       "path": "nextjs/",
-      "status": "planned",
+      "status": "available",
       "core_compatibility": ">=1.0.0"
     },
     {
       "id": "vue-vite",
       "path": "vue-vite/",
-      "status": "planned",
+      "status": "available",
       "core_compatibility": ">=1.0.0"
     },
     {
       "id": "python-fastapi",
       "path": "python-fastapi/",
-      "status": "planned",
+      "status": "available",
       "core_compatibility": ">=1.0.0"
     },
     {
       "id": "go-mod",
       "path": "go-mod/",
-      "status": "planned",
+      "status": "available",
       "core_compatibility": ">=1.0.0"
     },
     {
       "id": "rust-cargo",
       "path": "rust-cargo/",
-      "status": "planned",
+      "status": "available",
       "core_compatibility": ">=1.0.0"
     }
   ],
-  "loader_version": "1.0.0"
+  "loader_version": "1.4.0"
 }

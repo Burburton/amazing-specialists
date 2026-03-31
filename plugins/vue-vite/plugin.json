@@ -1,0 +1,26 @@
+{
+  "id": "vue-vite",
+  "name": "Vue + Vite",
+  "version": "1.0.0",
+  "description": "Tech stack adapter for Vue 3 + Vite + TypeScript projects: Composition API, Pinia state management, Vue Router configuration",
+  "author": "amazing_agent_specialist",
+  "compatibility": {
+    "core_version": ">=1.0.0",
+    "node_version": ">=18.0.0"
+  },
+  "skills": [
+    "vue-setup"
+  ],
+  "templates": [
+    "vite.config.ts",
+    "tsconfig.json",
+    "env.d.ts",
+    "src/main.ts",
+    "src/App.vue"
+  ],
+  "hooks": [
+    "vue-exclusions"
+  ],
+  "dependencies": [],
+  "tags": ["frontend", "vue", "typescript", "vite", "pinia", "vue-router", "composition-api"]
+}

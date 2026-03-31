@@ -7,6 +7,48 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.4.0] - 2026-03-31
+
+### Summary
+
+**Plugin Skill Activation Complete** - User-selectable skill activation with symlink-based loading, enabling OpenCode to discover and load plugin skills automatically.
+
+### Added
+
+#### Skill Activation Infrastructure
+- **skill-registry.json** - User configuration file for enabling/disabling plugin skills
+- **sync-skills command** - Create/remove symlinks from `.opencode/skills/` to plugin skills
+- **enable-skill/disable-skill commands** - CLI for toggling individual skills
+- **Cross-platform symlink support** - Windows junction (no admin) + Unix symlink
+
+#### New Libraries
+- `plugins/lib/skill-linker.js` - Cross-platform symlink/junction management
+- `plugins/lib/skill-registry.js` - skill-registry.json CRUD operations
+
+#### Enhanced Commands
+- **install** - Auto-creates skill-registry.json, prompts for sync-skills
+- **uninstall** - Cleans up skills from registry and removes symlinks
+- **list** - Shows skills with enabled/disabled status
+
+### Changed
+
+#### 030 Design Cleanup
+- `plugins/PLUGIN-SPEC.md` - Replaced "Skill 合并机制" with "Skill 激活机制"
+- `specs/030-plugin-architecture/data-model.md` - Deprecated `skills_enabled` field
+- `specs/030-plugin-architecture/spec.md` - Updated Activation section
+- `docs/plugin-usage-guide.md` - Added skill activation workflow
+- `README.md` - Updated Plugin usage and features table (31 features)
+
+### Stats
+| Metric | v1.3.0 | v1.4.0 |
+|--------|--------|--------|
+| Features | 30 | 31 |
+| Plugin Skills | 2 | 2 |
+| Loader Commands | 3 | 6 |
+| Lib Modules | 0 | 2 |
+
+---
+
 ## [1.3.0] - 2026-03-31
 
 ### Summary

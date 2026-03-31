@@ -344,12 +344,20 @@ created_at: 2026-03-31
           "format": "date-time",
           "description": "Installation timestamp"
         },
+        "skills_available": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Skills from this plugin that are available (enabled status controlled by skill-registry.json)"
+        },
         "skills_enabled": {
           "type": "array",
           "items": {
             "type": "string"
           },
-          "description": "Skills from this plugin that are enabled"
+          "description": "DEPRECATED: Use skills_available instead. Enabled status now controlled by .opencode/skill-registry.json",
+          "deprecated": true
         },
         "templates_copied": {
           "type": "array",
@@ -379,14 +387,15 @@ created_at: 2026-03-31
 
 ```json
 {
-  "version": "1.0.0",
-  "core_version": "1.0.0",
+  "version": "1.1.0",
+  "core_version": "1.3.0",
   "plugins": [
     {
       "id": "vite-react-ts",
       "version": "1.0.0",
       "installed_at": "2026-03-31T10:30:00Z",
-      "skills_enabled": ["vite-setup", "css-module-test"],
+      "skills_available": ["vite-setup", "css-module-test"],
+      "_note": "启用状态由 .opencode/skill-registry.json 控制 (见 031-plugin-skill-activation)",
       "templates_copied": [
         "tsconfig.app.json",
         "tsconfig.node.json",

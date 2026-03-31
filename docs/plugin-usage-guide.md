@@ -79,16 +79,78 @@ Templates copied to ./my-project:
   - vite.config.ts
 ```
 
-### 3. Use Plugin Skills
+### 3. Activate Plugin Skills
 
-After installation, plugin skills are available through the skill tool:
+After installation, skills are registered but not yet activated. Activate them with `sync-skills`:
+
+```bash
+node plugins/loader.js sync-skills --project ./my-project
+```
+
+Output:
+```
+=== Syncing Plugin Skills ===
+
+Registry: 2 skills (2 enabled, 0 disabled)
+
+Skills to be linked:
+  + vite-setup (junction)
+  + css-module-test (junction)
+
+Linked: 2
+Unlinked: 0
+Errors: 0
+
+Sync complete!
+```
+
+**What happens**:
+- Creates symbolic links from `.opencode/skills/<skill-name>/` to plugin skill directories
+- OpenCode automatically discovers skills in `.opencode/skills/`
+- Skills become available through the skill tool
+
+### 4. Enable/Disable Individual Skills
+
+Control which skills are active:
+
+```bash
+# Disable a skill
+node plugins/loader.js disable-skill css-module-test --project ./my-project
+
+# Re-enable a skill
+node plugins/loader.js enable-skill css-module-test --project ./my-project
+```
+
+The skill-registry.json file tracks enabled status:
+
+```json
+{
+  "version": "1.0.0",
+  "skills": [
+    {
+      "name": "vite-setup",
+      "enabled": true,
+      "plugin_id": "vite-react-ts"
+    },
+    {
+      "name": "css-module-test",
+      "enabled": false,
+      "plugin_id": "vite-react-ts"
+    }
+  ]
+}
+```
+
+### 5. Use Plugin Skills
+
+After activation, plugin skills are available through the skill tool:
 
 ```bash
 # Invoke vite-setup skill
 node .opencode/commands/skill-loader.js vite-setup
 ```
 
-### 4. Uninstall a Plugin
+### 6. Uninstall a Plugin
 
 ```bash
 node plugins/loader.js uninstall vite-react-ts --project ./my-project
@@ -232,11 +294,43 @@ Warning: Skill 'feature-implementation' already exists in core, skipping plugin 
 
 **Solution**: Rename plugin skill to avoid conflict (e.g., `vite-feature-implementation`).
 
+### Skills not discovered by OpenCode
+
+```
+Skills installed but not loading
+```
+
+**Solution**: Run `sync-skills` to create symbolic links:
+```bash
+node plugins/loader.js sync-skills --project ./my-project
+```
+
+### Junction creation failed on Windows
+
+```
+Error: Failed to create link
+```
+
+**Solution**: 
+- Ensure you have write permissions to `.opencode/skills/`
+- If using symlink type, try junction (default for Windows)
+- Check if antivirus is blocking junction creation
+
+### Custom skills overwritten
+
+```
+My custom skill was removed
+```
+
+**Solution**: `sync-skills` preserves custom skills not in the registry. If overwritten:
+1. Restore from backup
+2. Use a unique name for custom skills to avoid conflicts
+
 ---
 
 ## References
 
 - `plugins/PLUGIN-SPEC.md` - Full plugin specification
 - `specs/030-plugin-architecture/spec.md` - Feature specification
-- `specs/030-plugin-architecture/plan.md` - Implementation plan
-- `specs/029-real-world-validation/validation-report.md` - Plugin demand validation
+- `specs/031-plugin-skill-activation/spec.md` - Skill activation mechanism
+- `specs/031-plugin-skill-activation/data-model.md` - skill-registry.json format

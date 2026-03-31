@@ -219,14 +219,13 @@ node plugins/loader.js install vite-react-ts --project ../my-project
 
 ### Activation
 
-Plugin skills 通过 OpenCode 的 skill 加载机制自动合并：
+Plugin skills 通过符号链接激活：
 
-```typescript
-// OpenCode 加载 skills 时
-const coreSkills = loadSkills('.opencode/skills/');
-const pluginSkills = loadPluginSkills('plugins/vite-react-ts/skills/');
-const allSkills = [...coreSkills, ...pluginSkills];
-```
+1. 安装 plugin 时创建 `.opencode/skill-registry.json`
+2. 用户运行 `sync-skills` 创建符号链接到 `.opencode/skills/`
+3. OpenCode 自动发现 `.opencode/skills/` 下的所有 skills
+
+详见 `specs/031-plugin-skill-activation/` 获取完整的 skill 激活机制设计。
 
 ---
 

@@ -355,21 +355,52 @@ node plugins/loader.js uninstall {plugin-id} --project {path}
 
 ---
 
-## Skill 合并机制
+## Skill 激活机制
 
-Plugin skills 通过 OpenCode 的 skill 加载机制自动合并：
+Plugin skills 通过符号链接激活，用户可以选择启用哪些 skills：
 
-```javascript
-// OpenCode 加载 skills 时
-const coreSkills = loadSkills('.opencode/skills/');
-const pluginSkills = loadPluginSkills('plugins/*/skills/');
-const allSkills = [...coreSkills, ...pluginSkills];
+### 激活流程
+
+1. 用户在 `.opencode/skill-registry.json` 配置启用状态
+2. 运行 `sync-skills` 命令创建符号链接
+3. OpenCode 扫描 `.opencode/skills/` 发现所有 skills
+
+### skill-registry.json 格式
+
+```json
+{
+  "version": "1.0.0",
+  "skills": [
+    {
+      "name": "vite-setup",
+      "source": "plugins/vite-react-ts/skills/vite-setup/SKILL.md",
+      "enabled": true,
+      "plugin_id": "vite-react-ts"
+    }
+  ]
+}
 ```
 
-**合并规则**：
-- Plugin skills 补充核心 skills，不覆盖
-- 名称冲突时，核心 skill 优先，Plugin skill 跳过
-- 加载顺序：核心 → Plugin
+### 命令
+
+```bash
+# 安装 plugin 时自动创建 registry
+node plugins/loader.js install vite-react-ts --project ./my-project
+
+# 同步 skills 到 .opencode/skills/
+node plugins/loader.js sync-skills --project ./my-project
+
+# 启用/禁用特定 skill
+node plugins/loader.js enable-skill vite-setup --project ./my-project
+node plugins/loader.js disable-skill css-module-test --project ./my-project
+```
+
+### 跨平台支持
+
+- Windows: 使用 junction (不需要管理员权限)
+- Unix: 使用 symlink
+
+详见 `specs/031-plugin-skill-activation/` 获取完整设计。
 
 ---
 

@@ -1,4 +1,4 @@
-# OpenCode 专家包 - 全自动产品研发闭环执行层
+﻿# OpenCode 专家包 - 全自动产品研发闭环执行层
 
 ## What It Is
 OpenCode 专家包是一套围绕角色、skills、commands、rules、templates、artifacts 组织起来的执行能力包，用于支撑全自动产品研发闭环的代码执行层。
@@ -111,7 +111,7 @@ Plugin 层是专家包的可插拔扩展层，提供技术栈特定能力：
 
 | Plugin | Tech Stack | Status | Skills |
 |--------|------------|--------|--------|
-| vite-react-ts | Vite + React + TypeScript | ✅ Available | vite-setup, css-module-test |
+| vite-react-ts | Vite + React + TypeScript | ✅ Available | vite-setup, css-module-test, run-tests, run-build |
 | nextjs | Next.js | ✅ Available | nextjs-setup |
 | vue-vite | Vue + Vite | ✅ Available | vue-setup |
 | python-fastapi | Python FastAPI | ✅ Available | fastapi-setup |
@@ -338,8 +338,9 @@ User Input
 | `029-real-world-validation` | 实战验证 | ✅ Complete | Core vs Plugin distinction, validation-report.md |
 | `030-plugin-architecture` | Plugin 架构 | ✅ Complete | plugins/, loader.js, vite-react-ts plugin, 2 skills |
 | `031-plugin-skill-activation` | Plugin Skill 激活 | ✅ Complete | skill-registry.json, sync-skills, enable/disable-skill |
+| `032-workflow-extensibility-enhancements` | Workflow 扩展性增强 | ✅ Complete | Configurable body-parser, template mapping, plugin commands, run-tests/run-build skills |
 
-> **当前进度**: `001-bootstrap` 至 `031-plugin-skill-activation` 已全部完成。**6-Role 正式执行模型完整实现并验证，Enhanced 模式已验证可用，历史功能审计通过，发布准备就绪，契约 Schema Pack 完成，模板化基础包就绪，版本化体系建立，适配层架构完成，GitHub Issue 适配器实现并增强，GitHub PR 适配器实现，OpenClaw 适配器实现，E2E 集成测试完成，E2E Adapter 真实集成测试完成，Plugin 架构完成，Plugin Skill 激活机制完成**。
+> **当前进度**: `001-bootstrap` 至 `032-workflow-extensibility-enhancements` 已全部完成。**6-Role 正式执行模型完整实现并验证，Enhanced 模式已验证可用，历史功能审计通过，发布准备就绪，契约 Schema Pack 完成，模板化基础包就绪，版本化体系建立，适配层架构完成，GitHub Issue 适配器实现并增强，GitHub PR 适配器实现，OpenClaw 适配器实现，E2E 集成测试完成，E2E Adapter 真实集成测试完成，Plugin 架构完成，Plugin Skill 激活机制完成，Workflow 扩展性增强完成**。
 
 ### 阶段 7：3-Skill 迁移 ✅ 已完成（010-3-skill-migration）
 
@@ -443,7 +444,7 @@ node templates/cli/doctor.js
 - `templates/cli/` - Bootstrap CLI (init/install/doctor)
 - `templates/*.md` - 使用文档
 
-> **当前进度**: `001-bootstrap` 至 `008-security-core` 完成 MVP 核心，`010-3-skill-migration` 完成骨架归档，`011-m4-enhancement-kit` 完成 M4 可选增强，`012-performance-testing-skills` 完成性能测试套件，`013-e2e-validation` 完成端到端验证，`014-enhanced-mode-validation` 完成 Enhanced 模式验证，`015-historical-features-audit` 完成历史功能审计，`016-release-preparation` 完成发布准备，`017-contract-schema-pack` 完成契约 Schema Pack，`018-template-and-bootstrap-foundation` 完成模板化基础包，`019-versioning-and-compatibility-foundation` 完成版本化体系，`020-orchestrator-and-workspace-adapters` 完成适配层架构，`021-github-issue-adapter` 完成 GitHub Issue 适配器，`022-github-pr-adapter` 完成 GitHub PR 适配器，`023-openclaw-adapter` 完成 OpenClaw 适配器，`024-e2e-integration-tests` 完成 E2E 集成测试，`025-e2e-adapter-integration-tests` 完成 E2E Adapter 真实集成测试，`026-github-issue-adapter-workflow-test` 完成 Workflow 测试，`027-github-issue-adapter-enhancements` 完成 GitHub Issue Adapter 增强，`028-issue-status-sync` 完成 Issue 状态同步 skill，`029-real-world-validation` 完成实战验证，`030-plugin-architecture` 完成 Plugin 架构，`031-plugin-skill-activation` 完成 Plugin Skill 激活机制。**Skills 总计 41 个（23 MVP + 16 M4 + 2 Plugin）**，**Features 总计 31 个**。
+> **当前进度**: `001-bootstrap` 至 `008-security-core` 完成 MVP 核心，`010-3-skill-migration` 完成骨架归档，`011-m4-enhancement-kit` 完成 M4 可选增强，`012-performance-testing-skills` 完成性能测试套件，`013-e2e-validation` 完成端到端验证，`014-enhanced-mode-validation` 完成 Enhanced 模式验证，`015-historical-features-audit` 完成历史功能审计，`016-release-preparation` 完成发布准备，`017-contract-schema-pack` 完成契约 Schema Pack，`018-template-and-bootstrap-foundation` 完成模板化基础包，`019-versioning-and-compatibility-foundation` 完成版本化体系，`020-orchestrator-and-workspace-adapters` 完成适配层架构，`021-github-issue-adapter` 完成 GitHub Issue 适配器，`022-github-pr-adapter` 完成 GitHub PR 适配器，`023-openclaw-adapter` 完成 OpenClaw 适配器，`024-e2e-integration-tests` 完成 E2E 集成测试，`025-e2e-adapter-integration-tests` 完成 E2E Adapter 真实集成测试，`026-github-issue-adapter-workflow-test` 完成 Workflow 测试，`027-github-issue-adapter-enhancements` 完成 GitHub Issue Adapter 增强，`028-issue-status-sync` 完成 Issue 状态同步 skill，`029-real-world-validation` 完成实战验证，`030-plugin-architecture` 完成 Plugin 架构，`031-plugin-skill-activation` 完成 Plugin Skill 激活机制，`032-workflow-extensibility-enhancements` 完成 Workflow 扩展性增强。**Skills 总计 43 个（23 MVP + 16 M4 + 4 Plugin）**，**Features 总计 32 个**。
 
 ## Quick Start
 

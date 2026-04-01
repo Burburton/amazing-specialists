@@ -1,13 +1,14 @@
-/**
+﻿/**
  * GitHub Issue Body Parser
  * 
  * Parses GitHub Issue body markdown sections into structured data.
  * Reference: specs/021-github-issue-adapter/spec.md
  * Reference: docs/adapters/github-issue-adapter-design.md
+ * Reference: specs/032-workflow-extensibility-enhancements/spec.md (R1: Body Parser 可配置)
  */
 
 /**
- * Section headers expected in Issue body
+ * Section headers expected in Issue body (legacy, for backward compatibility)
  */
 const EXPECTED_SECTIONS = [
   'Context',
@@ -16,6 +17,48 @@ const EXPECTED_SECTIONS = [
   'Inputs',
   'Expected Outputs'
 ];
+
+/**
+ * Default sections configuration
+ * Used when no config is provided to parseWithConfig()
+ * 
+ * Reference: adapters/schemas/body-parser-config.schema.json
+ */
+const DEFAULT_SECTIONS = {
+  required: ['Goal'],
+  recommended: ['Context', 'Expected Outputs'],
+  optional: ['Constraints', 'Inputs'],
+  mapping: {
+    'Context': 'context.task_scope',
+    'Goal': 'goal',
+    'Constraints': 'constraints',
+    'Inputs': 'inputs',
+    'Expected Outputs': 'expected_outputs',
+    'Acceptance Criteria': 'verification_steps',
+    'Verification Steps': 'verification_steps'
+  }
+};
+
+/**
+ * Set a nested field value using dot notation path
+ * @param {Object} obj - Target object
+ * @param {string} path - Dot notation path (e.g., 'context.task_scope')
+ * @param {*} value - Value to set
+ */
+function setNestedField(obj, path, value) {
+  const parts = path.split('.');
+  let current = obj;
+  
+  for (let i = 0; i < parts.length - 1; i++) {
+    const part = parts[i];
+    if (!(part in current)) {
+      current[part] = {};
+    }
+    current = current[part];
+  }
+  
+  current[parts[parts.length - 1]] = value;
+}
 
 /**
  * Parse markdown list items into array of strings
@@ -31,7 +74,6 @@ function parseListItems(content) {
   const items = [];
 
   for (const line of lines) {
-    // Match list item patterns: "- item", "* item", "1. item", "2. item"
     const listMatch = line.match(/^[-*]\s+(.+)$|^\d+\.\s+(.+)$/);
     if (listMatch) {
       const itemText = listMatch[1] || listMatch[2];
@@ -46,17 +88,6 @@ function parseListItems(content) {
 
 /**
  * Parse artifact reference from Inputs section
- * Supports formats:
- * - `artifact_id: ABC123`
- * - `artifact_type: design-note`
- * - `path: specs/001/design-note.md`
- * - `summary: Optional description`
- * 
- * Or inline format:
- * - `- artifact:ABC123 (design-note) at specs/001/design-note.md`
- * 
- * @param {string} content - Section content
- * @returns {Array<{artifact_id: string, artifact_type: string, path: string, summary?: string}>}
  */
 function parseArtifactReferences(content) {
   if (!content || typeof content !== 'string') {
@@ -78,7 +109,6 @@ function parseArtifactReferences(content) {
     if (listMatch) {
       const itemText = (listMatch[1] || listMatch[2]).trim();
 
-      // Parse inline format: artifact:ABC123 (design-note) at path
       const inlineMatch = itemText.match(/^artifact:([A-Za-z0-9_-]+)\s*\(([A-Za-z0-9_-]+)\)\s*(?:at\s+)?(.+)$/i);
       if (inlineMatch) {
         inputs.push({
@@ -142,18 +172,16 @@ function parseArtifactReferences(content) {
 
 /**
  * Extract section content from body by header name
- * @param {string} body - Full Issue body
- * @param {string} sectionName - Section header name (e.g., "Context", "Goal")
- * @returns {string|null} - Section content or null if not found
  */
 function extractSection(body, sectionName) {
   if (!body || typeof body !== 'string') {
     return null;
   }
 
-  // Match ## SectionName header and capture content until next ## header or end
+  const escapedName = sectionName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  
   const sectionRegex = new RegExp(
-    `^##\\s+${sectionName}\\s*$\\n?(.*?)` +
+    `^##\\s+${escapedName}\\s*$\\n?(.*?)` +
     `(?=^##\\s+|$)`,
     'gm'
   );
@@ -168,10 +196,6 @@ function extractSection(body, sectionName) {
 
 /**
  * Parse context section content
- * May contain multiple subsections: task_scope, project_goal, milestone_goal, code_context_summary
- * 
- * @param {string} content - Context section content
- * @returns {{task_scope: string, project_goal?: string, milestone_goal?: string, code_context_summary?: string}}
  */
 function parseContextSection(content) {
   if (!content || typeof content !== 'string') {
@@ -209,25 +233,33 @@ function parseContextSection(content) {
 }
 
 /**
+ * Parse section content based on section type
+ */
+function parseSectionContent(sectionName, content) {
+  if (!content) return null;
+  
+  if (sectionName.toLowerCase() === 'context') {
+    return parseContextSection(content);
+  }
+  
+  if (sectionName.toLowerCase() === 'inputs') {
+    const refs = parseArtifactReferences(content);
+    return refs.length > 0 ? refs : parseListItems(content);
+  }
+  
+  const items = parseListItems(content);
+  return items.length > 0 ? items : content;
+}
+
+/**
  * Body Parser Class
- * 
- * Parses GitHub Issue body into structured BodyParseResult.
  */
 class BodyParser {
-  /**
-   * Parse Issue body into structured result
-   * 
-   * @param {string} body - GitHub Issue body (markdown)
-   * @param {string} [fallbackTitle] - Issue title to use as fallback goal (BR-003)
-   * @returns {Object} BodyParseResult structure
-   */
   parse(body, fallbackTitle = '') {
     const result = {
       goal: '',
       description: '',
-      context: {
-        task_scope: ''
-      },
+      context: { task_scope: '' },
       constraints: [],
       inputs: [],
       expected_outputs: [],
@@ -238,12 +270,10 @@ class BodyParser {
     if (!body || typeof body !== 'string' || body.trim() === '') {
       result.warnings.push('Issue body is empty or null');
       result.missing_sections = [...EXPECTED_SECTIONS];
-      
       if (fallbackTitle) {
         result.goal = fallbackTitle;
-        result.warnings.push(`Used Issue title as goal (BR-003 fallback)`);
+        result.warnings.push('Used Issue title as goal (BR-003 fallback)');
       }
-
       return result;
     }
 
@@ -305,6 +335,89 @@ class BodyParser {
     return result;
   }
 
+  parseWithConfig(body, config, fallbackTitle = '') {
+    const sectionsConfig = config?.body_parser_config?.sections || DEFAULT_SECTIONS;
+    const mapping = sectionsConfig.mapping || DEFAULT_SECTIONS.mapping;
+    const required = sectionsConfig.required || DEFAULT_SECTIONS.required;
+    const recommended = sectionsConfig.recommended || [];
+    const optional = sectionsConfig.optional || [];
+
+    const result = {
+      goal: '',
+      description: '',
+      context: { task_scope: '' },
+      constraints: [],
+      inputs: [],
+      expected_outputs: [],
+      verification_steps: [],
+      missing_sections: [],
+      missing_required: [],
+      missing_recommended: [],
+      warnings: [],
+      parsed_sections: []
+    };
+
+    if (!body || typeof body !== 'string' || body.trim() === '') {
+      result.warnings.push('Issue body is empty or null');
+      result.missing_required = [...required];
+      result.missing_recommended = [...recommended];
+      result.missing_sections = [...required, ...recommended, ...optional];
+      if (fallbackTitle) {
+        result.goal = fallbackTitle;
+        result.warnings.push('Used Issue title as goal (BR-003 fallback)');
+      }
+      return result;
+    }
+
+    result.description = body.trim();
+
+    const allSections = new Set([
+      ...required,
+      ...recommended,
+      ...optional,
+      ...Object.keys(mapping)
+    ]);
+
+    for (const sectionName of allSections) {
+      const content = extractSection(body, sectionName);
+      
+      if (!content) {
+        if (required.includes(sectionName)) {
+          result.missing_required.push(sectionName);
+          result.missing_sections.push(sectionName);
+          result.warnings.push(`Required section '${sectionName}' is missing`);
+        } else if (recommended.includes(sectionName)) {
+          result.missing_recommended.push(sectionName);
+          result.missing_sections.push(sectionName);
+          result.warnings.push(`Recommended section '${sectionName}' is missing`);
+        }
+        continue;
+      }
+
+      result.parsed_sections.push(sectionName);
+      const parsedContent = parseSectionContent(sectionName, content);
+
+      const targetField = mapping[sectionName];
+      if (targetField) {
+        setNestedField(result, targetField, parsedContent);
+      } else {
+        const fallbackField = sectionName.toLowerCase().replace(/\s+/g, '_');
+        if (!(fallbackField in result)) {
+          result[fallbackField] = parsedContent;
+        }
+      }
+    }
+
+    if (!result.goal && fallbackTitle) {
+      result.goal = fallbackTitle;
+      result.warnings.push('Goal section missing, used Issue title as fallback (BR-003)');
+    }
+
+    this._checkDuplicateSectionsConfig(body, result, allSections);
+
+    return result;
+  }
+
   _checkDuplicateSections(body, result) {
     for (const sectionName of EXPECTED_SECTIONS) {
       const regex = new RegExp(`^##\\s+${sectionName}\\s*$`, 'gm');
@@ -315,23 +428,23 @@ class BodyParser {
     }
   }
 
-  /**
-   * Validate that body has required sections
-   * 
-   * @param {string} body - Issue body
-   * @param {string[]} [requiredSections=['Goal', 'Context']] - Sections that must exist
-   * @returns {{valid: boolean, missing: string[], warnings: string[]}}
-   */
+  _checkDuplicateSectionsConfig(body, result, sections) {
+    for (const sectionName of sections) {
+      const escapedName = sectionName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const regex = new RegExp(`^##\\s+${escapedName}\\s*$`, 'gm');
+      const matches = body.match(regex);
+      if (matches && matches.length > 1) {
+        result.warnings.push(`Duplicate ## ${sectionName} section found (${matches.length} occurrences)`);
+      }
+    }
+  }
+
   validateRequiredSections(body, requiredSections = ['Goal', 'Context']) {
     const missing = [];
     const warnings = [];
 
     if (!body || typeof body !== 'string' || body.trim() === '') {
-      return {
-        valid: false,
-        missing: requiredSections,
-        warnings: ['Issue body is empty']
-      };
+      return { valid: false, missing: requiredSections, warnings: ['Issue body is empty'] };
     }
 
     for (const section of requiredSections) {
@@ -342,16 +455,25 @@ class BodyParser {
       }
     }
 
-    return {
-      valid: missing.length === 0,
-      missing,
-      warnings
-    };
+    return { valid: missing.length === 0, missing, warnings };
   }
 
   getExpectedSections() {
     return [...EXPECTED_SECTIONS];
   }
+
+  getDefaultSectionsConfig() {
+    return JSON.parse(JSON.stringify(DEFAULT_SECTIONS));
+  }
 }
 
-module.exports = { BodyParser, EXPECTED_SECTIONS };
+module.exports = { 
+  BodyParser, 
+  EXPECTED_SECTIONS,
+  DEFAULT_SECTIONS,
+  extractSection,
+  parseListItems,
+  parseArtifactReferences,
+  parseContextSection,
+  setNestedField
+};

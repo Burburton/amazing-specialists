@@ -1,0 +1,160 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "adapters/schemas/body-parser-config.schema.json",
+  "title": "Body Parser Configuration Schema",
+  "description": "Schema for configurable Issue Body section parsing in GitHub Issue Adapter",
+  "type": "object",
+  "properties": {
+    "body_parser_config": {
+      "type": "object",
+      "description": "Configuration for body parser section extraction",
+      "properties": {
+        "sections": {
+          "type": "object",
+          "description": "Section configuration",
+          "properties": {
+            "required": {
+              "type": "array",
+              "description": "Required section names - parsing fails if missing",
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64,
+                "pattern": "^[A-Za-z][A-Za-z0-9\\s-]+$"
+              },
+              "minItems": 1,
+              "default": ["Goal"]
+            },
+            "recommended": {
+              "type": "array",
+              "description": "Recommended section names - warning if missing but parsing continues",
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64,
+                "pattern": "^[A-Za-z][A-Za-z0-9\\s-]+$"
+              },
+              "default": ["Context", "Expected Outputs"]
+            },
+            "optional": {
+              "type": "array",
+              "description": "Optional section names - no warning if missing",
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64,
+                "pattern": "^[A-Za-z][A-Za-z0-9\\s-]+$"
+              },
+              "default": ["Constraints", "Inputs", "Acceptance Criteria", "Verification Steps"]
+            },
+            "mapping": {
+              "type": "object",
+              "description": "Section name to Dispatch Payload field mapping",
+              "additionalProperties": {
+                "type": "string",
+                "description": "Dot-notation path to Dispatch Payload field (e.g., 'context.task_scope', 'goal')"
+              },
+              "propertyNames": {
+                "minLength": 1,
+                "maxLength": 64
+              }
+            }
+          },
+          "required": ["required", "mapping"]
+        },
+        "extraction_rules": {
+          "type": "object",
+          "description": "Rules for section extraction",
+          "properties": {
+            "section_header_pattern": {
+              "type": "string",
+              "description": "Regex pattern for section headers (default: '## {section_name}')",
+              "default": "^##\\s+{section_name}\\s*$"
+            },
+            "list_item_pattern": {
+              "type": "string",
+              "description": "Regex pattern for list items (default: '- {item}')",
+              "default": "^-\\s+(.+)$"
+            },
+            "preserve_formatting": {
+              "type": "boolean",
+              "description": "Whether to preserve markdown formatting in extracted content",
+              "default": true
+            },
+            "trim_whitespace": {
+              "type": "boolean",
+              "description": "Whether to trim leading/trailing whitespace",
+              "default": true
+            }
+          }
+        },
+        "validation": {
+          "type": "object",
+          "description": "Validation options",
+          "properties": {
+            "strict_mode": {
+              "type": "boolean",
+              "description": "If true, missing required sections cause parse failure; if false, returns warnings",
+              "default": false
+            },
+            "allow_unknown_sections": {
+              "type": "boolean",
+              "description": "Whether to include sections not in configuration",
+              "default": true
+            },
+            "min_section_length": {
+              "type": "integer",
+              "description": "Minimum character length for a section to be considered valid",
+              "minimum": 0,
+              "default": 1
+            }
+          }
+        }
+      },
+      "required": ["sections"]
+    }
+  },
+  "required": ["body_parser_config"],
+  "additionalProperties": true,
+  
+  "examples": [
+    {
+      "body_parser_config": {
+        "sections": {
+          "required": ["Goal"],
+          "recommended": ["Context", "Expected Outputs"],
+          "optional": ["Constraints", "Inputs", "Acceptance Criteria", "Verification Steps"],
+          "mapping": {
+            "Context": "context.task_scope",
+            "Goal": "goal",
+            "Constraints": "constraints",
+            "Inputs": "inputs",
+            "Expected Outputs": "expected_outputs",
+            "Acceptance Criteria": "verification_steps",
+            "Verification Steps": "verification_steps"
+          }
+        }
+      }
+    },
+    {
+      "body_parser_config": {
+        "sections": {
+          "required": ["Goal", "Acceptance Criteria"],
+          "recommended": ["Context"],
+          "optional": ["Technical Notes", "Dependencies"],
+          "mapping": {
+            "Goal": "goal",
+            "Acceptance Criteria": "verification_steps",
+            "Context": "context.task_scope",
+            "Technical Notes": "context.technical_notes",
+            "Dependencies": "context.dependencies"
+          }
+        },
+        "validation": {
+          "strict_mode": true,
+          "allow_unknown_sections": false
+        }
+      }
+    }
+  ]
+}

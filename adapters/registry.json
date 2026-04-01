@@ -1,4 +1,4 @@
-{
+﻿{
   "$schema": "http://json-schema.org/draft-2020-12/schema#",
   "title": "OpenCode Expert Package Adapter Registry",
   "description": "Registry of all adapters for programmatic discovery",
@@ -22,8 +22,8 @@
         "description": "CLI/Local command-line adapter for local development workflow",
         "dispatch_mapping": {
           "input_format": "CLI arguments (process.argv)",
-          "output_format": "Dispatch Payload (io-contract.md §1)",
-          "mapping_doc": "ADAPTERS.md §Orchestrator Adapter §CLI/Local"
+          "output_format": "Dispatch Payload (io-contract.md Â§1)",
+          "mapping_doc": "ADAPTERS.md Â§Orchestrator Adapter Â§CLI/Local"
         },
         "escalation_mapping": {
           "channel": "console",
@@ -49,7 +49,7 @@
         "description": "GitHub Issue orchestrator adapter - receives tasks via GitHub Issues",
         "dispatch_mapping": {
           "input_format": "GitHub Issue (number, body, labels)",
-          "output_format": "Dispatch Payload (io-contract.md §1)",
+          "output_format": "Dispatch Payload (io-contract.md Â§1)",
           "mapping_doc": "adapters/github-issue/README.md"
         },
         "escalation_mapping": {
@@ -85,7 +85,7 @@
         "description": "OpenClaw orchestrator adapter - bidirectional communication between OpenClaw manager and Expert Pack",
         "dispatch_mapping": {
           "input_format": "OpenClaw dispatch message",
-          "output_format": "Dispatch Payload (io-contract.md §1)",
+          "output_format": "Dispatch Payload (io-contract.md Â§1)",
           "mapping_doc": "adapters/openclaw/README.md"
         },
         "escalation_mapping": {
@@ -123,9 +123,9 @@
         "workspace_type": "local_repo",
         "description": "Local filesystem workspace adapter for file output",
         "artifact_mapping": {
-          "input_format": "Execution Result (io-contract.md §2)",
+          "input_format": "Execution Result (io-contract.md Â§2)",
           "output_format": "Local filesystem files",
-          "mapping_doc": "ADAPTERS.md §Workspace Adapter §Local Repo"
+          "mapping_doc": "ADAPTERS.md Â§Workspace Adapter Â§Local Repo"
         },
         "escalation_mapping": {
           "channel": "console",
@@ -155,7 +155,7 @@
         "workspace_type": "github_repo",
         "description": "GitHub PR workspace adapter for outputting execution results to GitHub Pull Requests",
         "artifact_mapping": {
-          "input_format": "Execution Result (io-contract.md §2)",
+          "input_format": "Execution Result (io-contract.md Â§2)",
           "output_format": "GitHub PR (files, commits)",
           "mapping_doc": "adapters/github-pr/README.md"
         },
@@ -192,7 +192,7 @@
         "workspace_type": "external_system",
         "description": "External system workspace adapter (design only)",
         "artifact_mapping": {
-          "input_format": "Execution Result (io-contract.md §2)",
+          "input_format": "Execution Result (io-contract.md Â§2)",
           "output_format": "External API",
           "mapping_doc": "docs/adapters/external-adapter-design.md"
         },
@@ -212,11 +212,11 @@
   "interfaces": {
     "OrchestratorAdapter": {
       "definition": "adapters/interfaces/orchestrator-adapter.interface.ts",
-      "contract_reference": "io-contract.md §8"
+      "contract_reference": "io-contract.md Â§8"
     },
     "WorkspaceAdapter": {
       "definition": "adapters/interfaces/workspace-adapter.interface.ts",
-      "contract_reference": "io-contract.md §8"
+      "contract_reference": "io-contract.md Â§8"
     }
   },
   
@@ -224,6 +224,12 @@
     "workspace_configuration": {
       "definition": "adapters/schemas/workspace-configuration.schema.json",
       "description": "JSON Schema for workspace adapter configuration"
+    },
+    "body_parser_config": {
+      "definition": "adapters/schemas/body-parser-config.schema.json",
+      "description": "JSON Schema for configurable Issue Body section parsing",
+      "used_by": ["github-issue adapter"],
+      "contract_reference": "io-contract.md §1"
     }
   },
   
@@ -253,8 +259,8 @@
       "single_adapter_per_execution": true
     },
     "contract_consumption": {
-      "orchestrator": "io-contract.md §1",
-      "workspace": "io-contract.md §2, §3",
+      "orchestrator": "io-contract.md Â§1",
+      "workspace": "io-contract.md Â§2, Â§3",
       "validation_tool": "contracts/pack/validate-schema.js"
     },
     "version_compatibility": {
@@ -270,3 +276,4 @@
     }
   }
 }
+

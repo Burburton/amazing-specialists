@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "adapters/schemas/template-mapping.schema.json",
+  "title": "Template Mapping Configuration Schema",
+  "description": "Schema for mapping GitHub Issue Template names to execution commands in GitHub Issue Adapter",
+  "type": "object",
+  "properties": {
+    "template_mapping": {
+      "type": "object",
+      "description": "Mapping from Issue Template names to default execution commands",
+      "additionalProperties": {
+        "type": "string",
+        "description": "Command to execute when Issue uses this template",
+        "minLength": 1,
+        "maxLength": 64,
+        "pattern": "^[a-z][a-z0-9-]+$"
+      },
+      "propertyNames": {
+        "minLength": 1,
+        "maxLength": 128,
+        "pattern": "^[a-z][a-z0-9-]+\\.md$"
+      }
+    },
+    "priority_rules": {
+      "type": "object",
+      "description": "Priority rules for command determination",
+      "properties": {
+        "explicit_label_priority": {
+          "type": "boolean",
+          "description": "Whether explicit command: labels take priority over template mapping",
+          "default": true
+        },
+        "template_fallback": {
+          "type": "boolean",
+          "description": "Whether to use template mapping as fallback when no explicit command",
+          "default": true
+        },
+        "default_command": {
+          "type": "string",
+          "description": "Default command when neither label nor template provides a command",
+          "default": "implement-task",
+          "pattern": "^([a-z][a-z0-9-]+|)$"
+        }
+      }
+    },
+    "inference_rules": {
+      "type": "object",
+      "description": "Rules for inferring template type from Issue content",
+      "properties": {
+        "infer_from_body_structure": {
+          "type": "boolean",
+          "description": "Whether to infer template from Issue body structure patterns",
+          "default": false
+        },
+        "infer_from_labels": {
+          "type": "boolean",
+          "description": "Whether to infer template from Issue label patterns",
+          "default": true
+        },
+        "label_pattern_mapping": {
+          "type": "object",
+          "description": "Mapping from label patterns to inferred templates",
+          "additionalProperties": {
+            "type": "string",
+            "description": "Template name inferred from this label pattern",
+            "pattern": "^[a-z][a-z0-9-]+\\.md$"
+          }
+        }
+      }
+    }
+  },
+  "required": ["template_mapping"],
+  "additionalProperties": true,
+  
+  "examples": [
+    {
+      "template_mapping": {
+        "task.md": "implement-task",
+        "bug.md": "bugfix-workflow",
+        "design.md": "design-task",
+        "refactor.md": "refactor-task",
+        "test.md": "test-design"
+      },
+      "priority_rules": {
+        "explicit_label_priority": true,
+        "template_fallback": true,
+        "default_command": "implement-task"
+      }
+    },
+    {
+      "template_mapping": {
+        "feature-request.md": "feature-implementation",
+        "bug-report.md": "bugfix-workflow",
+        "documentation.md": "docs-update"
+      },
+      "priority_rules": {
+        "explicit_label_priority": true,
+        "default_command": "implement-task"
+      },
+      "inference_rules": {
+        "infer_from_labels": true,
+        "label_pattern_mapping": {
+          "type:bug": "bug-report.md",
+          "type:feature": "feature-request.md",
+          "type:docs": "documentation.md"
+        }
+      }
+    }
+  ]
+}

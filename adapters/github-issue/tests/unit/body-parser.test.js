@@ -1,4 +1,4 @@
-const { BodyParser, EXPECTED_SECTIONS } = require('../../body-parser');
+﻿const { BodyParser, EXPECTED_SECTIONS } = require('../../body-parser');
 
 describe('BodyParser', () => {
   let parser;
@@ -885,6 +885,207 @@ Single line goal.`;
 
       expect(result.context.task_scope).toBe('Windows line ending context.');
       expect(result.goal).toBe('Windows goal.');
+    });
+  });
+
+  describe('parseWithConfig() - Configuration-Driven Parsing', () => {
+    describe('Default configuration behavior', () => {
+      test('should use DEFAULT_SECTIONS when config is null', () => {
+        const body = `## Goal
+A goal.
+
+## Context
+Context content.
+
+## Verification Steps
+- Step 1
+- Step 2`;
+
+        const result = parser.parseWithConfig(body, null);
+
+        expect(result.goal).toBe('A goal.');
+        expect(result.context.task_scope).toBe('Context content.');
+        expect(result.verification_steps).toEqual(['Step 1', 'Step 2']);
+      });
+
+      test('should use DEFAULT_SECTIONS when config is undefined', () => {
+        const body = `## Goal
+A goal.`;
+
+        const result = parser.parseWithConfig(body, undefined);
+
+        expect(result.goal).toBe('A goal.');
+        expect(result.parsed_sections).toContain('Goal');
+      });
+
+      test('should use DEFAULT_SECTIONS when body_parser_config is missing', () => {
+        const body = `## Goal
+A goal.
+
+## Verification Steps
+- Test step`;
+
+        const result = parser.parseWithConfig(body, {});
+
+        expect(result.verification_steps).toEqual(['Test step']);
+      });
+    });
+
+    describe('Custom configuration behavior', () => {
+      test('should parse with custom required sections', () => {
+        const body = `## Goal
+A goal.
+
+## Context
+Context.
+
+## Custom Section
+Custom content.`;
+
+        const config = {
+          body_parser_config: {
+            sections: {
+              required: ['Goal', 'Custom Section'],
+              optional: [],
+              mapping: {
+                'Goal': 'goal',
+                'Custom Section': 'custom_section'
+              }
+            }
+          }
+        };
+
+        const result = parser.parseWithConfig(body, config);
+
+        expect(result.missing_required).toEqual([]);
+        expect(result.custom_section).toBe('Custom content.');
+      });
+
+      test('should report missing custom required sections', () => {
+        const body = `## Goal
+A goal.`;
+
+        const config = {
+          body_parser_config: {
+            sections: {
+              required: ['Goal', 'Mandatory Section'],
+              optional: [],
+              mapping: {}
+            }
+          }
+        };
+
+        const result = parser.parseWithConfig(body, config);
+
+        expect(result.missing_required).toContain('Mandatory Section');
+      });
+    });
+
+    describe('Verification Steps section', () => {
+      test('should parse Verification Steps as list items', () => {
+        const body = `## Goal
+A goal.
+
+## Verification Steps
+- Build succeeds
+- Tests pass`;
+
+        const result = parser.parseWithConfig(body, null);
+
+        expect(result.verification_steps).toEqual(['Build succeeds', 'Tests pass']);
+      });
+
+      test('should parse Acceptance Criteria as verification_steps', () => {
+        const body = `## Goal
+A goal.
+
+## Acceptance Criteria
+- Criteria 1`;
+
+        const result = parser.parseWithConfig(body, null);
+
+        expect(result.verification_steps).toEqual(['Criteria 1']);
+      });
+    });
+
+    describe('Section mapping to nested fields', () => {
+      test('should map Context to context.task_scope', () => {
+        const body = `## Goal
+A goal.
+
+## Context
+Task scope content.`;
+
+        const result = parser.parseWithConfig(body, null);
+
+        expect(result.context.task_scope).toBe('Task scope content.');
+      });
+
+      test('should map custom section to nested field', () => {
+        const body = `## Goal
+A goal.
+
+## Technical Notes
+Some notes.`;
+
+        const config = {
+          body_parser_config: {
+            sections: {
+              required: ['Goal'],
+              optional: ['Technical Notes'],
+              mapping: {
+                'Technical Notes': 'context.technical_notes'
+              }
+            }
+          }
+        };
+
+        const result = parser.parseWithConfig(body, config);
+
+        expect(result.context.technical_notes).toBe('Some notes.');
+      });
+    });
+
+    describe('Configuration fallback behavior', () => {
+      test('should use DEFAULT_SECTIONS mapping when mapping is missing', () => {
+        const body = `## Goal
+A goal.
+
+## Constraints
+- C1`;
+
+        const config = {
+          body_parser_config: {
+            sections: {
+              required: ['Goal'],
+              optional: ['Constraints']
+            }
+          }
+        };
+
+        const result = parser.parseWithConfig(body, config);
+
+        expect(result.constraints).toEqual(['C1']);
+      });
+
+      test('should handle empty body with config', () => {
+        const result = parser.parseWithConfig('', { body_parser_config: { sections: { required: ['Goal'] } } });
+
+        expect(result.missing_required).toContain('Goal');
+      });
+    });
+  });
+
+  describe('DEFAULT_SECTIONS export', () => {
+    test('should export DEFAULT_SECTIONS constant', () => {
+      const { DEFAULT_SECTIONS } = require('../../body-parser');
+      expect(DEFAULT_SECTIONS).toBeDefined();
+      expect(DEFAULT_SECTIONS.required).toContain('Goal');
+    });
+
+    test('should have Verification Steps in mapping', () => {
+      const { DEFAULT_SECTIONS } = require('../../body-parser');
+      expect(DEFAULT_SECTIONS.mapping['Verification Steps']).toBe('verification_steps');
     });
   });
 });

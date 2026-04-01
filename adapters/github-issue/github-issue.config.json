@@ -31,6 +31,27 @@
       "delivery_header": "X-GitHub-Delivery"
     },
     
+    "body_parser_config": {
+      "sections": {
+        "required": ["Goal"],
+        "recommended": ["Context", "Expected Outputs"],
+        "optional": ["Constraints", "Inputs", "Acceptance Criteria", "Verification Steps"],
+        "mapping": {
+          "Context": "context.task_scope",
+          "Goal": "goal",
+          "Constraints": "constraints",
+          "Inputs": "inputs",
+          "Expected Outputs": "expected_outputs",
+          "Acceptance Criteria": "verification_steps",
+          "Verification Steps": "verification_steps"
+        }
+      },
+      "validation": {
+        "strict_mode": false,
+        "allow_unknown_sections": true
+      }
+    },
+    
     "label_mappings": {
       "milestone_prefix": "milestone:",
       "role_prefix": "role:",
@@ -75,6 +96,15 @@
         "issues.assigned",
         "issues.unassigned"
       ]
+    },
+    
+    "template_mapping": {
+      "task.md": "implement-task",
+      "bug.md": "bugfix-workflow",
+      "bugfix.md": "bugfix-workflow",
+      "design.md": "design-task",
+      "refactor.md": "refactor-task",
+      "test.md": "test-task"
     }
   },
   

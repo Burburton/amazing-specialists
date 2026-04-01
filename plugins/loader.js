@@ -93,6 +93,25 @@ function loadPluginMetadata(pluginId) {
   }
 }
 
+function getCommands(pluginId) {
+  const plugin = loadPluginMetadata(pluginId);
+  if (!plugin) {
+    return {};
+  }
+  return plugin.commands || {};
+}
+
+function loadPlugin(pluginId) {
+  const plugin = loadPluginMetadata(pluginId);
+  if (!plugin) {
+    return null;
+  }
+  return {
+    ...plugin,
+    commands: plugin.commands || {}
+  };
+}
+
 function checkCompatibility(plugin, coreVersion) {
   const range = plugin.compatibility?.core_version || '>=1.0.0';
   
@@ -683,3 +702,11 @@ function main() {
 }
 
 main();
+
+module.exports = {
+  loadPluginMetadata,
+  loadPlugin,
+  getCommands,
+  checkCompatibility,
+  loadRegistry
+};

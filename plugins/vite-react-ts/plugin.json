@@ -10,8 +10,27 @@
   },
   "skills": [
     "vite-setup",
-    "css-module-test"
+    "css-module-test",
+    "run-tests",
+    "run-build"
   ],
+  "commands": {
+    "build": {
+      "cmd": "npm run build",
+      "env": {},
+      "description": "Build for production"
+    },
+    "test": {
+      "cmd": "npm test",
+      "env": { "CI": "true" },
+      "description": "Run unit tests with Vitest"
+    },
+    "lint": {
+      "cmd": "npm run lint",
+      "env": {},
+      "description": "Run ESLint"
+    }
+  },
   "templates": [
     "tsconfig.app.json",
     "tsconfig.node.json",

@@ -140,10 +140,75 @@ plugins/
 | `compatibility.core_version` | string | 是 | 核心版本兼容范围 |
 | `compatibility.node_version` | string | 可选 | Node.js 版本要求 |
 | `skills` | array | 推荐 | Plugin 提供的 skill 名称列表 |
+| `commands` | object | 推荐 | Plugin 提供的执行命令配置 |
 | `templates` | array | 推荐 | Plugin 提供的模板文件列表 |
 | `hooks` | array | 推荐 | Plugin 提供的 hook 名称列表 |
 | `dependencies` | array | 可选 | Plugin 依赖（其他 plugin） |
 | `tags` | array | 推荐 | 搜索/分类标签 |
+
+---
+
+## commands 字段格式
+
+Plugin 可定义技术栈特定的执行命令，供 Plugin skills 使用。
+
+### 格式
+
+```json
+{
+  "commands": {
+    "build": {
+      "cmd": "npm run build",
+      "env": {},
+      "description": "Build for production"
+    },
+    "test": {
+      "cmd": "npm test",
+      "env": { "CI": "true" },
+      "description": "Run unit tests"
+    },
+    "lint": {
+      "cmd": "npm run lint",
+      "env": {},
+      "description": "Run linter"
+    }
+  }
+}
+```
+
+### commands 字段说明
+
+| 字段 | 类型 | 必需 | 说明 |
+|------|------|------|------|
+| `commands` | object | 推荐 | 执行命令配置对象 |
+| `commands.{name}` | object | - | 单个命令配置（name: build/test/lint等） |
+| `commands.{name}.cmd` | string | 是 | 执行命令字符串 |
+| `commands.{name}.env` | object | 可选 | 环境变量配置 |
+| `commands.{name}.description` | string | 推荐 | 命令用途描述 |
+
+### 常见命令类型
+
+| 命令名 | 用途 | 示例 |
+|--------|------|------|
+| `build` | 生产构建 | `npm run build`, `cargo build --release` |
+| `test` | 运行测试 | `npm test`, `pytest`, `cargo test` |
+| `lint` | 代码检查 | `npm run lint`, `ruff check`, `golangci-lint run` |
+| `dev` | 开发服务器 | `npm run dev`, `cargo watch` |
+| `clean` | 清理构建产物 | `npm run clean`, `cargo clean` |
+
+### Loader 加载 commands
+
+Plugin loader 提供 `getCommands()` 方法读取 commands 配置：
+
+```javascript
+const loader = require('./plugins/loader');
+const commands = loader.getCommands('vite-react-ts');
+// Returns: { build: {...}, test: {...}, lint: {...} }
+```
+
+### 后向兼容
+
+若 Plugin 未定义 `commands` 字段，loader 返回空对象 `{}`。
 
 ---
 

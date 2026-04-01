@@ -195,10 +195,118 @@ Mock 原则：
 4. 避免逻辑（if/for）
 
 ### Step 6: 运行验证
-1. 运行所有测试
-2. 确保全部通过
-3. 检查覆盖率
-4. 修复问题
+
+#### 6.1 检测测试命令
+
+检测项目中可用的测试命令：
+
+**优先级顺序**：
+1. Plugin 提供的 `commands.test` (如 `plugins/vite-react-ts/plugin.json`)
+2. `package.json` 的 `scripts.test`
+3. 框架默认命令 (`npm test`, `pytest`, `go test`)
+
+```javascript
+// 检测 Plugin commands
+const plugin = require('plugins/vite-react-ts/plugin.json');
+if (plugin.commands?.test) {
+  testCmd = plugin.commands.test.cmd;  // "npm test"
+  testEnv = plugin.commands.test.env;  // { CI: "true" }
+}
+
+// 或从 package.json 检测
+const pkg = require('./package.json');
+const testScript = pkg.scripts?.test;
+```
+
+**记录检测到的命令**，用于后续步骤。
+
+#### 6.2 执行测试
+
+**调用 Plugin skill** (如果可用):
+
+```
+Use Plugin skill: run-tests (from vite-react-ts plugin)
+```
+
+**或手动执行测试命令**:
+
+```bash
+# Vitest/Jest
+npm test
+
+# 或带覆盖率
+npm test -- --coverage
+
+# pytest
+pytest --cov=src
+
+# go test
+go test ./... -cover
+```
+
+**捕获测试输出**：
+- 标准输出 (stdout)
+- 标准错误 (stderr)
+- 退出码 (exit code)
+- 执行时间
+
+#### 6.3 解析结果
+
+解析测试输出，提取关键指标：
+
+**Vitest/Jest JSON 格式**:
+```json
+{
+  "numPassedTests": 10,
+  "numFailedTests": 0,
+  "coverageMap": {
+    "total": { "lines": { "total": 100, "covered": 85 } }
+  }
+}
+```
+
+**提取指标**：
+- 通过/失败数量
+- 覆盖率百分比 (语句/分支/函数/行)
+- 失败测试详情
+
+**失败分类** (BR-004):
+- **Implementation issue**: 代码逻辑错误
+- **Test issue**: 测试设计/执行问题
+- **Environment issue**: 测试环境阻塞
+- **Design/spec issue**: 需求模糊
+- **Dependency/upstream issue**: 外部依赖失败
+
+#### 6.4 生成报告
+
+生成 verification-report (TC-001):
+
+```yaml
+verification_report:
+  dispatch_id: string
+  task_id: string
+  
+  tests_added_or_run:
+    test_files: string[]
+    total_tests: number
+    passed: number
+    failed: number
+    coverage_percent: number
+    
+  test_failures:
+    - test_file: string
+      test_name: string
+      error_type: string
+      error_message: string
+      classification: implementation | test | environment | design | dependency
+      
+  verification_status: PASS | FAIL | PARTIAL
+  
+  recommendations:
+    - string
+```
+
+**报告位置**: `specs/{feature-id}/verification-report.md`
 
 ## Output Format
 

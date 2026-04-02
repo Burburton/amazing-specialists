@@ -1,11 +1,9 @@
-﻿{
+{
   "$schema": "http://json-schema.org/draft-2020-12/schema#",
   "title": "OpenCode Expert Package Adapter Registry",
   "description": "Registry of all adapters for programmatic discovery",
-  
   "registry_version": "1.0.0",
-  "last_updated": "2026-03-29",
-  
+  "last_updated": "2026-04-03",
   "adapters": {
     "orchestrator": [
       {
@@ -17,8 +15,13 @@
         "path": "adapters/cli-local/",
         "config_file": "cli-local.config.json",
         "interface": "OrchestratorAdapter",
-        "compatible_profiles": ["minimal", "full"],
-        "compatible_workspaces": ["local-repo"],
+        "compatible_profiles": [
+          "minimal",
+          "full"
+        ],
+        "compatible_workspaces": [
+          "local-repo"
+        ],
         "description": "CLI/Local command-line adapter for local development workflow",
         "dispatch_mapping": {
           "input_format": "CLI arguments (process.argv)",
@@ -44,8 +47,14 @@
         "path": "adapters/github-issue/",
         "config_file": "github-issue.config.json",
         "interface": "OrchestratorAdapter",
-        "compatible_profiles": ["minimal", "full"],
-        "compatible_workspaces": ["github-pr", "local-repo"],
+        "compatible_profiles": [
+          "minimal",
+          "full"
+        ],
+        "compatible_workspaces": [
+          "github-pr",
+          "local-repo"
+        ],
         "description": "GitHub Issue orchestrator adapter - receives tasks via GitHub Issues",
         "dispatch_mapping": {
           "input_format": "GitHub Issue (number, body, labels)",
@@ -80,8 +89,15 @@
         "path": "adapters/openclaw/",
         "config_file": "openclaw.config.json",
         "interface": "OrchestratorAdapter",
-        "compatible_profiles": ["minimal", "full"],
-        "compatible_workspaces": ["github-pr", "local-repo", "external-system"],
+        "compatible_profiles": [
+          "minimal",
+          "full"
+        ],
+        "compatible_workspaces": [
+          "github-pr",
+          "local-repo",
+          "external-system"
+        ],
         "description": "OpenClaw orchestrator adapter - bidirectional communication between OpenClaw manager and Expert Pack",
         "dispatch_mapping": {
           "input_format": "OpenClaw dispatch message",
@@ -119,7 +135,10 @@
         "path": "adapters/local-repo/",
         "config_file": "local-repo.config.json",
         "interface": "WorkspaceAdapter",
-        "compatible_profiles": ["minimal", "full"],
+        "compatible_profiles": [
+          "minimal",
+          "full"
+        ],
         "workspace_type": "local_repo",
         "description": "Local filesystem workspace adapter for file output",
         "artifact_mapping": {
@@ -151,7 +170,10 @@
         "path": "adapters/github-pr/",
         "config_file": "github-pr.config.json",
         "interface": "WorkspaceAdapter",
-        "compatible_profiles": ["minimal", "full"],
+        "compatible_profiles": [
+          "minimal",
+          "full"
+        ],
         "workspace_type": "github_repo",
         "description": "GitHub PR workspace adapter for outputting execution results to GitHub Pull Requests",
         "artifact_mapping": {
@@ -188,7 +210,9 @@
         "status": "design-only",
         "design_doc": "docs/adapters/external-adapter-design.md",
         "interface": "WorkspaceAdapter",
-        "compatible_profiles": ["full"],
+        "compatible_profiles": [
+          "full"
+        ],
         "workspace_type": "external_system",
         "description": "External system workspace adapter (design only)",
         "artifact_mapping": {
@@ -208,7 +232,6 @@
       }
     ]
   },
-  
   "interfaces": {
     "OrchestratorAdapter": {
       "definition": "adapters/interfaces/orchestrator-adapter.interface.ts",
@@ -217,9 +240,12 @@
     "WorkspaceAdapter": {
       "definition": "adapters/interfaces/workspace-adapter.interface.ts",
       "contract_reference": "io-contract.md Â§8"
+    },
+    "PlatformAdapter": {
+      "definition": "adapters/interfaces/platform-adapter.interface.ts",
+      "contract_reference": "ADAPTERS.md Section Platform Adapter"
     }
   },
-  
   "schemas": {
     "workspace_configuration": {
       "definition": "adapters/schemas/workspace-configuration.schema.json",
@@ -228,11 +254,12 @@
     "body_parser_config": {
       "definition": "adapters/schemas/body-parser-config.schema.json",
       "description": "JSON Schema for configurable Issue Body section parsing",
-      "used_by": ["github-issue adapter"],
+      "used_by": [
+        "github-issue adapter"
+      ],
       "contract_reference": "io-contract.md §1"
     }
   },
-  
   "shared_utilities": {
     "version_check": {
       "path": "adapters/shared/version-check.js",
@@ -251,7 +278,6 @@
       "description": "Profile to workspace compatibility mapping"
     }
   },
-  
   "rules": {
     "adapter_isolation": {
       "orchestrator_workspace": "independent",
@@ -274,6 +300,36 @@
       "ir_003": "Profile version compatibility check",
       "ir_004": "Profile-adapter interface"
     }
-  }
+  },
+  "platform_adapters": [
+    {
+      "adapter_id": "opencode",
+      "adapter_type": "platform",
+      "status": "available",
+      "version": "1.0.0",
+      "path": "adapters/platform/opencode/",
+      "config_files": [
+        "role-mapping.json",
+        "capabilities.json"
+      ],
+      "interface": "PlatformAdapter",
+      "description": "OpenCode platform adapter - provides role-to-category mapping for OpenCode runtime",
+      "role_mapping": {
+        "architect": "deep",
+        "developer": "unspecified-high",
+        "tester": "unspecified-high",
+        "reviewer": "unspecified-high",
+        "docs": "writing",
+        "security": "unspecified-high"
+      },
+      "known_issues": [
+        {
+          "issue_id": "P-001",
+          "description": "subagent_type parameter not supported",
+          "workaround": "Use category + load_skills instead",
+          "reference": "docs/platform-adapter-guide.md#known-issues"
+        }
+      ]
+    }
+  ]
 }
-

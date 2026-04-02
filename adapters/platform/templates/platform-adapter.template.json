@@ -1,0 +1,84 @@
+{
+  "_comment": "Platform Adapter Template - Copy this file and customize for your platform",
+  
+  "platform_id": "your-platform-id",
+  "version": "1.0.0",
+  
+  "role_mapping": {
+    "_comment": "Map each 6-role to your platform's category",
+    
+    "architect": {
+      "category": "deep",
+      "default_skills": [
+        "architect/requirement-to-design",
+        "architect/module-boundary-design",
+        "architect/tradeoff-analysis"
+      ],
+      "_comment_category": "Choose from: deep, ultrabrain, visual-engineering, writing, quick, unspecified-high, unspecified-low"
+    },
+    
+    "developer": {
+      "category": "unspecified-high",
+      "default_skills": [
+        "developer/feature-implementation",
+        "developer/bugfix-workflow",
+        "developer/code-change-selfcheck"
+      ]
+    },
+    
+    "tester": {
+      "category": "unspecified-high",
+      "default_skills": [
+        "tester/unit-test-design",
+        "tester/regression-analysis",
+        "tester/edge-case-matrix"
+      ]
+    },
+    
+    "reviewer": {
+      "category": "unspecified-high",
+      "default_skills": [
+        "reviewer/code-review-checklist",
+        "reviewer/spec-implementation-diff",
+        "reviewer/reject-with-actionable-feedback"
+      ]
+    },
+    
+    "docs": {
+      "category": "writing",
+      "default_skills": [
+        "docs/readme-sync",
+        "docs/changelog-writing",
+        "docs/issue-status-sync"
+      ]
+    },
+    
+    "security": {
+      "category": "unspecified-high",
+      "default_skills": [
+        "security/auth-and-permission-review",
+        "security/input-validation-review"
+      ]
+    }
+  },
+  
+  "capabilities": {
+    "_comment": "Declare your platform's capabilities",
+    
+    "supports_background_task": true,
+    "supports_parallel_agents": true,
+    "max_context_length": 200000,
+    
+    "_comment_additional": "Add any platform-specific capabilities below",
+    "platform_specific_capability": "value"
+  },
+  
+  "known_issues": [
+    {
+      "_comment": "Document any known issues with workarounds",
+      "issue": "Description of the issue",
+      "workaround": "How to work around it",
+      "reference": "Link to documentation"
+    }
+  ]
+}

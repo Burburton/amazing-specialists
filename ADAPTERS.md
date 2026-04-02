@@ -365,6 +365,94 @@ interface WorkspaceAdapter {
 
 ---
 
+## Platform Adapter Definition
+
+Platform Adapter 是专家包与 AI 平台运行时之间的适配层，解决角色模型映射和任务派发抽象问题。
+
+### Purpose
+
+| Problem | Platform Adapter Solution |
+|---------|---------------------------|
+| **角色模型不匹配** | 专家包 6-role 模型 → 平台 category 映射 |
+| **任务派发困难** | `task(subagent_type="tester")` → `task(category, load_skills)` |
+| **缺乏统一抽象** | 提供统一接口，隔离平台差异 |
+
+### Responsibilities
+
+| Responsibility | Description | Output |
+|----------------|-------------|--------|
+| **Role Mapping** | 将 6-role 映射到平台支持的 category | `mapRoleToCategory(role) → category` |
+| **Skill Resolution** | 解析角色对应的默认 skills | `getDefaultSkills(role) → skill[]` |
+| **Capabilities** | 声明平台能力限制 | `getCapabilities() → capabilities` |
+| **Issue Workaround** | 提供已知问题的 workaround | Known issue documentation |
+
+### Interface Contract
+
+Platform Adapter 必须实现以下接口（详见 `adapters/interfaces/platform-adapter.interface.ts`）：
+
+```typescript
+interface PlatformAdapter {
+  // 核心方法
+  mapRoleToCategory(role: Role): Category;
+  getDefaultSkills(role: Role): SkillId[];
+  getCapabilities(): PlatformCapabilities;
+  
+  // 元数据
+  readonly platform_id: string;
+  readonly version: string;
+  readonly role_mapping: Record<Role, RoleMapping>;
+}
+```
+
+### Available: OpenCode Platform Adapter
+
+| Aspect | Implementation |
+|--------|----------------|
+| **Type** | Platform |
+| **Status** | Available |
+| **Version** | 1.0.0 |
+| **Path** | `adapters/platform/opencode/` |
+| **Config** | `role-mapping.json`, `capabilities.json` |
+| **README** | `adapters/platform/opencode/README.md` |
+
+**Role Mapping (OpenCode)**:
+
+| Role | Category | Default Skills |
+|------|----------|----------------|
+| architect | deep | architect/requirement-to-design, architect/module-boundary-design, architect/tradeoff-analysis |
+| developer | unspecified-high | developer/feature-implementation, developer/bugfix-workflow, developer/code-change-selfcheck |
+| tester | unspecified-high | tester/unit-test-design, tester/regression-analysis, tester/edge-case-matrix |
+| reviewer | unspecified-high | reviewer/code-review-checklist, reviewer/spec-implementation-diff, reviewer/reject-with-actionable-feedback |
+| docs | writing | docs/readme-sync, docs/changelog-writing, docs/issue-status-sync |
+| security | unspecified-high | security/auth-and-permission-review, security/input-validation-review |
+
+**Known Issue (P-001)**:
+
+| Issue | Description | Workaround |
+|-------|-------------|------------|
+| subagent_type not supported | `task(subagent_type="tester")` returns "Unknown agent: tester" | Use `category` + `load_skills` instead |
+
+### Configuration Priority
+
+配置加载优先级（从高到低）：
+
+1. **项目级覆盖** - `.opencode/platform-override.json`
+2. **Plugin 配置** - `plugin.json` → `platform_mapping.{platform}.{role}`
+3. **Platform Adapter 默认** - `adapters/platform/{platform-id}/role-mapping.json`
+4. **核心层默认行为** - 兜底处理
+
+### Plugin Platform Mapping Extension
+
+Plugin 可通过 `platform_mapping` 字段扩展角色映射。详见 `plugins/PLUGIN-SPEC.md` §Platform Mapping。
+
+### Creating New Platform Adapter
+
+1. 复制模板
+2. 编辑配置，填写 role → category 映射
+3. 创建 `capabilities.json` 声明平台能力
+4. 创建 `README.md` 说明平台特性
+5. 更新 `adapters/registry.json` 注册新 adapter
+
 ## Boundary Rules
 
 ### Orchestrator vs Workspace Boundary

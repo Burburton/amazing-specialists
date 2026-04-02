@@ -190,6 +190,45 @@ Priority order for feature work:
 - Every completed task must be validated against acceptance criteria or derived tests.
 - Implement one task at a time unless explicitly marked parallel-safe.
 
+## OpenCode Platform Adaptation（OpenCode 平台适配）
+
+### Background
+
+OpenCode 平台不支持 `task(subagent_type="tester")` 语法，需要通过 `category` + `load_skills` 参数实现角色派发。Platform Adapter 提供统一抽象来解决此问题。
+
+### Role → Category Mapping
+
+| Role | Category | Default Skills |
+|------|----------|----------------|
+| architect | deep | architect/requirement-to-design, architect/module-boundary-design, architect/tradeoff-analysis |
+| developer | unspecified-high | developer/feature-implementation, developer/bugfix-workflow, developer/code-change-selfcheck |
+| tester | unspecified-high | tester/unit-test-design, tester/regression-analysis, tester/edge-case-matrix |
+| reviewer | unspecified-high | reviewer/code-review-checklist, reviewer/spec-implementation-diff, reviewer/reject-with-actionable-feedback |
+| docs | writing | docs/readme-sync, docs/changelog-writing, docs/issue-status-sync |
+| security | unspecified-high | security/auth-and-permission-review, security/input-validation-review |
+
+### Correct Usage
+
+```typescript
+// ❌ WRONG: subagent_type not supported
+task(subagent_type="tester", prompt="Run tests...")
+
+// ✅ CORRECT: Use category + load_skills
+task(
+  category="unspecified-high",
+  load_skills=["tester/unit-test-design", "tester/regression-analysis", "tester/edge-case-matrix"],
+  prompt="Run tests..."
+)
+```
+
+### Customization
+
+**项目级覆盖**：创建 `.opencode/platform-override.json` 文件覆盖默认映射。
+
+**Plugin 扩展**：在 `plugin.json` 中添加 `platform_mapping` 字段扩展特定角色的 skills。
+
+详见 `docs/platform-adapter-guide.md`。
+
 ## Execution Discipline
 Always summarize:
 - what was changed

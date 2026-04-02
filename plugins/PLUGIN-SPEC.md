@@ -145,8 +145,67 @@ plugins/
 | `hooks` | array | 推荐 | Plugin 提供的 hook 名称列表 |
 | `dependencies` | array | 可选 | Plugin 依赖（其他 plugin） |
 | `tags` | array | 推荐 | 搜索/分类标签 |
+| `platform_mapping` | object | 可选 | 平台特定 skill 扩展映射（见下方） |
 
 ---
+
+## platform_mapping 字段格式
+
+Plugin 可通过 `platform_mapping` 字段扩展平台特定角色技能映射。这允许 Plugin 在不同平台上为特定角色添加额外的 skills。
+
+### 格式
+
+```json
+{
+  "platform_mapping": {
+    "{platform-id}": {
+      "{role}": {
+        "additional_skills": ["skill-1", "skill-2"],
+        "override_category": "category-name"
+      }
+    }
+  }
+}
+```
+
+### 字段说明
+
+| 字段 | 类型 | 必需 | 说明 |
+|------|------|------|------|
+| `platform_mapping` | object | 可选 | 平台映射根对象 |
+| `platform_mapping.{platform-id}` | object | - | 平台特定配置（如 `opencode`） |
+| `platform_mapping.{platform-id}.{role}` | object | - | 角色特定配置（6-role 之一） |
+| `additional_skills` | array | 推荐 | 要添加到该角色的额外 skills |
+| `override_category` | string | 可选 | 覆盖默认 category（谨慎使用） |
+
+### 示例
+
+```json
+{
+  "id": "vite-react-ts",
+  "skills": ["vite-setup", "css-module-test", "run-tests", "run-build"],
+  "platform_mapping": {
+    "opencode": {
+      "tester": {
+        "additional_skills": ["run-tests", "run-build"]
+      }
+    }
+  }
+}
+```
+
+此配置表示：在 OpenCode 平台上，`tester` 角色将额外获得 `run-tests` 和 `run-build` skills。
+
+### 配置优先级
+
+角色 skills 的加载优先级（从高到低）：
+
+1. **项目级覆盖** - `.opencode/platform-override.json`
+2. **Plugin 配置** - `plugin.json` → `platform_mapping.{platform}.{role}`
+3. **Platform Adapter 默认** - `adapters/platform/{platform-id}/role-mapping.json`
+4. **核心层默认行为** - 兜底处理
+
+详见 `docs/platform-adapter-guide.md`。
 
 ## commands 字段格式
 

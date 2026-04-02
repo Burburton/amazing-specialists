@@ -1,0 +1,70 @@
+{
+  "platform_id": "opencode",
+  "version": "1.0.0",
+  "role_mapping": {
+    "architect": {
+      "category": "deep",
+      "default_skills": [
+        "architect/requirement-to-design",
+        "architect/module-boundary-design",
+        "architect/tradeoff-analysis"
+      ]
+    },
+    "developer": {
+      "category": "unspecified-high",
+      "default_skills": [
+        "developer/feature-implementation",
+        "developer/bugfix-workflow",
+        "developer/code-change-selfcheck"
+      ]
+    },
+    "tester": {
+      "category": "unspecified-high",
+      "default_skills": [
+        "tester/unit-test-design",
+        "tester/regression-analysis",
+        "tester/edge-case-matrix"
+      ]
+    },
+    "reviewer": {
+      "category": "unspecified-high",
+      "default_skills": [
+        "reviewer/code-review-checklist",
+        "reviewer/spec-implementation-diff",
+        "reviewer/reject-with-actionable-feedback"
+      ]
+    },
+    "docs": {
+      "category": "writing",
+      "default_skills": [
+        "docs/readme-sync",
+        "docs/changelog-writing",
+        "docs/issue-status-sync"
+      ]
+    },
+    "security": {
+      "category": "unspecified-high",
+      "default_skills": [
+        "security/auth-and-permission-review",
+        "security/input-validation-review"
+      ]
+    }
+  },
+  "capabilities": {
+    "supports_background_task": true,
+    "supports_parallel_agents": true,
+    "max_context_length": 200000
+  },
+  "known_issues": [
+    {
+      "issue": "subagent_type parameter not supported",
+      "workaround": "Use category + load_skills instead of subagent_type",
+      "reference": "docs/platform-adapter-guide.md#known-issues"
+    },
+    {
+      "issue": "Background task may fail on first attempt",
+      "workaround": "Check task status and retry if needed, or use synchronous execution",
+      "reference": "docs/platform-adapter-guide.md#known-issues"
+    }
+  ]
+}

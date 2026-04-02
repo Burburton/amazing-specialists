@@ -7,6 +7,57 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.6.0] - 2026-04-03
+
+### Summary
+
+**Platform Adapter Layer** - Abstract platform runtime differences, providing unified role model mapping for cross-platform compatibility.
+
+### Added
+
+#### Platform Adapter Infrastructure
+
+- **Platform Adapter Interface** (`adapters/interfaces/platform-adapter.interface.ts`) - TypeScript interface for platform abstraction
+- **OpenCode Platform Adapter** (`adapters/platform/opencode/`) - OpenCode-specific adapter implementation
+  - `role-mapping.json` - 6-role to category mapping
+  - `capabilities.json` - Platform capabilities declaration
+  - `README.md` - OpenCode adapter documentation
+- **Platform Adapter Template** (`adapters/platform/templates/`) - Template for creating new platform adapters
+- **Platform Adapter Guide** (`docs/platform-adapter-guide.md`) - Usage and customization guide
+
+#### Plugin Extension
+
+- **platform_mapping field** - Added to `plugins/PLUGIN-SPEC.md` for plugin-level skill extension
+- Plugin can now extend role-to-skill mappings per platform
+
+#### Documentation
+
+- **ADAPTERS.md** - Added Platform Adapter Definition section
+- **AGENTS.md** - Added OpenCode Platform Adaptation section with correct task() usage examples
+
+### Changed
+
+- `README.md` - Updated feature count (32→33), added Feature 033 to feature table
+- `adapters/registry.json` - Added platform_adapters section
+
+### Problem Solved
+
+| Problem | Solution |
+|---------|----------|
+| `task(subagent_type="tester")` not supported on OpenCode | Use `category` + `load_skills` pattern via Platform Adapter |
+| Role-to-category mapping inconsistency | Centralized mapping configuration |
+| No plugin extension for platform skills | `platform_mapping` field in plugin.json |
+
+### Stats
+
+| Metric | v1.5.0 | v1.6.0 |
+|--------|--------|--------|
+| Features | 32 | 33 |
+| Adapters | 5 | 5 + Platform Adapter |
+| Platform Adapters | 0 | 1 (OpenCode) |
+
+---
+
 ## [1.5.0] - 2026-03-31
 
 ### Summary

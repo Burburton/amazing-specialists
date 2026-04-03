@@ -682,4 +682,195 @@ When creating a new Issue on GitHub:
 The template includes `role:developer` by default. Add additional labels:
 - `milestone:MXXX` - Target milestone
 - `task:TXXX` - Task ID
-- `risk:low|medium|high|critical` - Risk level
+- `risk:low|medium|high|critical` - Risk level---
+
+## Complete Workflow Steps
+
+The GitHub Issue workflow follows these steps:
+
+### Step 1: Pre-flight Check
+
+Before starting implementation, verify:
+
+1. **Dependency Check**
+   - All dependent Issues are CLOSED
+   - Required input files exist in the repository
+
+2. **Environment Check**
+   - Required environment variables set (e.g., GITHUB_TOKEN)
+   - Development environment ready
+
+3. **Label Check**
+   - Issue has correct role label (role:architect, role:developer, etc.)
+   - Priority and milestone labels set
+
+### Step 2: Implementation
+
+Follow the Goal and Constraints from the Issue:
+
+1. Read the Issue body sections
+2. Follow Constraints and Expected Outputs
+3. Implement according to Acceptance Criteria
+
+### Step 3: Verification
+
+Run verification commands from the Issue:
+
+1. Build command: `npm run build`
+2. Type check: `npx tsc --noEmit` (if applicable)
+3. Tests: `npm test` (if applicable)
+
+Capture evidence of success (build output, test results).
+
+### Step 4: Completion Report
+
+Post a comment on the Issue with:
+
+**Required Sections:**
+1. **Summary** - Brief description of what was done
+2. **Files Changed** - List of files created/modified
+3. **Verification Results** - Build/test output evidence
+4. **Acceptance Criteria** - Check each criterion
+
+**Example Comment Format:**
+```markdown
+## T-XXX Implementation Complete
+
+### Summary
+Brief description of changes.
+
+### Files Changed
+- `path/to/file.ts` - Description
+- `path/to/another.ts` - Description
+
+### Verification Results
+- Build: SUCCESS - 63 modules transformed
+- Tests: SUCCESS - All passing
+
+### Acceptance Criteria
+- [x] Criterion 1
+- [x] Criterion 2
+- [x] Criterion 3
+
+**Result: SUCCESS**
+```
+
+### Step 5: Reviewer Sign-off (Recommended)
+
+For high-risk or complex tasks:
+
+1. Add `role:reviewer` label after implementation complete
+2. Wait for reviewer validation
+3. Reviewer posts sign-off comment
+4. Close Issue after sign-off
+
+**Risk-based Triggers:**
+- `risk:critical` - Always requires reviewer sign-off
+- `risk:high` - Recommended reviewer sign-off
+- `risk:medium` or lower - Optional reviewer sign-off
+
+---
+
+## Role Trigger Mechanism
+
+Issue completion can trigger additional role assignments:
+
+### Reviewer Trigger
+
+| Condition | Action |
+|-----------|--------|
+| `risk:critical` label | Automatically add `role:reviewer` label |
+| `risk:high` label | Recommend adding `role:reviewer` label |
+| Security-related task | Recommend adding `role:security` label |
+
+### Tester Trigger
+
+| Condition | Action |
+|-----------|--------|
+| Core logic changes | Recommend running `role:tester` validation |
+| Breaking changes | Recommend running `role:tester` validation |
+| Database schema changes | Recommend running `role:tester` validation |
+
+### Configuration
+
+Role triggers can be configured in `github-issue.config.json`:
+
+```json
+{
+  "role_triggers": {
+    "reviewer": {
+      "auto_trigger_labels": ["risk:critical"],
+      "recommend_labels": ["risk:high"],
+      "recommend_keywords": ["security", "auth", "permission"]
+    },
+    "tester": {
+      "recommend_keywords": ["breaking", "migration", "schema"]
+    }
+  }
+}
+```
+
+---
+
+## Traceability Requirements
+
+### Issue to Code Mapping
+
+Every completion comment must include:
+
+1. **Files Changed List**
+   - Full file paths
+   - Brief description of changes per file
+
+2. **Functions/Components Affected** (optional)
+   - List of modified functions or components
+   - Brief description of changes
+
+3. **Verification Evidence**
+   - Build output (summary, not full log)
+   - Test results summary
+   - Type check results (if applicable)
+
+### Traceability File (Optional)
+
+For complex projects, generate `.issue-trace.json`:
+
+```json
+{
+  "issue": 42,
+  "task_id": "T-042",
+  "files_changed": [
+    {
+      "path": "src/pages/HomePage.tsx",
+      "change_type": "modified",
+      "functions": ["HomePage", "useHomePageData"],
+      "lines_added": 45,
+      "lines_removed": 12
+    }
+  ],
+  "verification": {
+    "build": "success",
+    "tests": "passed",
+    "type_check": "passed"
+  },
+  "completed_at": "2026-04-04T12:00:00Z"
+}
+```
+
+### Commit Message Format
+
+Follow conventional commits with task ID:
+
+```
+feat(T-XXX): Brief description
+
+- Detail 1
+- Detail 2
+
+Closes #42
+```
+
+This enables:
+- GitHub automatic issue closure on merge
+- Traceability from commit to Issue
+- Clear history in git log

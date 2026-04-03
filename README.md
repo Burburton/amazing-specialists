@@ -342,8 +342,9 @@ User Input
 | `033-platform-adapter` | Platform Adapter | ✅ Complete | Platform Adapter Interface, OpenCode adapter, role-to-category mapping, Plugin platform_mapping |
 | `034-platform-adapter-runtime` | Platform Adapter Runtime | ✅ Complete | getPlatformAdapter(), mapRoleToCategory(), loader, merger, project override support |
 | `035-platform-adapter-usability` | Platform Adapter Usability | ✅ Complete | Fixed docs field names, index.ts entry, getTaskConfig(), package exports |
+| `037-github-issue-workflow-enhancement` | GitHub Issue Workflow Enhancement | ✅ Complete | Enhanced Issue template, workflow documentation, traceability requirements |
 
-> **当前进度**: `001-bootstrap` 至 `032-workflow-extensibility-enhancements` 已全部完成。**6-Role 正式执行模型完整实现并验证，Enhanced 模式已验证可用，历史功能审计通过，发布准备就绪，契约 Schema Pack 完成，模板化基础包就绪，版本化体系建立，适配层架构完成，GitHub Issue 适配器实现并增强，GitHub PR 适配器实现，OpenClaw 适配器实现，E2E 集成测试完成，E2E Adapter 真实集成测试完成，Plugin 架构完成，Plugin Skill 激活机制完成，Workflow 扩展性增强完成**。
+> **当前进度**: `001-bootstrap` 至 `037-github-issue-workflow-enhancement` 已全部完成。**6-Role 正式执行模型完整实现并验证，Enhanced 模式已验证可用，历史功能审计通过，发布准备就绪，契约 Schema Pack 完成，模板化基础包就绪，版本化体系建立，适配层架构完成，GitHub Issue 适配器实现并增强，GitHub PR 适配器实现，OpenClaw 适配器实现，E2E 集成测试完成，E2E Adapter 真实集成测试完成，Plugin 架构完成，Plugin Skill 激活机制完成，Workflow 扩展性增强完成，GitHub Issue Workflow Enhancement 完成**。
 
 ### 阶段 7：3-Skill 迁移 ✅ 已完成（010-3-skill-migration）
 

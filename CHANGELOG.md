@@ -7,6 +7,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.6.1] - 2026-04-03
+
+### Summary
+
+**Platform Adapter Runtime** - Implement runtime code for Platform Adapter, making `getPlatformAdapter()` actually usable.
+
+### Added
+
+#### Runtime Implementation
+
+- **`adapters/platform/runtime.ts`** - Main entry point with `getPlatformAdapter()` function
+- **`adapters/platform/loader.ts`** - Configuration loading from JSON files
+- **`adapters/platform/merger.ts`** - Configuration merging with project override support
+- **`adapters/platform/errors.ts`** - Custom error types (`PlatformNotSupportedError`, `ConfigLoadError`, `InvalidRoleError`)
+- **`adapters/platform/opencode/index.ts`** - OpenCode adapter factory function
+
+#### Features
+
+- `getPlatformAdapter(platformId)` - Get adapter instance with caching
+- `mapRoleToCategory(role)` - Map 6-role to platform category
+- `getDefaultSkills(role)` - Get default skills for a role
+- Project-level override via `.opencode/platform-override.json`
+- Error handling with helpful messages
+
+### Changed
+
+- `docs/platform-adapter-guide.md` - Updated with runtime usage examples
+
+---
+
 ## [1.6.0] - 2026-04-03
 
 ### Summary

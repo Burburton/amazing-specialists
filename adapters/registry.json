@@ -329,6 +329,16 @@
           "workaround": "Use category + load_skills instead",
           "reference": "docs/platform-adapter-guide.md#known-issues"
         }
+      ],
+      "runtime_entry": "adapters/platform/runtime.ts",
+      "exports": [
+        "getPlatformAdapter",
+        "getSupportedPlatforms",
+        "clearCache",
+        "setProjectRoot",
+        "PlatformNotSupportedError",
+        "ConfigLoadError",
+        "InvalidRoleError"
       ]
     }
   ]

@@ -38,51 +38,45 @@ Platform Adapter 提供：
 ### Quick Start
 
 ```typescript
-import { createPlatformAdapter } from './adapters/interfaces/platform-adapter.interface';
-import opencodeConfig from './adapters/platform/opencode/role-mapping.json';
+import { getPlatformAdapter } from './adapters/platform/runtime';
 
-const adapter = createPlatformAdapter(opencodeConfig);
+const adapter = getPlatformAdapter('opencode');
+console.log(adapter.platform_id);  // 'opencode'
 ```
 
 ### Map Role to Category
 
 ```typescript
-// Get category for a role
-const category = adapter.mapRoleToCategory('tester');
-// Returns: 'unspecified-high'
+import { getPlatformAdapter } from './adapters/platform/runtime';
 
-// Use in task dispatch
-task(
-  category=category,
-  load_skills=['tester/unit-test-design'],
-  prompt="Verify the implementation..."
-)
+const adapter = getPlatformAdapter('opencode');
+const category = adapter.mapRoleToCategory('tester');  // 'unspecified-high'
+
+task(category=category, load_skills=['tester/unit-test-design'], prompt="...")
 ```
 
 ### Get Default Skills
 
 ```typescript
-const skills = adapter.getDefaultSkills('tester');
-// Returns: ['tester/unit-test-design', 'tester/regression-analysis', 'tester/edge-case-matrix']
+import { getPlatformAdapter } from './adapters/platform/runtime';
 
-task(
-  category='unspecified-high',
-  load_skills=skills,
-  prompt="..."
-)
+const adapter = getPlatformAdapter('opencode');
+const skills = adapter.getDefaultSkills('tester');
+
+task(category='unspecified-high', load_skills=skills, prompt="...")
 ```
 
-### Check Platform Capabilities
+### Error Handling
 
 ```typescript
-const capabilities = adapter.getCapabilities();
+import { getPlatformAdapter, getSupportedPlatforms, PlatformNotSupportedError } from './adapters/platform/runtime';
 
-if (capabilities.supports_background_task) {
-  // Can use run_in_background=true
-  task(..., run_in_background=true);
-} else {
-  // Must use synchronous execution
-  task(..., run_in_background=false);
+try {
+  const adapter = getPlatformAdapter('opencode');
+} catch (e) {
+  if (e instanceof PlatformNotSupportedError) {
+    console.log('Available:', getSupportedPlatforms());
+  }
 }
 ```
 

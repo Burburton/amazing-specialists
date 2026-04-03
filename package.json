@@ -1,6 +1,6 @@
 {
   "name": "opencode-expert-pack",
-  "version": "1.5.0",
+  "version": "1.6.2",
   "description": "OpenCode Expert Pack - Execution layer for automated product development",
   "private": true,
   "scripts": {
@@ -51,5 +51,9 @@
   "license": "MIT",
   "dependencies": {
     "minimist": "^1.2.8"
+  },
+  "exports": {
+    "./platform": "./adapters/platform/index.ts",
+    "./platform/runtime": "./adapters/platform/runtime.ts"
   }
 }

@@ -7,6 +7,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.6.2] - 2026-04-03
+
+### Summary
+
+**Platform Adapter Usability** - Fix documentation inconsistencies and improve caller experience based on caller-perspective validation.
+
+### Fixed
+
+#### P0 - Documentation Field Names
+
+- **Fixed `docs/platform-adapter-guide.md`**: Corrected field names to match code
+  - `"category"` → `override_category`
+  - `"load_skills"` → `additional_skills`
+- Added field description table with examples
+
+### Added
+
+#### P1 - API Improvements
+
+- **`adapters/platform/index.ts`** - New unified entry point
+- **`getTaskConfig(platformId, role)`** - Convenience method to get both category and skills
+- **`AGENTS.md`** - Added Runtime API section with usage examples
+- **`package.json`** - Added `exports` field for module imports
+
+### API Improvement
+
+```typescript
+// Before: Multiple calls
+const adapter = getPlatformAdapter('opencode');
+const category = adapter.mapRoleToCategory('tester');
+const skills = adapter.getDefaultSkills('tester');
+
+// After: One call
+import { getTaskConfig } from './adapters/platform';
+const { category, skills } = getTaskConfig('opencode', 'tester');
+```
+
+---
+
 ## [1.6.1] - 2026-04-03
 
 ### Summary

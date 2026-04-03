@@ -149,11 +149,42 @@ Plugin 可以通过 `platform_mapping` 字段扩展平台映射：
 
 ```json
 {
-  "platform_id": "opencode",
   "overrides": {
     "tester": {
-      "category": "deep",
-      "load_skills": ["tester/integration-test-design"]
+      "override_category": "deep",
+      "additional_skills": ["tester/integration-test-design"]
+    }
+  }
+}
+```
+
+### Override Fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `override_category` | string | Override the default category for this role |
+| `additional_skills` | string[] | Skills to add to the default list |
+| `replace_skills` | string[] | Completely replace the default skills list |
+
+### Example: Add Custom Skills
+
+```json
+{
+  "overrides": {
+    "tester": {
+      "additional_skills": ["run-tests", "run-build"]
+    }
+  }
+}
+```
+
+### Example: Change Category
+
+```json
+{
+  "overrides": {
+    "architect": {
+      "override_category": "ultrabrain"
     }
   }
 }

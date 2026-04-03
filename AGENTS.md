@@ -221,6 +221,41 @@ task(
 )
 ```
 
+### Runtime API
+
+使用 `getPlatformAdapter()` 自动获取 category 和 skills：
+
+```typescript
+import { getPlatformAdapter } from './adapters/platform/runtime';
+
+const adapter = getPlatformAdapter('opencode');
+
+// 自动获取 category 和 skills
+const category = adapter.mapRoleToCategory('tester');  // 'unspecified-high'
+const skills = adapter.getDefaultSkills('tester');      // ['tester/unit-test-design', ...]
+
+// 派发任务
+task(
+  category=category,
+  load_skills=skills,
+  prompt="Run tests..."
+)
+```
+
+### Available Exports
+
+```typescript
+import { 
+  getPlatformAdapter,    // 获取 adapter 实例
+  getSupportedPlatforms, // 获取支持的 platform 列表
+  clearCache,            // 清除缓存
+  setProjectRoot,        // 设置项目根目录
+  PlatformNotSupportedError,
+  ConfigLoadError,
+  InvalidRoleError
+} from './adapters/platform/runtime';
+```
+
 ### Customization
 
 **项目级覆盖**：创建 `.opencode/platform-override.json` 文件覆盖默认映射。

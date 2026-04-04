@@ -4,7 +4,7 @@
 `042-issue-lifecycle-automation`
 
 ## Status
-`draft`
+`complete`
 
 ## Version
 `1.0.0`

@@ -421,6 +421,132 @@ class GitHubClient {
     return await this._requestWithRetry('GET', path);
   }
 
+  /**
+   * Create a new issue
+   * @param {string} owner - Repository owner
+   * @param {string} repo - Repository name
+   * @param {Object} options - Issue options
+   * @param {string} options.title - Issue title (required)
+   * @param {string} [options.body] - Issue body (markdown supported)
+   * @param {string[]} [options.labels] - Labels to add
+   * @param {number|string} [options.milestone] - Milestone number or title
+   * @param {string[]} [options.assignees] - Assignees (usernames)
+   * @returns {Promise<Object>} Created issue object
+   */
+  async createIssue(owner, repo, options) {
+    const path = `/repos/${owner}/${repo}/issues`;
+    const data = {
+      title: options.title,
+      body: options.body || '',
+      labels: options.labels || [],
+      assignees: options.assignees || []
+    };
+    
+    if (options.milestone !== undefined) {
+      data.milestone = options.milestone;
+    }
+    
+    return await this._requestWithRetry('POST', path, data);
+  }
+
+  /**
+   * Search issues with filters
+   * @param {string} owner - Repository owner
+   * @param {string} repo - Repository name
+   * @param {Object} [options] - Search options
+   * @param {string[]} [options.labels] - Filter by labels
+   * @param {string} [options.state] - Filter by state ('open', 'closed', 'all')
+   * @param {string|number} [options.milestone] - Filter by milestone
+   * @param {string} [options.creator] - Filter by creator
+   * @param {string} [options.assignee] - Filter by assignee
+   * @param {number} [options.per_page] - Results per page (max 100, default 30)
+   * @param {number} [options.page] - Page number
+   * @param {string} [options.since] - Only issues updated after this timestamp (ISO 8601)
+   * @returns {Promise<Array>} Array of issue objects
+   */
+  async searchIssues(owner, repo, options = {}) {
+    const params = new URLSearchParams();
+    
+    if (options.labels && options.labels.length > 0) {
+      params.set('labels', options.labels.join(','));
+    }
+    if (options.state) {
+      params.set('state', options.state);
+    }
+    if (options.milestone !== undefined) {
+      params.set('milestone', String(options.milestone));
+    }
+    if (options.creator) {
+      params.set('creator', options.creator);
+    }
+    if (options.assignee) {
+      params.set('assignee', options.assignee);
+    }
+    if (options.per_page !== undefined) {
+      params.set('per_page', String(Math.min(options.per_page, 100)));
+    }
+    if (options.page !== undefined) {
+      params.set('page', String(options.page));
+    }
+    if (options.since) {
+      params.set('since', options.since);
+    }
+    
+    const queryString = params.toString();
+    const path = `/repos/${owner}/${repo}/issues${queryString ? '?' + queryString : ''}`;
+    return await this._requestWithRetry('GET', path);
+  }
+
+  /**
+   * Update an issue
+   * @param {string} owner - Repository owner
+   * @param {string} repo - Repository name
+   * @param {number} issueNumber - Issue number
+   * @param {Object} options - Update options
+   * @param {string} [options.title] - New title
+   * @param {string} [options.body] - New body
+   * @param {string} [options.state] - New state ('open' or 'closed')
+   * @param {string[]} [options.labels] - Replace labels
+   * @param {number|string} [options.milestone] - New milestone
+   * @param {string[]} [options.assignees] - Replace assignees
+   * @returns {Promise<Object>} Updated issue object
+   */
+  async updateIssue(owner, repo, issueNumber, options) {
+    const path = `/repos/${owner}/${repo}/issues/${issueNumber}`;
+    const data = {};
+    
+    if (options.title !== undefined) data.title = options.title;
+    if (options.body !== undefined) data.body = options.body;
+    if (options.state !== undefined) data.state = options.state;
+    if (options.labels !== undefined) data.labels = options.labels;
+    if (options.milestone !== undefined) data.milestone = options.milestone;
+    if (options.assignees !== undefined) data.assignees = options.assignees;
+    
+    return await this._requestWithRetry('PATCH', path, data);
+  }
+
+  /**
+   * Close an issue
+   * @param {string} owner - Repository owner
+   * @param {string} repo - Repository name
+   * @param {number} issueNumber - Issue number
+   * @returns {Promise<Object>} Closed issue object
+   */
+  async closeIssue(owner, repo, issueNumber) {
+    return await this.updateIssue(owner, repo, issueNumber, { state: 'closed' });
+  }
+
+  /**
+   * Reopen an issue
+   * @param {string} owner - Repository owner
+   * @param {string} repo - Repository name
+   * @param {number} issueNumber - Issue number
+   * @returns {Promise<Object>} Reopened issue object
+   */
+  async reopenIssue(owner, repo, issueNumber) {
+    return await this.updateIssue(owner, repo, issueNumber, { state: 'open' });
+  }
+
   // ============================================================
   // Rate Limit Methods
   // ============================================================

@@ -12,18 +12,18 @@ M042
 
 | Task ID | Task Name | Role | Status | Dependencies |
 |---------|-----------|------|--------|--------------|
-| T-042-001 | GitHubClient.createIssue | developer | pending | - |
-| T-042-002 | GitHubClient.searchIssues | developer | pending | - |
-| T-042-003 | GitHubClient.updateIssue/closeIssue | developer | pending | - |
-| T-042-004 | IssueContext class | developer | pending | - |
-| T-042-005 | CLI: create command | developer | pending | T-042-001, T-042-004 |
-| T-042-006 | CLI: close command | developer | pending | T-042-002, T-042-003, T-042-004 |
-| T-042-007 | CLI: status command | developer | pending | T-042-002, T-042-004 |
-| T-042-008 | CLI: list command | developer | pending | T-042-002 |
-| T-042-009 | Update Issue template | developer | pending | - |
-| T-042-010 | Update README documentation | docs | pending | T-042-005~T-042-008 |
-| T-042-011 | Unit tests | tester | pending | T-042-001~T-042-004 |
-| T-042-012 | Integration test | tester | pending | T-042-005~T-042-008 |
+| T-042-001 | GitHubClient.createIssue | developer | completed | - |
+| T-042-002 | GitHubClient.searchIssues | developer | completed | - |
+| T-042-003 | GitHubClient.updateIssue/closeIssue | developer | completed | - |
+| T-042-004 | IssueContext class | developer | completed | - |
+| T-042-005 | CLI: create command | developer | completed | T-042-001, T-042-004 |
+| T-042-006 | CLI: close command | developer | completed | T-042-002, T-042-003, T-042-004 |
+| T-042-007 | CLI: status command | developer | completed | T-042-002, T-042-004 |
+| T-042-008 | CLI: list command | developer | completed | T-042-002 |
+| T-042-009 | Update Issue template | developer | completed | - |
+| T-042-010 | Update README documentation | docs | completed | T-042-005~T-042-008 |
+| T-042-011 | Unit tests | tester | completed | T-042-001~T-042-004 |
+| T-042-012 | Integration test | tester | completed | T-042-005~T-042-008 |
 
 ---
 

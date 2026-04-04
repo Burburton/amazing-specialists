@@ -649,13 +649,139 @@ Label Setup Report:
 Process an issue end-to-end:
 
 ```bash
-node scripts/process-issue.js --owner <owner> --repo <repo> --issue <number>
+node scripts/process-issue.js process --owner <owner> --repo <repo> --issue <number>
 
 # Example:
-node scripts/process-issue.js --owner Burburton --repo amazing-specialist-face --issue 42
+node scripts/process-issue.js process --owner Burburton --repo amazing-specialist-face --issue 42
 ```
 
 **Flow**: Fetch Issue → Parse → Validate → Execute → Post Comment → Close (if SUCCESS)
+
+### Issue Lifecycle Automation (NEW)
+
+Manage Issues with Task ID-based workflow to prevent closing wrong Issues.
+
+#### Create Issue
+
+Create a new Issue with Task ID tracking:
+
+```bash
+node scripts/process-issue.js create \
+  --owner <owner> --repo <repo> \
+  --task T-XXX \
+  --title "[T-XXX]: Task title" \
+  --role developer \
+  --risk low
+
+# With body from file:
+node scripts/process-issue.js create \
+  --owner Burburton --repo my-project \
+  --task T-042-001 \
+  --title "Add createIssue method" \
+  --bodyFile ./specs/042/task-body.md
+```
+
+**Features**:
+- Automatically adds `task:T-XXX` label
+- Records Issue number to `.issue-context.json`
+- **Idempotent**: Returns existing Issue if already created
+
+#### Close Issue by Task ID
+
+Close an Issue using Task ID (not Issue number):
+
+```bash
+node scripts/process-issue.js close \
+  --owner <owner> --repo <repo> \
+  --task T-XXX \
+  --comment "✅ Implementation complete"
+
+# Example:
+node scripts/process-issue.js close \
+  --owner Burburton --repo my-project \
+  --task T-042-001 \
+  --comment "✅ All acceptance criteria met"
+```
+
+**Features**:
+- Finds Issue by `task:T-XXX` label
+- Posts comment before closing (optional)
+- **Idempotent**: Returns success if already closed
+- Updates `.issue-context.json` status
+
+#### Check Issue Status
+
+Query Issue status by Task ID:
+
+```bash
+node scripts/process-issue.js status --task T-XXX
+
+# Example:
+node scripts/process-issue.js status --task T-042-001
+```
+
+**Output**:
+```
+Issue #42
+  URL: https://github.com/Burburton/my-project/issues/42
+  Status: open
+  Created: 2026-04-04T12:00:00Z
+```
+
+#### List Issues
+
+List Issues with filters:
+
+```bash
+node scripts/process-issue.js list \
+  --owner <owner> --repo <repo> \
+  --label role:developer \
+  --state open
+
+# List by Task ID prefix (from cache):
+node scripts/process-issue.js list \
+  --owner <owner> --repo <repo> \
+  --taskPrefix T-042
+```
+
+**Output**:
+```
+Found 5 issues:
+
+#42 [open] T-042-001: Add createIssue method
+#43 [open] T-042-002: Add searchIssues method
+#44 [closed] T-042-003: Add closeIssue method
+```
+
+### Issue Context File (`.issue-context.json`)
+
+The `IssueContext` class manages a state file for Task ID to Issue Number mapping:
+
+```json
+{
+  "version": "1.0.0",
+  "project": "my-project",
+  "owner": "Burburton",
+  "issues": {
+    "T-042-001": {
+      "number": 42,
+      "url": "https://github.com/Burburton/my-project/issues/42",
+      "status": "open",
+      "created_at": "2026-04-04T12:00:00Z",
+      "closed_at": null,
+      "commit_sha": null
+    }
+  },
+  "lastUpdated": "2026-04-04T12:00:00Z"
+}
+```
+
+**Purpose**:
+- Maps Task ID ↔ Issue Number for reliable workflow
+- Enables close-by-task-id without remembering Issue numbers
+- Tracks Issue status locally for quick lookup
+
+**Location**: Project root (same directory as `package.json`)
 
 ## Issue Template Usage
 

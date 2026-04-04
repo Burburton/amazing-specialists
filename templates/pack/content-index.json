@@ -6,14 +6,14 @@
   
   "profiles": {
     "minimal": {
-      "description": "Essential OpenCode execution layer with 21 MVP skills",
-      "target_files": 116,
-      "target_skills": 21
+      "description": "Essential OpenCode execution layer with 23 MVP skills",
+      "target_files": 130,
+      "target_skills": 23
     },
     "full": {
-      "description": "Complete OpenCode execution layer with 37 skills including M4 enhancements",
-      "target_files": 190,
-      "target_skills": 37,
+      "description": "Complete OpenCode execution layer with 39 skills including M4 enhancements",
+      "target_files": 210,
+      "target_skills": 39,
       "extends": "minimal"
     }
   },
@@ -36,7 +36,15 @@
         "package-lifecycle.md",
         "contracts/pack/registry.json",
         "contracts/pack/registry.schema.json",
-        "contracts/pack/pack-version.json"
+        "contracts/pack/pack-version.json",
+        "templates/cli/init.js",
+        "templates/cli/install.js",
+        "templates/cli/doctor.js",
+        "examples/01-quick-start/minimal-example.md",
+        "docs/skills-usage-guide.md",
+        "docs/enhanced-mode-guide.md",
+        "docs/adapters/adapter-usage-guide.md",
+        "docs/plugin-usage-guide.md"
       ],
       "directories": [
         ".opencode/skills/common/",
@@ -46,7 +54,11 @@
         ".opencode/skills/reviewer/",
         ".opencode/skills/docs/",
         ".opencode/skills/security/",
-        "contracts/pack/"
+        "contracts/pack/",
+        "templates/cli/",
+        "examples/01-quick-start/",
+        "docs/",
+        "docs/adapters/"
       ]
     },
     
@@ -200,8 +212,8 @@
     },
     "docs_content": {
       "path": "templates/pack/full/docs/",
-      "status": "empty",
-      "description": "docs/templates/, docs/rules/, docs/validation/ not included"
+      "status": "partial",
+      "description": "docs/templates/, docs/rules/, docs/validation/ not included (only essential guides)"
     }
   }
 }

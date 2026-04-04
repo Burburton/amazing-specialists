@@ -55,23 +55,88 @@ node adapters/cli-local/index.js <command> [options] [title] [goal]
 
 ```bash
 # Developer implementation task
-node adapters/cli-local/index.js --project myapp --milestone m1 --task t001 \
+node adapters/cli-local/dispatch.js --project myapp --milestone m1 --task t001 \
   --role developer --command implement-task \
   "Implement user authentication" \
   "Create login/logout functionality with session management"
 
 # Architect design task
-node adapters/cli-local/index.js --project myapp --milestone m1 --task t002 \
+node adapters/cli-local/dispatch.js --project myapp --milestone m1 --task t002 \
   --role architect --command design-task \
   --risk medium \
   "Design API structure" \
   "Create API contract design for user module"
 
 # Tester verification task
-node adapters/cli-local/index.js --project myapp --milestone m1 --task t003 \
+node adapters/cli-local/dispatch.js --project myapp --milestone m1 --task t003 \
   --role tester --command test-task \
   "Test authentication flow" \
   "Verify login/logout works correctly"
+```
+
+#### Quick Subcommand (Simplified)
+
+Quick 子命令提供简化的调用方式，仅需 `--role` 和任务描述：
+
+```bash
+# Quick dispatch (简化调用)
+node adapters/cli-local/dispatch.js quick --role developer "Implement login feature"
+
+# Quick dispatch with enhanced mode
+node adapters/cli-local/dispatch.js quick --role developer --enhanced "Implement secure auth"
+
+# Quick dispatch with custom project
+node adapters/cli-local/dispatch.js quick --role architect -p my-project "Design API"
+```
+
+**Quick 参数映射**：
+
+| Quick 参数 | 映射到 | 默认值 |
+|------------|--------|--------|
+| `--role, -r <role>` | dispatch.role | 必填 |
+| `--enhanced, -e` | metadata.enhanced | false |
+| `--project, -p <id>` | dispatch.project_id | `default` |
+| `--milestone, -m <id>` | dispatch.milestone_id | `m-current` |
+| `--task, -t <id>` | dispatch.task_id | `t-quick` |
+| `--risk <level>` | dispatch.risk_level | `medium` |
+| `<title>` | dispatch.title | 必填 |
+| `<goal>` | dispatch.goal | 同 title |
+
+**角色自动映射**：
+
+| Role | Auto Command |
+|------|-------------|
+| architect | design-task |
+| developer | implement-task |
+| tester | test-task |
+| reviewer | review-task |
+| docs | sync-docs |
+| security | security-check |
+
+**Quick 输出示例**：
+
+```
+=== Quick Dispatch Payload ===
+
+{
+  "dispatch_id": "9f02e836-9f4e-45e7-82bd-12e6f08a9990",
+  "project_id": "default",
+  "role": "developer",
+  "command": "implement-task",
+  "title": "Implement login feature",
+  ...
+}
+
+=== Execution Suggestions ===
+
+Role: developer
+Command: implement-task
+Task: Implement login feature
+
+Next steps:
+  1. Review spec and plan
+  2. Implement the feature
+  3. Run self-check validation
 ```
 
 ### Configuration

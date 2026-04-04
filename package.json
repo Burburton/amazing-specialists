@@ -1,6 +1,6 @@
 {
   "name": "opencode-expert-pack",
-  "version": "1.6.2",
+  "version": "1.7.0",
   "description": "OpenCode Expert Pack - Execution layer for automated product development",
   "private": true,
   "scripts": {

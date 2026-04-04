@@ -7,6 +7,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.7.0] - 2026-04-04
+
+### Summary
+
+**Usability Improvements** - Enhanced documentation, simplified CLI, and fixed template pack content.
+
+### Added
+
+#### README Improvements (038, 039)
+
+- **30秒快速入门** section at README top for quick onboarding
+- **文档导航** section with clear reading order
+- **核心命令参考** section with 5 spec commands documentation
+- CLI `quick` subcommand for simplified dispatch (`node dispatch.js quick --role developer "task"`)
+
+#### Template Pack Content Fix (040)
+
+- **CLI scripts** added to template pack (`templates/cli/init.js`, `install.js`, `doctor.js`)
+- **Examples** added to template pack (`examples/01-quick-start/minimal-example.md`)
+- **Docs** added to template pack (`skills-usage-guide.md`, `enhanced-mode-guide.md`, `adapter-usage-guide.md`, `plugin-usage-guide.md`)
+- **Doctor checks** updated with 3 new checks (CLI scripts, Examples, Docs)
+
+### Fixed
+
+- Skills count unified to 23 MVP across README and skills-usage-guide.md
+- Template pack file counts updated (minimal: 124, full: 198)
+- README links now work after project initialization
+
+### Changed
+
+- Features count: 39 total
+- Template file count: 117 → 124 (minimal), 190 → 198 (full)
+
+---
+
 ## [1.6.2] - 2026-04-03
 
 ### Summary

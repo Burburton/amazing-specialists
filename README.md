@@ -30,20 +30,66 @@ node templates/cli/doctor.js
 
 ## 文档导航
 
-| 阅读顺序 | 文档 | 用途 |
-|----------|------|------|
-| 新手第一步 | 本页 [30秒快速入门](#30秒快速入门) | 初始化项目 |
-| 新手第二步 | [examples/01-quick-start/](examples/01-quick-start/) | 最小可运行示例 |
-| 进阶使用 | [docs/skills-usage-guide.md](docs/skills-usage-guide.md) | 23 个 MVP Skills 详细用法 |
-| Enhanced 模式 | [docs/enhanced-mode-guide.md](docs/enhanced-mode-guide.md) | 16 个 M4 增强技能 |
-| Plugin 扩展 | [docs/plugin-usage-guide.md](docs/plugin-usage-guide.md) | 技术栈特定能力 |
-| Adapter 集成 | [docs/adapters/adapter-usage-guide.md](docs/adapters/adapter-usage-guide.md) | CLI/GitHub/OpenClaw 集成 |
-| Template 使用 | [templates/USAGE.md](templates/USAGE.md) | 模板初始化/升级/健康检查 |
-| 深度参考 | [specs/](specs/) | Feature 开发记录、验证报告 |
+### 🎯 终端用户
+| 步骤 | 文档 | 用途 |
+|------|------|------|
+| 第一步 | 本页 [30秒快速入门](#30秒快速入门) | 初始化项目 |
+| 第二步 | [examples/01-quick-start/](examples/01-quick-start/) | 最小可运行示例 |
+| 第三步 | [核心命令参考](#核心命令参考) | Spec 命令详解 |
+| 深入 | [docs/skills-usage-guide.md](docs/skills-usage-guide.md) | Skills 使用指南 |
+
+### 🔗 系统集成者
+| 步骤 | 文档 | 用途 |
+|------|------|------|
+| 第一步 | [io-contract.md](io-contract.md) | I/O 契约定义 |
+| 第二步 | [ADAPTERS.md](ADAPTERS.md) | Adapter 架构 |
+| 第三步 | [docs/adapters/](docs/adapters/) | 各 Adapter 使用指南 |
+
+### 🔧 专家包开发者
+| 步骤 | 文档 | 用途 |
+|------|------|------|
+| 第一步 | [package-spec.md](package-spec.md) | 专家包定位 |
+| 第二步 | [role-definition.md](role-definition.md) | 角色边界 |
+| 参考 | [specs/](specs/) | Feature 开发记录 |
+
+---
+
+## 接口定位说明
+
+专家包提供**两套接口**，适用于不同场景：
+
+| 接口类型 | 适用场景 | 使用者 | 典型入口 |
+|---------|---------|--------|----------|
+| **Spec 命令** | 本地开发、feature 开发流程 | 终端用户 | `/spec-start`, `/spec-plan` |
+| **Adapter 接口** | 外部系统集成、管理层调度 | 系统集成者 | Dispatch Payload / Execution Result |
+
+> **大多数用户**: 应使用 **Spec 命令**（下一节"核心命令参考"）。
+> **系统集成者**: 参考 "Adapter Architecture" 章节和 `io-contract.md`。
+
+---
+
+## 用户角色
+
+### 🎯 终端用户
+- **目标**：使用专家包开发功能
+- **使用接口**：Spec 命令（`/spec-start`, `/spec-implement` 等）
+- **入门**：[examples/01-quick-start/](examples/01-quick-start/)
+
+### 🔗 系统集成者
+- **目标**：将专家包集成到外部系统（OpenClaw、GitHub Bot 等）
+- **使用接口**：Adapter 接口
+- **入门**：[io-contract.md](io-contract.md), [ADAPTERS.md](ADAPTERS.md)
+
+### 🔧 专家包开发者
+- **目标**：开发专家包自身的新功能/技能
+- **使用接口**：Spec 命令 + 治理文档
+- **入门**：[package-spec.md](package-spec.md), [role-definition.md](role-definition.md)
 
 ---
 
 ## 核心命令参考
+
+> **这是普通用户的日常使用方式**。以下 5 个命令覆盖完整的 spec-driven 开发流程。
 
 专家包提供 5 个核心命令，用于 spec-driven 开发流程：
 
@@ -328,6 +374,18 @@ node plugins/loader.js uninstall vite-react-ts --project ./my-project
 
 ## How to Use
 
+### 对于终端用户
+1. 运行 `node templates/cli/init.js ./my-project` 初始化项目
+2. 阅读 [examples/01-quick-start/](examples/01-quick-start/) 了解完整流程
+3. 使用 `/spec-start`, `/spec-implement` 等命令开发功能
+4. 运行 `node templates/cli/doctor.js` 进行健康检查
+
+### 对于系统集成者
+1. 阅读 [io-contract.md](io-contract.md) 理解 I/O 契约
+2. 阅读 [ADAPTERS.md](ADAPTERS.md) 理解 Adapter 架构
+3. 选择合适的 Orchestrator Adapter 和 Workspace Adapter
+4. 使用 `contracts/pack/` 的 JSON Schema 验证数据
+
 ### 对于 OpenClaw 管理层调用者
 1. 通过统一 dispatch payload 调用专家包角色
 2. 接收统一 execution result 和 artifact
@@ -451,8 +509,9 @@ User Input
 | `038-readme-quick-start-and-doc-unification` | README Quick Start 和文档导航 | ✅ Complete | 30秒快速入门, 文档导航章节, Skills 计数统一 |
 | `039-readme-command-reference-and-adapter-quick` | README 命令参考和 Adapter Quick | ✅ Complete | 核心命令参考章节, CLI quick 子命令 |
 | `040-template-pack-content-fix` | 模板包内容修复 | ✅ Complete | CLI 脚本, Examples, Docs 复制到模板包 |
+| `041-readme-interface-and-role-clarification` | README 接口定位与用户角色澄清 | ✅ Complete | 接口定位说明, 用户角色章节, 文档导航重构, 目标受众声明 |
 
-> **当前进度**: `001-bootstrap` 至 `040-template-pack-content-fix` 已全部完成。**6-Role 正式执行模型完整实现并验证，Enhanced 模式已验证可用，历史功能审计通过，发布准备就绪，契约 Schema Pack 完成，模板化基础包就绪，版本化体系建立，适配层架构完成，GitHub Issue 适配器实现并增强，GitHub PR 适配器实现，OpenClaw 适配器实现，E2E 集成测试完成，E2E Adapter 真实集成测试完成，Plugin 架构完成，Plugin Skill 激活机制完成，Workflow 扩展性增强完成，GitHub Issue Workflow Enhancement 完成，README Quick Start 和文档导航完成，README 命令参考和 Adapter Quick 完成，模板包内容修复完成**。**Skills 总计 43 个（23 MVP + 16 M4 + 4 Plugin）**，**Features 总计 39 个**。
+> **当前进度**: `001-bootstrap` 至 `041-readme-interface-and-role-clarification` 已全部完成。**6-Role 正式执行模型完整实现并验证，Enhanced 模式已验证可用，历史功能审计通过，发布准备就绪，契约 Schema Pack 完成，模板化基础包就绪，版本化体系建立，适配层架构完成，GitHub Issue 适配器实现并增强，GitHub PR 适配器实现，OpenClaw 适配器实现，E2E 集成测试完成，E2E Adapter 真实集成测试完成，Plugin 架构完成，Plugin Skill 激活机制完成，Workflow 扩展性增强完成，GitHub Issue Workflow Enhancement 完成，README Quick Start 和文档导航完成，README 命令参考和 Adapter Quick 完成，模板包内容修复完成，README 接口定位与用户角色澄清完成**。**Skills 总计 43 个（23 MVP + 16 M4 + 4 Plugin）**，**Features 总计 40 个**。
 
 ### 阶段 7：3-Skill 迁移 ✅ 已完成（010-3-skill-migration）
 
@@ -556,7 +615,7 @@ node templates/cli/doctor.js
 - `templates/cli/` - Bootstrap CLI (init/install/doctor)
 - `templates/*.md` - 使用文档
 
-> **当前进度**: `001-bootstrap` 至 `008-security-core` 完成 MVP 核心，`010-3-skill-migration` 完成骨架归档，`011-m4-enhancement-kit` 完成 M4 可选增强，`012-performance-testing-skills` 完成性能测试套件，`013-e2e-validation` 完成端到端验证，`014-enhanced-mode-validation` 完成 Enhanced 模式验证，`015-historical-features-audit` 完成历史功能审计，`016-release-preparation` 完成发布准备，`017-contract-schema-pack` 完成契约 Schema Pack，`018-template-and-bootstrap-foundation` 完成模板化基础包，`019-versioning-and-compatibility-foundation` 完成版本化体系，`020-orchestrator-and-workspace-adapters` 完成适配层架构，`021-github-issue-adapter` 完成 GitHub Issue 适配器，`022-github-pr-adapter` 完成 GitHub PR 适配器，`023-openclaw-adapter` 完成 OpenClaw 适配器，`024-e2e-integration-tests` 完成 E2E 集成测试，`025-e2e-adapter-integration-tests` 完成 E2E Adapter 真实集成测试，`026-github-issue-adapter-workflow-test` 完成 Workflow 测试，`027-github-issue-adapter-enhancements` 完成 GitHub Issue Adapter 增强，`028-issue-status-sync` 完成 Issue 状态同步 skill，`029-real-world-validation` 完成实战验证，`030-plugin-architecture` 完成 Plugin 架构，`031-plugin-skill-activation` 完成 Plugin Skill 激活机制，`032-workflow-extensibility-enhancements` 完成 Workflow 扩展性增强，`033-platform-adapter` 完成 Platform Adapter，`034-platform-adapter-runtime` 完成 Platform Adapter 运行时，`035-platform-adapter-usability` 完成 Platform Adapter 可用性修复，`037-github-issue-workflow-enhancement` 完成 GitHub Issue Workflow Enhancement，`038-readme-quick-start-and-doc-unification` 完成 README Quick Start 和文档导航，`039-readme-command-reference-and-adapter-quick` 完成 README 命令参考和 Adapter Quick，`040-template-pack-content-fix` 完成模板包内容修复。**Skills 总计 43 个（23 MVP + 16 M4 + 4 Plugin）**，**Features 总计 39 个**。
+> **当前进度**: `001-bootstrap` 至 `008-security-core` 完成 MVP 核心，`010-3-skill-migration` 完成骨架归档，`011-m4-enhancement-kit` 完成 M4 可选增强，`012-performance-testing-skills` 完成性能测试套件，`013-e2e-validation` 完成端到端验证，`014-enhanced-mode-validation` 完成 Enhanced 模式验证，`015-historical-features-audit` 完成历史功能审计，`016-release-preparation` 完成发布准备，`017-contract-schema-pack` 完成契约 Schema Pack，`018-template-and-bootstrap-foundation` 完成模板化基础包，`019-versioning-and-compatibility-foundation` 完成版本化体系，`020-orchestrator-and-workspace-adapters` 完成适配层架构，`021-github-issue-adapter` 完成 GitHub Issue 适配器，`022-github-pr-adapter` 完成 GitHub PR 适配器，`023-openclaw-adapter` 完成 OpenClaw 适配器，`024-e2e-integration-tests` 完成 E2E 集成测试，`025-e2e-adapter-integration-tests` 完成 E2E Adapter 真实集成测试，`026-github-issue-adapter-workflow-test` 完成 Workflow 测试，`027-github-issue-adapter-enhancements` 完成 GitHub Issue Adapter 增强，`028-issue-status-sync` 完成 Issue 状态同步 skill，`029-real-world-validation` 完成实战验证，`030-plugin-architecture` 完成 Plugin 架构，`031-plugin-skill-activation` 完成 Plugin Skill 激活机制，`032-workflow-extensibility-enhancements` 完成 Workflow 扩展性增强，`033-platform-adapter` 完成 Platform Adapter，`034-platform-adapter-runtime` 完成 Platform Adapter 运行时，`035-platform-adapter-usability` 完成 Platform Adapter 可用性修复，`037-github-issue-workflow-enhancement` 完成 GitHub Issue Workflow Enhancement，`038-readme-quick-start-and-doc-unification` 完成 README Quick Start 和文档导航，`039-readme-command-reference-and-adapter-quick` 完成 README 命令参考和 Adapter Quick，`040-template-pack-content-fix` 完成模板包内容修复，`041-readme-interface-and-role-clarification` 完成 README 接口定位与用户角色澄清。**Skills 总计 43 个（23 MVP + 16 M4 + 4 Plugin）**，**Features 总计 40 个**。
 
 ## Quick Start
 

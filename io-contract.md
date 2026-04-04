@@ -2,6 +2,9 @@
 
 本文件定义 OpenCode 专家包与 OpenClaw 管理层之间的完整输入输出契约。
 
+> **目标受众**: OpenClaw 开发者、Adapter 开发者、系统集成者。
+> **普通用户**: 请使用 `/spec-start`, `/spec-plan` 等 Spec 命令，无需阅读本文档。
+
 ---
 
 ## 1. Dispatch Input Contract

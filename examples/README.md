@@ -38,6 +38,22 @@ examples/
     └── using-enhanced-mode.md  # 如何使用 --enhanced 标志
 ```
 
+## 示例分类
+
+### 普通用户示例
+以下示例展示终端用户的日常使用方式：
+
+- [01-quick-start/minimal-example.md](01-quick-start/minimal-example.md) - 使用 Spec 命令的完整流程（推荐入门）
+- [02-end-to-end-feature/](02-end-to-end-feature/) - 完整 feature 开发示例
+- [03-role-specific/](03-role-specific/) - 各角色详细用法
+
+### 高级用户/系统集成者示例
+以下示例展示系统内部机制，供高级用户和系统集成者参考：
+
+- [happy-path.md](happy-path.md) - 系统内部调用流程（理解架构）
+- [cli-workflow.md](cli-workflow.md) - CLI Adapter 使用（高级）
+- [local-repo-output.md](local-repo-output.md) - Workspace Adapter 使用（高级）
+
 ## 快速导航
 
 ### 我是新手

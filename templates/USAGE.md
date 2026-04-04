@@ -1,5 +1,7 @@
 # OpenCode Template Pack - Usage Guide
 
+> **目标受众**: 终端用户
+
 ## Quick Start
 
 ### Initialize a New Project

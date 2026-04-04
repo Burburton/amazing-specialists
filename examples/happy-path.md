@@ -1,5 +1,9 @@
 # Happy Path Example - 用户登录功能开发
 
+> **注意**: 本示例展示的是系统内部调用流程，用于理解架构。
+> 用户实际操作入口是 `/spec-start <feature-id>`，而非手动构造 Dispatch Payload。
+> 如需学习日常使用方式，请参考 [01-quick-start/minimal-example.md](01-quick-start/minimal-example.md)。
+
 ## Scenario
 开发一个用户登录功能，包括：
 - 用户名/密码验证

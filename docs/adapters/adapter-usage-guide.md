@@ -1,5 +1,7 @@
 # Adapter Usage Guide
 
+> **目标受众**: 系统集成者
+
 本指南介绍如何使用 OpenCode 专家包的适配器，包括 CLI/Local Orchestrator Adapter 和 Local Repo Workspace Adapter。
 
 ---

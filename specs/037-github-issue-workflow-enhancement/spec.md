@@ -67,7 +67,11 @@
 2. Implementation
 3. Verification
 4. Completion Report
-5. Reviewer Sign-off（新增）
+5. Code Commit & Push（新增，必须）
+6. Reviewer Sign-off（可选）
+7. Close Issue（新增，强调顺序）
+
+**关键改进**：Step 5 (Code Commit & Push) 是必须步骤，Issue 必须在代码推送后才能关闭。
 
 #### FR-003: Role Trigger Mechanism
 定义 Issue 完成后的角色触发机制：

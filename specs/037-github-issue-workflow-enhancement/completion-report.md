@@ -13,13 +13,14 @@
 | GAP-037-001 | Minor formatting: `---` separator missing newline before it | **Low** - cosmetic only | ⚠️ Minor |
 | GAP-037-002 | tasks.md was created post-audit | Low - now resolved | ✅ Fixed |
 | GAP-037-003 | Project README.md feature entry - needs manual add due to PowerShell encoding issues | Low - cosmetic in project README | ⚠️ Needs manual add |
+| GAP-037-004 | Workflow initially defined as 5 steps, now expanded to 7 steps | **Medium** - spec.md needed update | ✅ Fixed (2026-04-04) |
 
 ## Acceptance Criteria Status
 
 | Criterion | Status | Notes |
 |-----------|--------|-------|
 | AC-001: Issue Template Enhanced | ✅ Complete | Pre-flight, Verification, Post-completion sections added |
-| AC-002: README.md Updated | ✅ Complete | Workflow Steps, Role Trigger, Traceability sections added (lines 687-876) |
+| AC-002: README.md Updated | ✅ Complete | Workflow Steps (now 7 steps), Role Trigger, Traceability sections added (lines 687-946) |
 | AC-003: Traceability Defined | ✅ Complete | Defined in spec.md, completion-report format, and README.md |
 
 ## Completion Date

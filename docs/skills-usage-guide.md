@@ -2,11 +2,11 @@
 
 ## 概述
 
-本指南介绍如何使用 OpenCode 专家包的 21 个 Skills 完成全自动产品研发闭环。
+本指南介绍如何使用 OpenCode 专家包的 23 个 MVP 核心 Skills 完成全自动产品研发闭环。
 
 ## 技能总览
 
-### 已完成 Skills（21个）
+### 已完成 Skills（23个 MVP 核心）
 
 | 类别 | 数量 | Skills |
 |------|------|--------|
@@ -15,7 +15,7 @@
 | **Developer** | 3 | feature-implementation, bugfix-workflow, code-change-selfcheck |
 | **Tester** | 3 | unit-test-design, regression-analysis, edge-case-matrix |
 | **Reviewer** | 3 | code-review-checklist, spec-implementation-diff, reject-with-actionable-feedback |
-| **Docs** | 2 | readme-sync, changelog-writing |
+| **Docs** | 3 | readme-sync, changelog-writing, issue-status-sync |
 | **Security** | 2 | auth-and-permission-review, input-validation-review |
 
 ---
@@ -851,7 +851,7 @@ $ feature-implementation
 | Developer | feature-implementation, bugfix-workflow, code-change-selfcheck |
 | Tester | edge-case-matrix, unit-test-design, regression-analysis |
 | Reviewer | code-review-checklist, spec-implementation-diff, reject-with-actionable-feedback |
-| Docs | readme-sync, changelog-writing |
+| Docs | readme-sync, changelog-writing, issue-status-sync |
 | Security | auth-and-permission-review, input-validation-review |
 
 ### 任务类型 → Skills
@@ -923,5 +923,5 @@ $ node contracts/pack/validate-schema.js artifacts/design-note.json AC-001
 
 - **Version**: 1.0.0
 - **Updated**: 2026-03-22
-- **Skills Count**: 21
+- **Skills Count**: 23 (MVP Core)
 - **MVP Stage**: M1 + M2 + M3 Complete

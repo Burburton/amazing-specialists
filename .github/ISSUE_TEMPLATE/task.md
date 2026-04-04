@@ -55,17 +55,52 @@ npm test
 ## Post-completion
 <!-- Actions after successful completion -->
 
-### Commit Message Format
-```
-feat(T-XXX): Brief description
+### Step 1: Commit Changes (Required)
+```bash
+git add <files>
+git commit -m "feat(T-XXX): Brief description
 
 - Detail 1
 - Detail 2
+
+Closes #XX"
 ```
 
-### Reviewer Assignment
-<!-- For high-risk tasks, assign a reviewer -->
-<!-- Add label: role:reviewer after implementation complete -->
+### Step 2: Push to Remote (Required)
+```bash
+git push origin <branch>
+```
 
-### PR Creation (if applicable)
-<!-- Create PR with title: feat(T-XXX): Brief description -->
+**Verify:**
+- [ ] All changes committed
+- [ ] Code pushed to remote
+- [ ] Commit visible in GitHub
+
+### Step 3: Post Completion Comment
+Post a comment on this Issue with:
+- Summary of changes
+- Files changed
+- Verification results (build output)
+- Acceptance criteria check
+
+### Step 4: Reviewer Assignment (if required)
+<!-- For high-risk tasks, add label: role:reviewer -->
+- `risk:critical` → Must have reviewer sign-off
+- `risk:high` → Recommended reviewer sign-off
+
+### Step 5: Close Issue (After Code Pushed)
+**Close ONLY after:**
+- ✅ Code committed and pushed
+- ✅ Build passes
+- ✅ Completion comment posted
+- ✅ Reviewer sign-off (if required)
+
+```bash
+gh issue close <number> --repo <owner/repo>
+```
+
+### PR Creation (alternative)
+<!-- Create PR instead of direct commit -->
+- Branch: `feat/T-XXX-brief-description`
+- Title: `feat(T-XXX): Brief description`
+- Merge PR to close Issue automatically

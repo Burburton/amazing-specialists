@@ -755,19 +755,89 @@ Brief description of changes.
 **Result: SUCCESS**
 ```
 
-### Step 5: Reviewer Sign-off (Recommended)
+### Step 5: Code Commit & Push (Required)
+
+**CRITICAL: This step MUST be completed before closing the Issue.**
+
+1. **Stage Changes**
+   ```bash
+   git add <files>
+   # or stage all changes
+   git add .
+   ```
+
+2. **Commit with Standard Format**
+   ```bash
+   git commit -m "feat(T-XXX): Brief description
+
+   - Detail 1
+   - Detail 2
+
+   Closes #XX"
+   ```
+
+3. **Push to Remote**
+   ```bash
+   git push origin <branch>
+   ```
+
+4. **Verify Push Success**
+   - Confirm no errors during push
+   - Verify commit appears in remote repository
+   - Check GitHub commit URL is accessible
+
+**Verification Checklist:**
+- [ ] All changes committed
+- [ ] Commit message follows format
+- [ ] Code pushed to remote
+- [ ] Commit visible in GitHub
+
+**Common Errors:**
+- Push rejected due to remote changes → Pull and rebase first
+- Authentication failed → Check GITHUB_TOKEN
+- Large files rejected → Use Git LFS or .gitignore
+
+### Step 6: Reviewer Sign-off (Recommended)
 
 For high-risk or complex tasks:
 
-1. Add `role:reviewer` label after implementation complete
+1. Add `role:reviewer` label after code pushed
 2. Wait for reviewer validation
 3. Reviewer posts sign-off comment
-4. Close Issue after sign-off
+4. Proceed to Step 7 after sign-off
 
 **Risk-based Triggers:**
 - `risk:critical` - Always requires reviewer sign-off
 - `risk:high` - Recommended reviewer sign-off
 - `risk:medium` or lower - Optional reviewer sign-off
+
+### Step 7: Close Issue (After Code Pushed)
+
+**CRITICAL: Issue MUST NOT be closed until code is pushed to remote.**
+
+1. **Verify Prerequisites**
+   - Code committed and pushed (Step 5)
+   - Build passed verification (Step 3)
+   - Completion report posted (Step 4)
+   - Reviewer sign-off obtained (if required, Step 6)
+
+2. **Close Issue**
+   ```bash
+   gh issue close <number> --repo <owner/repo>
+   ```
+   Or close via GitHub UI.
+
+**Wrong Sequence (DO NOT):**
+```
+❌ Close Issue → Then commit code
+❌ Close Issue → Code only in local
+❌ Close Issue → Build failing
+```
+
+**Correct Sequence:**
+```
+✅ Implement → Verify → Commit → Push → Report → Review (optional) → Close
+```
 
 ---
 

@@ -190,7 +190,7 @@ estimated_effort: Medium (2 sessions)
   "name": "Vite + React + TypeScript",
   "version": "1.0.0",
   "description": "Tech stack adapter for Vite + React + TypeScript projects",
-  "author": "amazing_agent_specialist",
+  "author": "amazing-specialists",
   "compatibility": {
     "core_version": ">=1.0.0"
   },

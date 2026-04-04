@@ -3,7 +3,7 @@
   "name": "Next.js",
   "version": "1.0.0",
   "description": "Tech stack adapter for Next.js projects: App Router patterns, Server Components, API Routes, and configuration best practices",
-  "author": "amazing_agent_specialist",
+  "author": "amazing-specialists",
   "compatibility": {
     "core_version": ">=1.0.0",
     "node_version": ">=18.0.0"

@@ -3,7 +3,7 @@
   "name": "Rust Cargo",
   "version": "1.0.0",
   "description": "Tech stack adapter for Rust projects: project structure, error handling with Result, async patterns with tokio, and testing",
-  "author": "amazing_agent_specialist",
+  "author": "amazing-specialists",
   "compatibility": {
     "core_version": ">=1.0.0",
     "rust_version": ">=1.75"

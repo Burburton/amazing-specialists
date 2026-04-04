@@ -11,7 +11,7 @@
 
 ## Purpose
 
-通过 `amazing-specialist-face` 项目的实际开发，验证 `amazing_agent_specialist` 专家包在真实场景中的表现。
+通过 `amazing-specialist-face` 项目的实际开发，验证 `amazing-specialists` 专家包在真实场景中的表现。
 
 **设计原则**: 专家包是通用核心库，技术栈特定能力应通过可插拔 Plugin 机制提供。验证应区分：
 - **核心层问题** → 专家包架构/流程缺陷，需修复核心
@@ -130,7 +130,7 @@ plugins/vite-react-ts/
 
 **Proposed Architecture**:
 ```
-amazing_agent_specialist (核心库)
+amazing-specialists (核心库)
 ├── core/                     # 核心能力（通用）
 │   ├── architect/
 │   ├── developer/
@@ -165,7 +165,7 @@ amazing_agent_specialist (核心库)
 
 | Action | Target | Type | Priority |
 |--------|--------|------|----------|
-| Fix triple-slash policy hook | amazing_agent_specialist | Core Fix | Low |
+| Fix triple-slash policy hook | amazing-specialists | Core Fix | Low |
 | Design Plugin architecture | specs/030-plugin-architecture | New Spec | High |
 | Implement vite-react-ts Plugin | Future Feature | Plugin | Medium |
 | Implement vue-vite Plugin | Future Feature | Plugin | Low |

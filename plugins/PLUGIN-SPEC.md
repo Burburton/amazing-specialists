@@ -5,7 +5,7 @@
 
 ## Purpose
 
-本文档定义 `amazing_agent_specialist` 专家包的 Plugin 规格标准，供 Plugin 开发者遵循。
+本文档定义 `amazing-specialists` 专家包的 Plugin 规格标准，供 Plugin 开发者遵循。
 
 ---
 

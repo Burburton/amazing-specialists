@@ -2,7 +2,7 @@
 
 ## Overview
 
-Plugin 是 `amazing_agent_specialist` 专家包的可插拔扩展层，提供技术栈特定能力。本文档指导用户如何发现、安装、使用 Plugin。
+Plugin 是 `amazing-specialists` 专家包的可插拔扩展层，提供技术栈特定能力。本文档指导用户如何发现、安装、使用 Plugin。
 
 ---
 

@@ -2,7 +2,7 @@
 
 ## 1. 文档定位
 
-本文档定义 `003-architect-core` 的完整 feature 设计，用于指导 OpenCode 在 `amazing_agent_specialist` 仓库中正式实现 `architect` 角色的核心能力体系。
+本文档定义 `003-architect-core` 的完整 feature 设计，用于指导 OpenCode 在 `amazing-specialists` 仓库中正式实现 `architect` 角色的核心能力体系。
 
 本文档不是“最小开工草案”，而是 `architect-core` 的完整 feature 需求说明。其目标包括：
 

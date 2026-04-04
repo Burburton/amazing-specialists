@@ -3,7 +3,7 @@
   "name": "Go Modules",
   "version": "1.0.0",
   "description": "Tech stack adapter for Go projects: project structure, error handling, testing patterns, and best practices",
-  "author": "amazing_agent_specialist",
+  "author": "amazing-specialists",
   "compatibility": {
     "core_version": ">=1.0.0",
     "go_version": ">=1.21"

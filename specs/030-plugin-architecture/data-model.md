@@ -268,7 +268,7 @@ created_at: 2026-03-31
   "name": "Vite + React + TypeScript",
   "version": "1.0.0",
   "description": "Tech stack adapter for Vite + React + TypeScript projects: configuration guidance, CSS Module testing patterns",
-  "author": "amazing_agent_specialist",
+  "author": "amazing-specialists",
   "compatibility": {
     "core_version": ">=1.0.0",
     "node_version": ">=18.0.0"

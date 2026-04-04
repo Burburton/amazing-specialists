@@ -16,7 +16,7 @@
 
 ### Goal
 
-为 `amazing_agent_specialist` 专家包设计可插拔 Plugin 架构，使技术栈特定能力与核心层分离。用户可按需选择 Plugin 匹配自己的项目类型。
+为 `amazing-specialists` 专家包设计可插拔 Plugin 架构，使技术栈特定能力与核心层分离。用户可按需选择 Plugin 匹配自己的项目类型。
 
 ### Background
 
@@ -89,7 +89,7 @@
 ## Directory Structure
 
 ```
-amazing_agent_specialist/
+amazing-specialists/
 ├── .opencode/
 │   ├── skills/                   # 核心 skills (不变)
 │   │   ├── common/
@@ -147,7 +147,7 @@ amazing_agent_specialist/
   "name": "Vite + React + TypeScript",
   "version": "1.0.0",
   "description": "技术栈适配器：Vite + React + TypeScript 项目配置与测试",
-  "author": "amazing_agent_specialist",
+  "author": "amazing-specialists",
   "compatibility": {
     "core-version": ">=1.0.0"
   },

@@ -1,4 +1,4 @@
-# 文档修改策略规范（适用于 amazing_agent_specialist / OpenCode 专家包）
+# 文档修改策略规范（适用于 amazing-specialists / OpenCode 专家包）
 
 ## 1. 目的
 
@@ -204,7 +204,7 @@ AI / agent 很可能会：
 
 ---
 
-## 6. 针对 amazing_agent_specialist 的具体落地规则
+## 6. 针对 amazing-specialists 的具体落地规则
 
 ### 6.1 必须直接回写正文的文件
 

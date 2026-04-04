@@ -16,7 +16,7 @@
 
 ## Summary
 
-为 `amazing_agent_specialist` 专家包实现 Plugin 架构，将技术栈特定能力与核心层分离。用户可通过 loader.js 按需安装技术栈 Plugin。
+为 `amazing-specialists` 专家包实现 Plugin 架构，将技术栈特定能力与核心层分离。用户可通过 loader.js 按需安装技术栈 Plugin。
 
 ---
 

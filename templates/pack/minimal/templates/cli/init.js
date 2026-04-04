@@ -92,7 +92,7 @@ function createManifest(targetDir, profile) {
     profile: profile,
     install_timestamp: new Date().toISOString(),
     last_upgrade_timestamp: null,
-    template_source: 'https://github.com/Burburton/amazing_agent_specialist',
+    template_source: 'https://github.com/Burburton/amazing-specialists',
     install_options: {
       force: false,
       dry_run: false

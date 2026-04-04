@@ -3,7 +3,7 @@
   "name": "Vue + Vite",
   "version": "1.0.0",
   "description": "Tech stack adapter for Vue 3 + Vite + TypeScript projects: Composition API, Pinia state management, Vue Router configuration",
-  "author": "amazing_agent_specialist",
+  "author": "amazing-specialists",
   "compatibility": {
     "core_version": ">=1.0.0",
     "node_version": ">=18.0.0"

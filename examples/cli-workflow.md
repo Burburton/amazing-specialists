@@ -12,7 +12,7 @@ CLI/Local Adapter 将命令行参数转换为标准 Dispatch Payload，使本地
 
 ```bash
 # 确保在项目根目录
-cd amazing_agent_specialist
+cd amazing-specialists
 
 # 验证 Node.js 环境
 node --version  # 需要 Node.js 14+

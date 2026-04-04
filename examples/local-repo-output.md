@@ -12,7 +12,7 @@ Local Repo Adapter 将 Execution Result 输出到本地文件系统，处理 art
 
 ```bash
 # 确保在项目根目录
-cd amazing_agent_specialist
+cd amazing-specialists
 
 # 确保输出目录存在
 mkdir -p ./artifacts

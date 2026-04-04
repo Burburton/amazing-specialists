@@ -146,6 +146,23 @@ Priority order for feature work:
   - completion-report vs README state narrative
   - tasks declared outputs vs actual repository outputs
 
+#### 7. Version Declarations Synchronized (AH-007)
+- **规则**：所有版本声明必须同步更新
+- **检查项**：`package.json`, `CHANGELOG.md`, `contracts/pack/pack-version.json`, `templates/pack/pack-version.json`
+- **严重级别**：版本不同步 = **major**
+- **参考**：`VERSIONING.md` Section "Version Sync Rules"
+
+#### 8. CHANGELOG Reflects Release (AH-008)
+- **规则**：每次发布必须有 CHANGELOG 条目
+- **检查项**：Added/Changed/Deprecated/Removed/Fixed 部分
+- **严重级别**：缺失 CHANGELOG 条目 = **major**
+
+#### 9. Compatibility Matrix Updated (AH-009)
+- **规则**：MAJOR 发布必须更新 `compatibility-matrix.json`
+- **检查项**：版本历史、兼容性状态、迁移路径
+- **严重级别**：MAJOR 发布未更新 = **major**
+- **参考**：`VERSIONING.md` Section "Compatibility Matrix"
+
 ### Findings Severity
 
 审计发现必须使用以下严重级别：
@@ -172,6 +189,80 @@ Priority order for feature work:
 - Every code change must map to at least one task in `tasks.md`.
 - Every completed task must be validated against acceptance criteria or derived tests.
 - Implement one task at a time unless explicitly marked parallel-safe.
+
+## OpenCode Platform Adaptation（OpenCode 平台适配）
+
+### Background
+
+OpenCode 平台不支持 `task(subagent_type="tester")` 语法，需要通过 `category` + `load_skills` 参数实现角色派发。Platform Adapter 提供统一抽象来解决此问题。
+
+### Role → Category Mapping
+
+| Role | Category | Default Skills |
+|------|----------|----------------|
+| architect | deep | architect/requirement-to-design, architect/module-boundary-design, architect/tradeoff-analysis |
+| developer | unspecified-high | developer/feature-implementation, developer/bugfix-workflow, developer/code-change-selfcheck |
+| tester | unspecified-high | tester/unit-test-design, tester/regression-analysis, tester/edge-case-matrix |
+| reviewer | unspecified-high | reviewer/code-review-checklist, reviewer/spec-implementation-diff, reviewer/reject-with-actionable-feedback |
+| docs | writing | docs/readme-sync, docs/changelog-writing, docs/issue-status-sync |
+| security | unspecified-high | security/auth-and-permission-review, security/input-validation-review |
+
+### Correct Usage
+
+```typescript
+// ❌ WRONG: subagent_type not supported
+task(subagent_type="tester", prompt="Run tests...")
+
+// ✅ CORRECT: Use category + load_skills
+task(
+  category="unspecified-high",
+  load_skills=["tester/unit-test-design", "tester/regression-analysis", "tester/edge-case-matrix"],
+  prompt="Run tests..."
+)
+```
+
+### Runtime API
+
+使用 `getPlatformAdapter()` 自动获取 category 和 skills：
+
+```typescript
+import { getPlatformAdapter } from './adapters/platform/runtime';
+
+const adapter = getPlatformAdapter('opencode');
+
+// 自动获取 category 和 skills
+const category = adapter.mapRoleToCategory('tester');  // 'unspecified-high'
+const skills = adapter.getDefaultSkills('tester');      // ['tester/unit-test-design', ...]
+
+// 派发任务
+task(
+  category=category,
+  load_skills=skills,
+  prompt="Run tests..."
+)
+```
+
+### Available Exports
+
+```typescript
+import { 
+  getPlatformAdapter,    // 获取 adapter 实例
+  getSupportedPlatforms, // 获取支持的 platform 列表
+  clearCache,            // 清除缓存
+  setProjectRoot,        // 设置项目根目录
+  PlatformNotSupportedError,
+  ConfigLoadError,
+  InvalidRoleError
+} from './adapters/platform/runtime';
+```
+
+### Customization
+
+**项目级覆盖**：创建 `.opencode/platform-override.json` 文件覆盖默认映射。
+
+**Plugin 扩展**：在 `plugin.json` 中添加 `platform_mapping` 字段扩展特定角色的 skills。
+
+详见 `docs/platform-adapter-guide.md`。
 
 ## Execution Discipline
 Always summarize:

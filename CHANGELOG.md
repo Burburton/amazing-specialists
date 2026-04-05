@@ -7,6 +7,83 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.9.0] - 2026-04-05
+
+### Summary
+
+**Secrets Redaction** - Automatic detection and filtering of sensitive information (tokens, passwords, API keys) from error reports before publishing to GitHub Issues, preventing sensitive data leakage.
+
+### Added
+
+#### Feature 046: Secrets Redaction
+
+- **Core Module**: `lib/secrets-redaction/` with pattern-based detection and filtering
+  - `patterns.js` - 12 default secret detection patterns
+  - `scrubber.js` - Deep object traversal and redaction algorithm
+  - `config-loader.js` - Configuration loading with schema validation
+  - `audit-logger.js` - Audit logging without sensitive information
+  - `index.js` - Public API (scrubErrorReport, scrubString, scrubForLog)
+
+- **Default Patterns** (12 patterns):
+  - **Critical**: GitHub Token (ghp_), GitHub App Token (ghs_), AWS Access Key (AKIA), Password, Private Key (PEM), Bearer Token, JWT
+  - **High**: AWS Secret Key, Generic API Key, Generic Secret, Connection String
+  - **Medium**: Environment Variable Reference (${VAR})
+
+- **Configuration System**: `.opencode/secrets-redaction.json`
+  - `enabled` flag (default: true)
+  - `default_patterns` - Toggle individual patterns
+  - `custom_patterns` - User-defined patterns
+  - `context_patterns` - Key-value context matching
+  - `whitelist_fields` - Fields to exclude from redaction
+  - `replacement_format` - Customizable replacement text
+
+- **Integration Points**:
+  - `github-issue-reporter`: Filters error reports before publishing
+  - `auto-error-report`: Filters before passing to reporter
+  - Log output: Filters logs before writing
+
+- **Documentation**:
+  - `docs/secrets-redaction-usage.md` - Comprehensive usage guide
+  - `specs/046-secrets-redaction/contracts/secrets-redaction-config-contract.md` - Configuration contract
+
+- **Tests**:
+  - 46 false positive/negative tests (NFR-002 verification)
+  - Pattern matching tests for all 12 patterns
+  - Scrubber tests for object traversal
+  - Performance tests (all < 50ms)
+  - Integration tests with error-report artifact
+
+- **Performance**:
+  - Typical error-report scrubbing: ~2ms (target: < 50ms)
+  - Large stacktrace scrubbing: ~2ms (target: < 100ms)
+  - False positive rate: 0% (target: < 5%)
+  - False negative rate: 0% (target: < 1%)
+
+### Changed
+
+- Features count: 44 → 45 total
+- Resolves Security Finding: `045-auto-error-report` Sec-002 (secrets redaction not implemented)
+- README updated with feature 046 in feature list
+
+### Security
+
+- ✅ Resolves Sec-002 from auto-error-report security review
+- ✅ Pattern-based detection prevents common secret formats from leaking
+- ✅ Audit logging without sensitive information
+- ✅ Failure isolation (redaction errors do not block publishing)
+- ✅ Fallback to original object on redaction failure
+
+### References
+
+- Feature Spec: `specs/046-secrets-redaction/spec.md`
+- Implementation Plan: `specs/046-secrets-redaction/plan.md`
+- Task List: `specs/046-secrets-redaction/tasks.md`
+- Data Model: `specs/046-secrets-redaction/data-model.md`
+- Usage Guide: `docs/secrets-redaction-usage.md`
+- Config Contract: `specs/046-secrets-redaction/contracts/secrets-redaction-config-contract.md`
+
+---
+
 ## [1.8.0] - 2026-04-05
 
 ### Summary

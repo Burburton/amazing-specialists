@@ -4,7 +4,7 @@
 `045-auto-error-report`
 
 ## Status
-`draft`
+`complete`
 
 ## Version
 `0.1.0`

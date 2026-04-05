@@ -42,8 +42,8 @@
     },
     
     "authentication": {
-      "primary_method": "github_app",
-      "fallback_method": "pat",
+      "primary_method": "pat",
+      "fallback_method": null,
       "token_env_var": "GITHUB_TOKEN",
       "app_id_env_var": "GITHUB_APP_ID",
       "app_private_key_env_var": "GITHUB_APP_PRIVATE_KEY"

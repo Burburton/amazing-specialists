@@ -1,6 +1,6 @@
 ---
 description: Audit consistency between spec, plan, tasks, code, and canonical governance documents
-agent: explore
+agent: general
 flags:
   --enhanced: Enable M4 enhancement kit for comprehensive audit
 ---

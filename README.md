@@ -315,12 +315,13 @@ node plugins/loader.js uninstall vite-react-ts --project ./my-project
 
 ## Skills 清单
 
-### Common Skills（6个）✅ 正式实现
-> **注**: 通过 `043-error-reporter` feature 实现 error-reporter 技能，统一错误报告机制。
+### Common Skills（7个）✅ 正式实现
+> **注**: 通过 `043-error-reporter` feature 实现 error-reporter 技能，`044-github-issue-reporter` feature 实现 github-issue-reporter 技能，统一错误报告与 Issue 发布机制。
 
 - **artifact-reading** - 统一读取工件，提取关键字段
 - **context-summarization** - 上下文裁剪，防止膨胀
 - **error-reporter** - 标准化错误报告，统一错误分类与输出
+- **github-issue-reporter** - 将 error-report 发布到 GitHub Issue，直观展示错误详情
 - **failure-analysis** - 失败根因分析，分类失败类型
 - **execution-reporting** - 统一输出执行结果
 - **retry-strategy** - 智能返工策略选择
@@ -514,8 +515,10 @@ User Input
 | `040-template-pack-content-fix` | 模板包内容修复 | ✅ Complete | CLI 脚本, Examples, Docs 复制到模板包 |
 | `041-readme-interface-and-role-clarification` | README 接口定位与用户角色澄清 | ✅ Complete | 接口定位说明, 用户角色章节, 文档导航重构, 目标受众声明 |
 | `042-issue-lifecycle-automation` | Issue 生命周期自动化 | ✅ Complete | createIssue/searchIssues/closeIssue 方法, CLI 命令, Task ID 工作流 |
+| `043-error-reporter` | Error Reporter | ✅ Complete | error-report artifact, 8 error types, 4 severity levels, ERR-001 contract |
+| `044-github-issue-reporter` | GitHub Issue Reporter | ✅ Complete | Publish error-report to GitHub Issue, 194 tests, CLI command |
 
-> **当前进度**: `001-bootstrap` 至 `042-issue-lifecycle-automation` 已全部完成。**6-Role 正式执行模型完整实现并验证，Enhanced 模式已验证可用，历史功能审计通过，发布准备就绪，契约 Schema Pack 完成，模板化基础包就绪，版本化体系建立，适配层架构完成，GitHub Issue 适配器实现并增强，GitHub PR 适配器实现，OpenClaw 适配器实现，E2E 集成测试完成，E2E Adapter 真实集成测试完成，Plugin 架构完成，Plugin Skill 激活机制完成，Workflow 扩展性增强完成，GitHub Issue Workflow Enhancement 完成，README Quick Start 和文档导航完成，README 命令参考和 Adapter Quick 完成，模板包内容修复完成，README 接口定位与用户角色澄清完成，Issue 生命周期自动化完成**。**Skills 总计 43 个（23 MVP + 16 M4 + 4 Plugin）**，**Features 总计 41 个**。
+> **当前进度**: `001-bootstrap` 至 `044-github-issue-reporter` 已全部完成。**6-Role 正式执行模型完整实现并验证，Enhanced 模式已验证可用，历史功能审计通过，发布准备就绪，契约 Schema Pack 完成，模板化基础包就绪，版本化体系建立，适配层架构完成，GitHub Issue 适配器实现并增强，GitHub PR 适配器实现，OpenClaw 适配器实现，E2E 集成测试完成，E2E Adapter 真实集成测试完成，Plugin 架构完成，Plugin Skill 激活机制完成，Workflow 扩展性增强完成，GitHub Issue Workflow Enhancement 完成，README Quick Start 和文档导航完成，README 命令参考和 Adapter Quick 完成，模板包内容修复完成，README 接口定位与用户角色澄清完成，Issue 生命周期自动化完成，Error Reporter 完成，GitHub Issue Reporter 完成**。**Skills 总计 45 个（25 MVP + 16 M4 + 4 Plugin）**，**Features 总计 43 个**。
 
 ### 阶段 7：3-Skill 迁移 ✅ 已完成（010-3-skill-migration）
 
@@ -619,12 +622,12 @@ node templates/cli/doctor.js
 - `templates/cli/` - Bootstrap CLI (init/install/doctor)
 - `templates/*.md` - 使用文档
 
-> **当前进度**: `001-bootstrap` 至 `008-security-core` 完成 MVP 核心，`010-3-skill-migration` 完成骨架归档，`011-m4-enhancement-kit` 完成 M4 可选增强，`012-performance-testing-skills` 完成性能测试套件，`013-e2e-validation` 完成端到端验证，`014-enhanced-mode-validation` 完成 Enhanced 模式验证，`015-historical-features-audit` 完成历史功能审计，`016-release-preparation` 完成发布准备，`017-contract-schema-pack` 完成契约 Schema Pack，`018-template-and-bootstrap-foundation` 完成模板化基础包，`019-versioning-and-compatibility-foundation` 完成版本化体系，`020-orchestrator-and-workspace-adapters` 完成适配层架构，`021-github-issue-adapter` 完成 GitHub Issue 适配器，`022-github-pr-adapter` 完成 GitHub PR 适配器，`023-openclaw-adapter` 完成 OpenClaw 适配器，`024-e2e-integration-tests` 完成 E2E 集成测试，`025-e2e-adapter-integration-tests` 完成 E2E Adapter 真实集成测试，`026-github-issue-adapter-workflow-test` 完成 Workflow 测试，`027-github-issue-adapter-enhancements` 完成 GitHub Issue Adapter 增强，`028-issue-status-sync` 完成 Issue 状态同步 skill，`029-real-world-validation` 完成实战验证，`030-plugin-architecture` 完成 Plugin 架构，`031-plugin-skill-activation` 完成 Plugin Skill 激活机制，`032-workflow-extensibility-enhancements` 完成 Workflow 扩展性增强，`033-platform-adapter` 完成 Platform Adapter，`034-platform-adapter-runtime` 完成 Platform Adapter 运行时，`035-platform-adapter-usability` 完成 Platform Adapter 可用性修复，`037-github-issue-workflow-enhancement` 完成 GitHub Issue Workflow Enhancement，`038-readme-quick-start-and-doc-unification` 完成 README Quick Start 和文档导航，`039-readme-command-reference-and-adapter-quick` 完成 README 命令参考和 Adapter Quick，`040-template-pack-content-fix` 完成模板包内容修复，`041-readme-interface-and-role-clarification` 完成 README 接口定位与用户角色澄清，`042-issue-lifecycle-automation` 完成 Issue 生命周期自动化，`043-error-reporter` 完成错误报告机制。**Skills 总计 44 个（24 MVP + 16 M4 + 4 Plugin）**，**Features 总计 42 个**。
+> **当前进度**: `001-bootstrap` 至 `044-github-issue-reporter` 已全部完成。**Skills 总计 45 个（25 MVP + 16 M4 + 4 Plugin）**，**Features 总计 43 个**。
 
 ## Quick Start
 
 ### 查看使用指南
-阅读 [docs/skills-usage-guide.md](docs/skills-usage-guide.md) 了解如何使用 23 个 MVP 核心 skills。
+阅读 [docs/skills-usage-guide.md](docs/skills-usage-guide.md) 了解如何使用 25 个 MVP 核心 skills。
 
 ### 查看 Enhanced Mode 指南
 阅读 [docs/enhanced-mode-guide.md](docs/enhanced-mode-guide.md) 了解如何启用和使用 16 个 M4 增强 skills。
@@ -645,7 +648,7 @@ node templates/cli/doctor.js
 
 ```
 .opencode/skills/
-├── common/              # 6个通用技能（MVP）
+├── common/              # 7个通用技能（MVP）
 ├── architect/           # 5个架构师技能（3 MVP + 2 M4）
 │   ├── requirement-to-design/      # MVP
 │   ├── module-boundary-design/     # MVP

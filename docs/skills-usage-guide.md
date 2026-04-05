@@ -4,15 +4,15 @@
 
 ## 概述
 
-本指南介绍如何使用 OpenCode 专家包的 23 个 MVP 核心 Skills 完成全自动产品研发闭环。
+本指南介绍如何使用 OpenCode 专家包的 25 个 MVP 核心 Skills 完成全自动产品研发闭环。
 
 ## 技能总览
 
-### 已完成 Skills（23个 MVP 核心）
+### 已完成 Skills（25个 MVP 核心）
 
 | 类别 | 数量 | Skills |
 |------|------|--------|
-| **Common** | 5 | artifact-reading, context-summarization, failure-analysis, execution-reporting, retry-strategy |
+| **Common** | 7 | artifact-reading, context-summarization, error-reporter, github-issue-reporter, failure-analysis, execution-reporting, retry-strategy |
 | **Architect** | 3 | requirement-to-design, module-boundary-design, tradeoff-analysis |
 | **Developer** | 3 | feature-implementation, bugfix-workflow, code-change-selfcheck |
 | **Tester** | 3 | unit-test-design, regression-analysis, edge-case-matrix |
@@ -214,9 +214,76 @@ retry_strategy:
 
 ---
 
+### 6. error-reporter
+
+**用途**: 标准化错误报告，统一错误分类与输出
+
+**调用时机**: 任务执行失败时
+
+**输入**:
+```yaml
+execution_failure:
+  error_type: INPUT_INVALID
+  context: {...}
+  severity: high
+task_context:
+  goal: "实现登录功能"
+  phase: design
+```
+
+**输出**:
+```yaml
+error_report:
+  artifact_id: ERR-20260405123000-abc123
+  artifact_type: error-report
+  error_classification:
+    severity: high
+    error_type: INPUT_INVALID
+  error_details:
+    title: "Missing spec section"
+    description: "..."
+  resolution_guidance:
+    recommended_action: REWORK
+```
+
+---
+
+### 7. github-issue-reporter
+
+**用途**: 将 error-report artifact 发布到 GitHub Issue，直观展示错误详情
+
+**调用时机**: error-report 生成后（自动或手动）
+
+**输入**:
+```yaml
+error_report: {...}  # error-report artifact
+owner: anomalyco
+repo: amazing-specialists
+issue: 42  # optional, CLI override
+```
+
+**输出**:
+```yaml
+publish_result:
+  success: true
+  comment_url: https://github.com/anomalyco/amazing-specialists/issues/42#issuecomment-123456
+  comment_id: 123456
+```
+
+**使用示例（CLI）**:
+```bash
+node scripts/report-error-to-issue.js \
+  --error-report specs/044/artifacts/error-report-example.json \
+  --owner anomalyco \
+  --repo amazing-specialists \
+  --issue 42
+```
+
+---
+
 ## Architect Skills 使用指南
 
-### 6. requirement-to-design
+### 8. requirement-to-design
 
 **用途**: 需求转技术设计
 
@@ -251,7 +318,7 @@ inputs:
 
 ---
 
-### 7. module-boundary-design
+### 9. module-boundary-design
 
 **用途**: 细化模块划分
 
@@ -272,7 +339,7 @@ module_design:
 
 ---
 
-### 8. tradeoff-analysis
+### 10. tradeoff-analysis
 
 **用途**: 技术方案对比
 
@@ -302,7 +369,7 @@ tradeoff_analysis:
 
 ## Developer Skills 使用指南
 
-### 9. feature-implementation
+### 11. feature-implementation
 
 **用途**: 功能实现
 
@@ -327,7 +394,7 @@ implementation_summary:
 
 ---
 
-### 10. bugfix-workflow
+### 12. bugfix-workflow
 
 **用途**: Bug 修复
 
@@ -350,7 +417,7 @@ bugfix_report:
 
 ---
 
-### 11. code-change-selfcheck
+### 13. code-change-selfcheck
 
 **用途**: 代码自检
 
@@ -377,7 +444,7 @@ self_check_report:
 
 ## Tester Skills 使用指南
 
-### 12. edge-case-matrix
+### 14. edge-case-matrix
 
 **用途**: 边界条件分析
 
@@ -401,7 +468,7 @@ edge_case_matrix:
 
 ---
 
-### 13. unit-test-design
+### 15. unit-test-design
 
 **用途**: 单元测试设计
 
@@ -426,7 +493,7 @@ test_design:
 
 ---
 
-### 14. regression-analysis
+### 16. regression-analysis
 
 **用途**: 回归分析
 
@@ -449,7 +516,7 @@ regression_analysis:
 
 ## Reviewer Skills 使用指南
 
-### 15. code-review-checklist
+### 17. code-review-checklist
 
 **用途**: 代码审查
 
@@ -474,7 +541,7 @@ review_report:
 
 ---
 
-### 16. spec-implementation-diff
+### 18. spec-implementation-diff
 
 **用途**: 实现与 spec 对比
 
@@ -496,7 +563,7 @@ spec_implementation_diff:
 
 ---
 
-### 17. reject-with-actionable-feedback
+### 19. reject-with-actionable-feedback
 
 **用途**: 可执行反馈
 
@@ -520,7 +587,7 @@ reject_feedback:
 
 ## Docs Skills 使用指南
 
-### 18. readme-sync
+### 20. readme-sync
 
 **用途**: README 同步
 
@@ -543,7 +610,7 @@ readme_sync_report:
 
 ---
 
-### 19. changelog-writing
+### 21. changelog-writing
 
 **用途**: 变更日志
 
@@ -572,7 +639,7 @@ changelog_entry:
 
 ## Security Skills 使用指南
 
-### 20. auth-and-permission-review
+### 22. auth-and-permission-review
 
 **用途**: 认证权限审查
 
@@ -598,7 +665,7 @@ security_review_report:
 
 ---
 
-### 21. input-validation-review
+### 23. input-validation-review
 
 **用途**: 输入验证审查
 
@@ -848,7 +915,7 @@ $ feature-implementation
 
 | 角色 | Skills |
 |------|--------|
-| Common | artifact-reading, context-summarization, failure-analysis, execution-reporting, retry-strategy |
+| Common | artifact-reading, context-summarization, error-reporter, github-issue-reporter, failure-analysis, execution-reporting, retry-strategy |
 | Architect | requirement-to-design, module-boundary-design, tradeoff-analysis |
 | Developer | feature-implementation, bugfix-workflow, code-change-selfcheck |
 | Tester | edge-case-matrix, unit-test-design, regression-analysis |
@@ -865,6 +932,8 @@ $ feature-implementation
 | 代码审查 | artifact-reading → code-review-checklist → execution-reporting |
 | 安全审查 | artifact-reading → auth-and-permission-review → execution-reporting |
 | 文档更新 | artifact-reading → readme-sync → changelog-writing → execution-reporting |
+| 错误报告 | error-reporter → github-issue-reporter (发布到 Issue) |
+| 失败处理 | error-reporter → failure-analysis → retry-strategy |
 
 ### 风险等级 → Security
 
@@ -923,7 +992,7 @@ $ node contracts/pack/validate-schema.js artifacts/design-note.json AC-001
 
 ## 版本信息
 
-- **Version**: 1.0.0
-- **Updated**: 2026-03-22
-- **Skills Count**: 23 (MVP Core)
-- **MVP Stage**: M1 + M2 + M3 Complete
+- **Version**: 1.1.0
+- **Updated**: 2026-04-05
+- **Skills Count**: 25 (MVP Core)
+- **MVP Stage**: M1 + M2 + M3 + M4 Complete

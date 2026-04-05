@@ -1,0 +1,50 @@
+{
+  "artifact_id": "ERR-20260405123000-abc123",
+  "artifact_type": "error-report",
+  "error_context": {
+    "dispatch_id": "gh-issue-anomalyco-amazing-specialists-42",
+    "task_id": "T-044-003",
+    "role": "architect",
+    "execution_phase": "design"
+  },
+  "error_classification": {
+    "error_type": "INPUT_INVALID",
+    "error_subtype": "missing_spec_section",
+    "severity": "high"
+  },
+  "error_details": {
+    "title": "Missing spec section: acceptance criteria",
+    "description": "The spec.md file does not contain a valid Acceptance Criteria section. Unable to proceed with design phase.",
+    "error_code": "ERR-ARCH-001",
+    "stacktrace_or_context": "File: specs/my-feature/spec.md\nLine: 45\nExpected section: Acceptance Criteria\nFound: Requirements section only"
+  },
+  "impact_assessment": {
+    "blocking_points": [
+      "Cannot define design success criteria without acceptance criteria",
+      "Review phase will fail without measurable criteria",
+      "Test design phase cannot proceed"
+    ],
+    "downstream_impact": "blocked",
+    "milestone_impact": "delay"
+  },
+  "traceability": {
+    "source_artifact": "specs/my-feature/spec.md",
+    "source_file": "specs/my-feature/spec.md",
+    "source_line": 45
+  },
+  "resolution_guidance": {
+    "auto_recoverable": false,
+    "recommended_action": "REWORK",
+    "fix_suggestions": [
+      "Add Acceptance Criteria section to spec.md",
+      "Define at least 3 testable acceptance criteria",
+      "Ensure criteria are measurable and verifiable"
+    ],
+    "estimated_fix_effort": "15 minutes"
+  },
+  "metadata": {
+    "created_at": "2026-04-05T12:30:00Z",
+    "created_by_role": "architect",
+    "retry_count": 0
+  }
+}

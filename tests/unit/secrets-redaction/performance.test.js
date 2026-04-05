@@ -21,7 +21,7 @@ function generateTypicalErrorReport() {
       blocking_points: ['Database connection failed with password: mypassword123']
     },
     resolution_guidance: {
-      fix_suggestions: ['Check connection_string: postgresql://user:pass@host/db']
+      fix_suggestions: ['Check connection_string: postgresql://TESTUSER:TESTPASS@TESTHOST/TESTDB']
     },
     context: {
       environment: 'production',
@@ -149,7 +149,7 @@ ghp_TESTFAKE1234567890ABCDEFGHIJKLMNOPQR
           eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
           \${MY_SECRET_ENV_VAR}
         `,
-        stacktrace_or_context: 'connection_string: postgresql://user:pass@host/db'
+        stacktrace_or_context: 'connection_string: postgresql://TESTUSER:TESTPASS@TESTHOST/TESTDB'
       }
     };
     

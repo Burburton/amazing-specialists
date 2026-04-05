@@ -227,7 +227,7 @@ describe('False Positive/Negative Tests', () => {
           { input: 'Bearer eyJhbGciOiJIUzI1NiJ9', shouldRedact: true },
           { input: 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0In0.sig', shouldRedact: true },
           { input: '-----BEGIN RSA PRIVATE KEY-----', shouldRedact: true },
-          { input: 'connection_string: postgresql://user:pass@host/db', shouldRedact: true }
+          { input: 'connection_string: postgresql://TESTUSER:TESTPASS@TESTHOST/TESTDB', shouldRedact: true }
         ];
 
         let falsePositives = 0;
@@ -462,8 +462,8 @@ database:
           '-----BEGIN RSA PRIVATE KEY-----',
           '-----BEGIN EC PRIVATE KEY-----',
           '-----BEGIN PRIVATE KEY-----',
-          'connection_string: postgresql://user:pass@host/db',
-          'connstr: mongodb://user:pass@host:27017/db',
+          'connection_string: postgresql://TESTUSER:TESTPASS@TESTHOST/TESTDB',
+          'connstr: mongodb://TESTUSER:TESTPASS@TESTHOST:27017/TESTDB',
           '${MY_SECRET}',
           '${DATABASE_PASSWORD}',
           '${API_KEY}',

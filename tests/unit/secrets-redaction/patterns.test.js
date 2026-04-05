@@ -487,41 +487,41 @@ MIIEpAIBAAKCAQEA...
     const pattern = getPatternByName('connection_string');
 
     test('matches connection_string: format', () => {
-      const text = 'connection_string: postgresql://user:pass@host/db';
+      const text = 'connection_string: postgresql://TESTUSER:TESTPASS@TESTHOST/TESTDB';
       const regex = new RegExp(pattern.pattern.source, pattern.pattern.flags);
       expect(regex.test(text)).toBe(true);
     });
 
     test('matches connection-string: format', () => {
-      const text = 'connection-string: mysql://user:password@localhost/db';
+      const text = 'connection-string: mysql://TESTUSER:TESTPASS@TESTHOST/TESTDB';
       const regex = new RegExp(pattern.pattern.source, pattern.pattern.flags);
       expect(regex.test(text)).toBe(true);
     });
 
     test('matches connstr: format', () => {
-      const text = 'connstr: mongodb://user:pass@host:27017/db';
+      const text = 'connstr: mongodb://TESTUSER:TESTPASS@TESTHOST:27017/TESTDB';
       const regex = new RegExp(pattern.pattern.source, pattern.pattern.flags);
       expect(regex.test(text)).toBe(true);
     });
 
     test('matches case insensitive', () => {
-      const text = 'CONNECTION_STRING: postgresql://user:pass@host/db';
+      const text = 'CONNECTION_STRING: postgresql://TESTUSER:TESTPASS@TESTHOST/TESTDB';
       const regex = new RegExp(pattern.pattern.source, pattern.pattern.flags);
       expect(regex.test(text)).toBe(true);
     });
 
     test('matches with equals sign', () => {
-      const text = 'connection_string=postgresql://user:pass@host/db';
+      const text = 'connection_string=postgresql://TESTUSER:TESTPASS@TESTHOST/TESTDB';
       const regex = new RegExp(pattern.pattern.source, pattern.pattern.flags);
       expect(regex.test(text)).toBe(true);
     });
 
     test('matches various database types', () => {
       const dbStrings = [
-        'connection_string: postgresql://user:pass@host/db',
-        'connection_string: mysql://root:secret@localhost/mydb',
-        'connection_string: mongodb://admin:pwd@cluster.mongodb.net/db',
-        'connection_string: redis://:password@host:6379'
+        'connection_string: postgresql://TESTUSER:TESTPASS@TESTHOST/TESTDB',
+        'connection_string: mysql://TESTUSER:TESTPASS@TESTHOST/TESTDB',
+        'connection_string: mongodb://TESTUSER:TESTPASS@TESTCLUSTER.mongodb.net/TESTDB',
+        'connection_string: redis://:TESTPASS@TESTHOST:6379'
       ];
       dbStrings.forEach(str => {
         const regex = new RegExp(pattern.pattern.source, pattern.pattern.flags);
@@ -530,7 +530,7 @@ MIIEpAIBAAKCAQEA...
     });
 
     test('does not match without keyword', () => {
-      const text = 'postgresql://user:pass@host/db';
+      const text = 'postgresql://TESTUSER:TESTPASS@TESTHOST/TESTDB';
       const regex = new RegExp(pattern.pattern.source, pattern.pattern.flags);
       expect(regex.test(text)).toBe(false);
     });

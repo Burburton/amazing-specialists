@@ -695,7 +695,7 @@ Error at config.js:42
       },
       context: {
         config: {
-          database_url: 'connection_string: postgresql://user:pass@host/db'
+          database_url: 'connection_string: postgresql://TESTUSER:TESTPASS@TESTHOST/TESTDB'
         }
       },
       impact_assessment: {

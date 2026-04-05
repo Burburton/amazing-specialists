@@ -136,7 +136,7 @@ const createErrorReportWithNestedSecrets = () => ({
   context: {
     config: {
       database: {
-        connection_string: 'postgresql://user:secretpass123@host:5432/mydb',
+        connection_string: 'postgresql://TESTUSER:TESTPASS123@TESTHOST:5432/TESTDB',
         password: 'db_password_secret_value'
       },
       api: {
@@ -334,7 +334,7 @@ describe('Secrets Redaction Integration Tests', () => {
               key: 'api_key: TEST-API-KEY-FOR-TESTING-NOT-REAL-abc'
             },
             database: {
-              connection_string: 'postgresql://user:pass@host/db'
+              connection_string: 'postgresql://TESTUSER:TESTPASS@TESTHOST/TESTDB'
             }
           }
         }

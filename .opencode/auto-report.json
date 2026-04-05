@@ -1,0 +1,23 @@
+{
+  "$schema": "./auto-report-config.schema.json",
+  "enabled": false,
+  "github_token_env": "GITHUB_TOKEN",
+  "target_repository": {
+    "owner": "",
+    "repo": ""
+  },
+  "report_conditions": {
+    "severity_threshold": "medium",
+    "only_expert_pack_errors": true,
+    "exclude_types": ["ENVIRONMENT_ISSUE"]
+  },
+  "rate_limit": {
+    "max_per_hour": 5,
+    "max_per_day": 20,
+    "dedup_window_minutes": 60
+  },
+  "privacy": {
+    "include_stack_trace": true,
+    "redact_secrets": true
+  }
+}

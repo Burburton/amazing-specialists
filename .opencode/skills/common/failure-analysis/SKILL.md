@@ -156,6 +156,55 @@
 ### Step 6: 生成结构化报告
 输出 failure analysis report
 
+### Step 7: 自动触发错误报告
+当 failure analysis 完成且满足以下条件时，自动将错误报告发布到 GitHub Issue：
+
+1. **生成 error-report artifact**：将 failure_analysis 转换为标准 error-report 格式
+2. **检查自动报告配置**：读取 `.opencode/auto-report.json` 配置
+3. **执行自动报告**：调用 `lib/auto-error-report/index.js` 的 `tryAutoReport()`
+
+**触发条件**：
+- 配置文件中 `enabled: true`
+- 错误严重级别 >= `report_conditions.severity_threshold`
+- 错误类型不在 `exclude_types` 列表中
+- 未超过 rate limit
+
+**集成模式**：
+```javascript
+// 在 failure analysis 完成后
+const { tryAutoReport } = require('../../../lib/auto-error-report');
+
+// 从 failure_analysis 构造 error-report
+const errorReport = {
+  artifact_id: `err-${dispatch_id}`,
+  artifact_type: 'error-report',
+  error_context: {
+    dispatch_id: dispatch_id,
+    task_id: task_id,
+    role: role
+  },
+  error_classification: {
+    severity: failure_analysis.failure_summary.severity,
+    error_type: failure_analysis.failure_summary.failure_type,
+    error_subtype: failure_analysis.failure_summary.failure_subtype
+  },
+  error_details: {
+    error_code: failure_analysis.failure_summary.failure_subtype,
+    title: failure_analysis.failure_summary.description,
+    root_cause: failure_analysis.root_cause.primary_cause
+  },
+  // ... 其他字段
+};
+
+// 异步执行自动报告（失败静默）
+tryAutoReport(errorReport).catch(() => {});
+```
+
+**重要特性**：
+- **异步执行**：不阻塞主流程
+- **失败静默**：报告失败不影响 failure analysis 结果
+- **自动去重**：相同错误在 dedup_window 内不重复报告
+
 ## Checklists
 
 ### 前置检查

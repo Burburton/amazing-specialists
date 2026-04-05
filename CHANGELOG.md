@@ -7,6 +7,69 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.8.0] - 2026-04-05
+
+### Summary
+
+**Auto Error Report** - Automatic error reporting to GitHub Issues when execution errors meet configured thresholds, eliminating manual CLI commands.
+
+### Added
+
+#### Feature 045: Auto Error Report
+
+- **Configuration System**: `.opencode/auto-report.json` with schema validation
+  - `enabled` flag (default disabled for security)
+  - `github_token_env` for token environment variable reference
+  - `severity_threshold` for filtering error reports (low/medium/high/critical)
+  - `rate_limit` for preventing excessive reports (max_per_hour, max_per_day, dedup_window)
+  - `privacy` settings for stack trace and secrets redaction
+
+- **Auto Trigger Modules**:
+  - `lib/auto-error-report/config-loader.js` - Configuration loading with AJV validation
+  - `lib/auto-error-report/rate-limiter.js` - Rate limit enforcement with memory-based tracking
+  - `lib/auto-error-report/dedup-manager.js` - Error hash deduplication (SHA-256)
+  - `lib/auto-error-report/trigger-checker.js` - Condition checking (severity, type, role)
+  - `lib/auto-error-report/index.js` - Core module with failure isolation
+
+- **Integration with failure-analysis Skill**:
+  - Step 7 added to `.opencode/skills/common/failure-analysis/SKILL.md`
+  - Automatic trigger after failure analysis report generation
+  - Async execution with failure isolation (does not block main flow)
+  - Error report generation and automatic publish to GitHub Issue
+
+- **Documentation**:
+  - `docs/auto-error-report-usage.md` - Usage guide with configuration examples
+  - `specs/045-auto-error-report/security-review-report.md` - Security review findings
+  - `tests/performance/auto-error-report/benchmark.test.js` - Performance benchmarks
+
+- **Tests**:
+  - 68 unit tests covering all modules (config, rate limit, dedup, trigger, core)
+  - Performance benchmarks: all operations < 10ms (NFR-001 verified)
+
+### Changed
+
+- Features count: 43 → 44 total
+- No new skill created (integrates into existing failure-analysis skill)
+- README updated with feature 045 in feature list
+
+### Security
+
+- ✅ GitHub token from environment variable only (no hardcoding)
+- ✅ Default disabled state (`enabled: false`)
+- ✅ No token storage in configuration file
+- ✅ Failure isolation (errors do not affect main execution flow)
+- ⚠️ Secrets redaction not yet implemented (documented in security review)
+
+### References
+
+- Feature Spec: `specs/045-auto-error-report/spec.md`
+- Implementation Plan: `specs/045-auto-error-report/plan.md`
+- Task List: `specs/045-auto-error-report/tasks.md`
+- Usage Guide: `docs/auto-error-report-usage.md`
+- Security Review: `specs/045-auto-error-report/security-review-report.md`
+
+---
+
 ## [1.7.1] - 2026-04-04
 
 ### Summary

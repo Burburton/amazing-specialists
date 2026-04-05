@@ -1,0 +1,118 @@
+{
+  "$schema": "http://json-schema.org/draft-2020-12/schema#",
+  "$id": "auto-report-config.schema.json",
+  "title": "Auto Error Report Configuration",
+  "description": "Configuration for automatic error report to GitHub",
+  "type": "object",
+  "required": ["enabled", "github_token_env", "target_repository", "report_conditions", "rate_limit", "privacy"],
+  "properties": {
+    "enabled": {
+      "type": "boolean",
+      "default": false,
+      "description": "Enable/disable automatic error reporting"
+    },
+    "github_token_env": {
+      "type": "string",
+      "default": "GITHUB_TOKEN",
+      "description": "Environment variable name for GitHub token"
+    },
+    "target_repository": {
+      "type": "object",
+      "required": ["owner", "repo"],
+      "properties": {
+        "owner": {
+          "type": "string",
+          "minLength": 1,
+          "description": "GitHub repository owner"
+        },
+        "repo": {
+          "type": "string",
+          "minLength": 1,
+          "description": "GitHub repository name"
+        }
+      },
+      "description": "Target GitHub repository for error reports"
+    },
+    "report_conditions": {
+      "type": "object",
+      "required": ["severity_threshold"],
+      "properties": {
+        "severity_threshold": {
+          "type": "string",
+          "enum": ["low", "medium", "high", "critical"],
+          "default": "medium",
+          "description": "Minimum severity level for auto report"
+        },
+        "only_expert_pack_errors": {
+          "type": "boolean",
+          "default": true,
+          "description": "Only report errors from expert pack execution"
+        },
+        "exclude_types": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "INPUT_INVALID",
+              "CONSTRAINT_VIOLATION",
+              "EXECUTION_ERROR",
+              "VERIFICATION_FAILURE",
+              "ENVIRONMENT_ISSUE",
+              "DEPENDENCY_BLOCKER",
+              "AMBIGUOUS_GOAL",
+              "SCOPE_CREEP_DETECTED"
+            ]
+          },
+          "default": ["ENVIRONMENT_ISSUE"],
+          "description": "Error types to exclude from auto report"
+        }
+      },
+      "description": "Conditions for triggering auto report"
+    },
+    "rate_limit": {
+      "type": "object",
+      "required": ["max_per_hour", "max_per_day", "dedup_window_minutes"],
+      "properties": {
+        "max_per_hour": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 5,
+          "description": "Maximum reports per hour"
+        },
+        "max_per_day": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 500,
+          "default": 20,
+          "description": "Maximum reports per day"
+        },
+        "dedup_window_minutes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1440,
+          "default": 60,
+          "description": "Deduplication window in minutes"
+        }
+      },
+      "description": "Rate limiting configuration"
+    },
+    "privacy": {
+      "type": "object",
+      "required": ["include_stack_trace", "redact_secrets"],
+      "properties": {
+        "include_stack_trace": {
+          "type": "boolean",
+          "default": true,
+          "description": "Include stack trace in error report"
+        },
+        "redact_secrets": {
+          "type": "boolean",
+          "default": true,
+          "description": "Redact secrets/tokens from stack trace"
+        }
+      },
+      "description": "Privacy settings for error reports"
+    }
+  }
+}

@@ -13,7 +13,7 @@ describe('Scrubber', () => {
     describe('simple object with single secret', () => {
       test('scrubs GitHub token in simple object', () => {
         const obj = {
-          token: 'ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+          token: 'ghp_TESTFAKE1234567890ABCDEFGHIJKLMNOPQR'
         };
         const result = scrubObject(obj, patterns);
 
@@ -69,7 +69,7 @@ describe('Scrubber', () => {
         const obj = {
           api_key: 'api_key: sk-1234567890abcdefghijklmnop',
           nested: {
-            token: 'ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+            token: 'ghp_TESTFAKE1234567890ABCDEFGHIJKLMNOPQR',
             deeper: {
               secret: 'secret: mysecretvalue123456'
             }
@@ -108,7 +108,7 @@ describe('Scrubber', () => {
       test('scrubs secrets in array', () => {
         const obj = {
           tokens: [
-            'ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+            'ghp_TESTFAKE1234567890ABCDEFGHIJKLMNOPQR',
             'ghs_yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy',
             'normal_value'
           ]
@@ -124,7 +124,7 @@ describe('Scrubber', () => {
       test('scrubs nested arrays', () => {
         const obj = {
           matrix: [
-            ['ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', 'normal'],
+            ['ghp_TESTFAKE1234567890ABCDEFGHIJKLMNOPQR', 'normal'],
             ['AKIAIOSFODNN7EXAMPLE', 'data']
           ]
         };
@@ -152,7 +152,7 @@ describe('Scrubber', () => {
     describe('mixed types', () => {
       test('handles mixed types (strings, numbers, booleans)', () => {
         const obj = {
-          token: 'ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+          token: 'ghp_TESTFAKE1234567890ABCDEFGHIJKLMNOPQR',
           count: 42,
           enabled: true,
           ratio: 3.14,
@@ -214,7 +214,7 @@ describe('Scrubber', () => {
       test('handles object with empty strings', () => {
         const obj = {
           empty: '',
-          nonEmpty: 'ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+          nonEmpty: 'ghp_TESTFAKE1234567890ABCDEFGHIJKLMNOPQR'
         };
         const result = scrubObject(obj, patterns);
 
@@ -245,7 +245,7 @@ describe('Scrubber', () => {
     describe('original object preservation', () => {
       test('does not mutate original object', () => {
         const original = {
-          token: 'ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+          token: 'ghp_TESTFAKE1234567890ABCDEFGHIJKLMNOPQR',
           nested: {
             secret: 'api_key: MYAPIKEY12345678901234'
           }
@@ -262,13 +262,13 @@ describe('Scrubber', () => {
 
       test('deep clone preserves structure', () => {
         const original = {
-          a: { b: { c: 'ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' } },
+          a: { b: { c: 'ghp_TESTFAKE1234567890ABCDEFGHIJKLMNOPQR' } },
           d: [1, 2, { e: 'api_key: MYAPIKEY12345678901234' }]
         };
 
         const result = scrubObject(original, patterns);
 
-        expect(original.a.b.c).toBe('ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
+        expect(original.a.b.c).toBe('ghp_TESTFAKE1234567890ABCDEFGHIJKLMNOPQR');
         expect(result.scrubbed.a.b.c).toBe('[REDACTED:github-token]');
         expect(result.scrubbed.d[2].e).toContain('[REDACTED:api-key]');
       });
@@ -290,7 +290,7 @@ describe('Scrubber', () => {
 
       test('records array index in paths', () => {
         const obj = {
-          items: ['ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx']
+          items: ['ghp_TESTFAKE1234567890ABCDEFGHIJKLMNOPQR']
         };
         const result = scrubObject(obj, patterns);
 
@@ -299,7 +299,7 @@ describe('Scrubber', () => {
 
       test('records nested array paths', () => {
         const obj = {
-          matrix: [['ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx']]
+          matrix: [['ghp_TESTFAKE1234567890ABCDEFGHIJKLMNOPQR']]
         };
         const result = scrubObject(obj, patterns);
 
@@ -309,7 +309,7 @@ describe('Scrubber', () => {
       test('records object in array paths', () => {
         const obj = {
           users: [
-            { token: 'ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' }
+            { token: 'ghp_TESTFAKE1234567890ABCDEFGHIJKLMNOPQR' }
           ]
         };
         const result = scrubObject(obj, patterns);
@@ -320,14 +320,14 @@ describe('Scrubber', () => {
 
     describe('redaction count accuracy', () => {
       test('counts single match correctly', () => {
-        const obj = { token: 'ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' };
+        const obj = { token: 'ghp_TESTFAKE1234567890ABCDEFGHIJKLMNOPQR' };
         const result = scrubObject(obj, patterns);
         expect(result.redaction_count).toBe(1);
       });
 
       test('counts matches in different fields', () => {
         const obj = {
-          field1: 'ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+          field1: 'ghp_TESTFAKE1234567890ABCDEFGHIJKLMNOPQR',
           field2: 'password: secret123',
           field3: 'api_key: MYAPIKEY12345678901234'
         };
@@ -338,7 +338,7 @@ describe('Scrubber', () => {
       test('counts matches in arrays', () => {
         const obj = {
           tokens: [
-            'ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+            'ghp_TESTFAKE1234567890ABCDEFGHIJKLMNOPQR',
             'ghs_yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy'
           ]
         };
@@ -350,7 +350,7 @@ describe('Scrubber', () => {
 
   describe('scrubString', () => {
     test('scrubs single pattern match', () => {
-      const text = 'Token: ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';
+      const text = 'Token: ghp_TESTFAKE1234567890ABCDEFGHIJKLMNOPQR';
       const result = scrubString(text, patterns);
 
       expect(result).toContain('[REDACTED:github-token]');
@@ -374,7 +374,7 @@ describe('Scrubber', () => {
     });
 
     test('handles special characters in context', () => {
-      const text = 'Token="ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"';
+      const text = 'Token="ghp_TESTFAKE1234567890ABCDEFGHIJKLMNOPQR"';
       const result = scrubString(text, patterns);
 
       expect(result).toContain('[REDACTED:github-token]');
@@ -382,7 +382,7 @@ describe('Scrubber', () => {
     });
 
     test('preserves non-matching parts', () => {
-      const text = 'Start ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx End';
+      const text = 'Start ghp_TESTFAKE1234567890ABCDEFGHIJKLMNOPQR End';
       const result = scrubString(text, patterns);
 
       expect(result).toContain('Start');
@@ -424,7 +424,7 @@ Error: Configuration failed
     });
 
     test('scrubs multiple secrets in stacktrace', () => {
-      const trace = 'Error: ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx api_key: MYAPIKEY12345678901234567890';
+      const trace = 'Error: ghp_TESTFAKE1234567890ABCDEFGHIJKLMNOPQR api_key: MYAPIKEY12345678901234567890';
       const result = scrubStackTrace(trace, patterns);
 
       expect(result).toContain('[REDACTED:github-token]');
@@ -447,7 +447,7 @@ Error at line 1
     test('skips whitelisted fields', () => {
       const obj = {
         error_code: 'AKIAIOSFODNN7EXAMPLE',
-        real_token: 'ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+        real_token: 'ghp_TESTFAKE1234567890ABCDEFGHIJKLMNOPQR'
       };
       const result = scrubObject(obj, patterns, { whitelist: ['error_code'] });
 
@@ -460,7 +460,7 @@ Error at line 1
       const obj = {
         config: {
           safe_key: 'AKIAIOSFODNN7EXAMPLE',
-          unsafe_token: 'ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+          unsafe_token: 'ghp_TESTFAKE1234567890ABCDEFGHIJKLMNOPQR'
         }
       };
       const result = scrubObject(obj, patterns, { whitelist: ['config.safe_key'] });
@@ -473,19 +473,19 @@ Error at line 1
       const obj = {
         metadata: {
           error_code: 'AKIAIOSFODNN7EXAMPLE',
-          trace_id: 'ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+          trace_id: 'ghp_TESTFAKE1234567890ABCDEFGHIJKLMNOPQR'
         }
       };
       const result = scrubObject(obj, patterns, { whitelist: ['metadata'] });
 
       expect(result.scrubbed.metadata.error_code).toBe('AKIAIOSFODNN7EXAMPLE');
-      expect(result.scrubbed.metadata.trace_id).toBe('ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
+      expect(result.scrubbed.metadata.trace_id).toBe('ghp_TESTFAKE1234567890ABCDEFGHIJKLMNOPQR');
       expect(result.redaction_count).toBe(0);
     });
 
     test('empty whitelist processes all fields', () => {
       const obj = {
-        token: 'ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+        token: 'ghp_TESTFAKE1234567890ABCDEFGHIJKLMNOPQR'
       };
       const result = scrubObject(obj, patterns, { whitelist: [] });
 
@@ -513,7 +513,7 @@ Error at line 1
 
     test('context pattern takes precedence over default patterns', () => {
       const obj = {
-        custom_secret: 'ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+        custom_secret: 'ghp_TESTFAKE1234567890ABCDEFGHIJKLMNOPQR'
       };
       const contextPatterns = [
         {
@@ -552,7 +552,7 @@ Error at line 1
 
     test('invalid regex in context pattern is skipped', () => {
       const obj = {
-        valid_field: 'ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+        valid_field: 'ghp_TESTFAKE1234567890ABCDEFGHIJKLMNOPQR',
         invalid_context_field: 'value'
       };
       const contextPatterns = [
@@ -573,7 +573,7 @@ Error at line 1
   describe('replacement format', () => {
     test('uses correct format for each pattern type', () => {
       const testCases = [
-        { input: 'ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', expected: '[REDACTED:github-token]' },
+        { input: 'ghp_TESTFAKE1234567890ABCDEFGHIJKLMNOPQR', expected: '[REDACTED:github-token]' },
         { input: 'ghs_yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy', expected: '[REDACTED:github-app-token]' },
         { input: 'AKIAIOSFODNN7EXAMPLE', expected: '[REDACTED:aws-access-key]' },
         { input: 'Bearer eyJhbGciOiJIUzI1NiJ9', expected: '[REDACTED:bearer-token]' }
@@ -588,7 +588,7 @@ Error at line 1
 
     test('preserves context around replacement', () => {
       const obj = {
-        message: 'Token was ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx and failed'
+        message: 'Token was ghp_TESTFAKE1234567890ABCDEFGHIJKLMNOPQR and failed'
       };
       const result = scrubObject(obj, patterns);
 
@@ -603,7 +603,7 @@ Error at line 1
       const largeObj = {};
       for (let i = 0; i < 100; i++) {
         largeObj[`field_${i}`] = i % 10 === 0 
-          ? 'ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+          ? 'ghp_TESTFAKE1234567890ABCDEFGHIJKLMNOPQR'
           : `normal_value_${i}`;
       }
 
@@ -616,7 +616,7 @@ Error at line 1
     });
 
     test('handles deep nesting efficiently', () => {
-      let deepObj = { value: 'ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' };
+      let deepObj = { value: 'ghp_TESTFAKE1234567890ABCDEFGHIJKLMNOPQR' };
       for (let i = 0; i < 50; i++) {
         deepObj = { nested: deepObj };
       }
@@ -631,7 +631,7 @@ Error at line 1
 
   describe('edge cases', () => {
     test('handles circular-like structures (same reference)', () => {
-      const sharedValue = 'ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';
+      const sharedValue = 'ghp_TESTFAKE1234567890ABCDEFGHIJKLMNOPQR';
       const obj = {
         a: sharedValue,
         b: sharedValue
@@ -667,7 +667,7 @@ Error at line 1
       const date = new Date('2026-04-05');
       const obj = {
         timestamp: date,
-        token: 'ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+        token: 'ghp_TESTFAKE1234567890ABCDEFGHIJKLMNOPQR'
       };
       const result = scrubObject(obj, patterns);
 
@@ -690,7 +690,7 @@ describe('Integration with Error Report Structure', () => {
         stacktrace_or_context: `
 Error at config.js:42
   password: mysecretpassword123
-  token: ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  token: ghp_TESTFAKE1234567890ABCDEFGHIJKLMNOPQR
 `
       },
       context: {
@@ -717,7 +717,7 @@ Error at config.js:42
     const errorReport = {
       error_details: {
         blocking_points: [
-          'Token ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx leaked',
+          'Token ghp_TESTFAKE1234567890ABCDEFGHIJKLMNOPQR leaked',
           'AWS key AKIAIOSFODNN7EXAMPLE found'
         ]
       }

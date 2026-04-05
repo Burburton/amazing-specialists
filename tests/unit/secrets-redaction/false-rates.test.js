@@ -63,7 +63,7 @@ describe('False Positive/Negative Tests', () => {
 
       test('redacts actual token in URL query param', () => {
         const obj = {
-          url: 'https://api.example.com?token=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+          url: 'https://api.example.com?token=ghp_TESTFAKE1234567890ABCDEFGHIJKLMNOPQR'
         };
         const result = scrubObject(obj, patterns);
         
@@ -95,7 +95,7 @@ describe('False Positive/Negative Tests', () => {
 
       test('redacts actual secret even in code comment', () => {
         const obj = {
-          code: '// hardcoded token: ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+          code: '// hardcoded token: ghp_TESTFAKE1234567890ABCDEFGHIJKLMNOPQR'
         };
         const result = scrubObject(obj, patterns);
         
@@ -219,7 +219,7 @@ describe('False Positive/Negative Tests', () => {
           { input: 'Bearer authentication header format', shouldRedact: true },
           { input: 'JWT structure explanation', shouldRedact: false },
           { input: 'connection_string parameter description', shouldRedact: false },
-          { input: 'ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', shouldRedact: true },
+          { input: 'ghp_TESTFAKE1234567890ABCDEFGHIJKLMNOPQR', shouldRedact: true },
           { input: 'AKIAIOSFODNN7EXAMPLE', shouldRedact: true },
           { input: 'password: mysecretpass123', shouldRedact: true },
           { input: 'api_key: sk-1234567890abcdefghij', shouldRedact: true },
@@ -349,7 +349,7 @@ MIIEvgIBADANBg...
     describe('Secrets in unusual contexts', () => {
       test('redacts token in JSON string', () => {
         const obj = {
-          json: '{"auth": "ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"}'
+          json: '{"auth": "ghp_TESTFAKE1234567890ABCDEFGHIJKLMNOPQR"}'
         };
         const result = scrubObject(obj, patterns);
         
@@ -394,7 +394,7 @@ database:
     describe('Multiple secrets in single string', () => {
       test('redacts tokens in concatenated string', () => {
         const obj = {
-          data: 'ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx ghs_yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy AKIAIOSFODNN7EXAMPLE'
+          data: 'ghp_TESTFAKE1234567890ABCDEFGHIJKLMNOPQR ghs_yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy AKIAIOSFODNN7EXAMPLE'
         };
         const result = scrubObject(obj, patterns);
         expect(result.redaction_count).toBeGreaterThanOrEqual(3);
@@ -447,8 +447,8 @@ database:
     describe('False negative rate measurement', () => {
       test('false negative rate should be < 1%', () => {
         const knownSecrets = [
-          'ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-          'ghs_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+          'ghp_TESTFAKE1234567890ABCDEFGHIJKLMNOPQR',
+          'ghs_TESTFAKE1234567890ABCDEFGHIJKLMNOPQR',
           'AKIAIOSFODNN7EXAMPLE',
           'AKIA1234567890ABCDEF',
           'wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY',

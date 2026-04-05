@@ -137,8 +137,8 @@ describe('Performance Benchmarks', () => {
       error_details: {
         title: 'Performance Test',
         description: `
-          ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-          ghs_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ghp_TESTFAKE1234567890ABCDEFGHIJKLMNOPQR
+           ghs_TESTFAKE1234567890ABCDEFGHIJKLMNOPQR
           AKIAIOSFODNN7EXAMPLE
           wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
           api_key: sk-1234567890abcdefghijklmnopqrstuvwx

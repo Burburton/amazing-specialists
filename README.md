@@ -175,13 +175,13 @@ node templates/cli/doctor.js
 - **examples/** - 正例、边界例、失败例
 - **specs/** - 本专家包自身功能的 spec-driven 开发目录
 - **docs/** - 使用指南和验证报告
-- **contracts/pack/** - 统一 Contract Schema Pack（18 个 artifact contracts 的机器可读 JSON Schema）
+- **contracts/pack/** - 统一 Contract Schema Pack（19 个 artifact contracts 的机器可读 JSON Schema）
 
 ### Contract Schema Pack
 
-Contract Schema Pack 提供所有 18 个 artifact contracts 的统一机器可读定义：
+Contract Schema Pack 提供所有 19 个 artifact contracts 的统一机器可读定义：
 
-- **registry.json** - 统一契约注册表，包含所有 18 个契约的元数据
+- **registry.json** - 统一契约注册表，包含所有 19 个契约的元数据
 - **各角色 schema 文件** - JSON Schema Draft 2020-12 格式的契约定义
 - **validate-schema.js** - 基础 schema 验证工具
 
@@ -203,6 +203,7 @@ cat contracts/pack/registry.json
 | reviewer | 3 | review-findings-report, actionable-feedback-report, acceptance-decision-record |
 | docs | 3 | docs-sync-report, changelog-entry, issue-progress-report |
 | security | 2 | security-review-report, input-validation-review-report |
+| common | 1 | error-report |
 
 > **注**: 机器可读 schema 与 markdown 契约完全对应（BR-002）。markdown 契约仍为权威定义，schema 为派生格式。
 
@@ -520,7 +521,7 @@ User Input
 | `045-auto-error-report` | Auto Error Report | ✅ Complete | Automatic error reporting to GitHub Issues, 68 tests, failure-analysis integration |
 | `046-secrets-redaction` | Secrets Redaction | ✅ Complete | Automatic sensitive info filtering (tokens, passwords, API keys), 12 default patterns, custom patterns support |
 
-> **当前进度**: `001-bootstrap` 至 `046-secrets-redaction` 已全部完成。**6-Role 正式执行模型完整实现并验证，Enhanced 模式已验证可用，历史功能审计通过，发布准备就绪，契约 Schema Pack 完成，模板化基础包就绪，版本化体系建立，适配层架构完成，GitHub Issue 适配器实现并增强，GitHub PR 适配器实现，OpenClaw 适配器实现，E2E 集成测试完成，E2E Adapter 真实集成测试完成，Plugin 架构完成，Plugin Skill 激活机制完成，Workflow 扩展性增强完成，GitHub Issue Workflow Enhancement 完成，README Quick Start 和文档导航完成，README 命令参考和 Adapter Quick 完成，模板包内容修复完成，README 接口定位与用户角色澄清完成，Issue 生命周期自动化完成，Error Reporter 完成，GitHub Issue Reporter 完成，Auto Error Report 完成，Secrets Redaction 完成**。**Skills 总计 45 个（25 MVP + 16 M4 + 4 Plugin）**，**Features 总计 45 个**。
+> **当前进度**: `001-bootstrap` 至 `046-secrets-redaction` 已全部完成。**6-Role 正式执行模型完整实现并验证，Enhanced 模式已验证可用，历史功能审计通过，发布准备就绪，契约 Schema Pack 完成，模板化基础包就绪，版本化体系建立，适配层架构完成，GitHub Issue 适配器实现并增强，GitHub PR 适配器实现，OpenClaw 适配器实现，E2E 集成测试完成，E2E Adapter 真实集成测试完成，Plugin 架构完成，Plugin Skill 激活机制完成，Workflow 扩展性增强完成，GitHub Issue Workflow Enhancement 完成，README Quick Start 和文档导航完成，README 命令参考和 Adapter Quick 完成，模板包内容修复完成，README 接口定位与用户角色澄清完成，Issue 生命周期自动化完成，Error Reporter 完成，GitHub Issue Reporter 完成，Auto Error Report 完成，Secrets Redaction 完成**。**Skills 总计 49 个（24 MVP + 16 M4 + 9 Plugin）**，**Features 总计 46 个**。
 
 ### 阶段 7：3-Skill 迁移 ✅ 已完成（010-3-skill-migration）
 
@@ -624,12 +625,10 @@ node templates/cli/doctor.js
 - `templates/cli/` - Bootstrap CLI (init/install/doctor)
 - `templates/*.md` - 使用文档
 
-> **当前进度**: `001-bootstrap` 至 `044-github-issue-reporter` 已全部完成。**Skills 总计 45 个（25 MVP + 16 M4 + 4 Plugin）**，**Features 总计 43 个**。
-
 ## Quick Start
 
 ### 查看使用指南
-阅读 [docs/skills-usage-guide.md](docs/skills-usage-guide.md) 了解如何使用 25 个 MVP 核心 skills。
+阅读 [docs/skills-usage-guide.md](docs/skills-usage-guide.md) 了解如何使用 24 个 MVP 核心 skills。
 
 ### 查看 Enhanced Mode 指南
 阅读 [docs/enhanced-mode-guide.md](docs/enhanced-mode-guide.md) 了解如何启用和使用 16 个 M4 增强 skills。

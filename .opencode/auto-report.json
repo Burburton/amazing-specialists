@@ -3,8 +3,8 @@
   "enabled": false,
   "github_token_env": "GITHUB_TOKEN",
   "target_repository": {
-    "owner": "",
-    "repo": ""
+    "owner": "Burburton",
+    "repo": "amazing-specialists"
   },
   "report_conditions": {
     "severity_threshold": "medium",

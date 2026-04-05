@@ -1,0 +1,46 @@
+{
+  "artifact_id": "ERR-20260405123000-abc123",
+  "artifact_type": "error-report",
+  "error_context": {
+    "dispatch_id": "disp-001",
+    "task_id": "task-arch-001",
+    "role": "architect",
+    "execution_phase": "preparation"
+  },
+  "error_classification": {
+    "error_type": "INPUT_INVALID",
+    "error_subtype": "missing_spec_section",
+    "severity": "medium"
+  },
+  "error_details": {
+    "title": "Missing spec section: acceptance criteria",
+    "description": "The spec.md file does not contain a valid Acceptance Criteria section. Unable to proceed with design.",
+    "error_code": "ERR-ARCH-001",
+    "stacktrace_or_context": "spec.md line 45: '## Acceptance Criteria' section is empty"
+  },
+  "impact_assessment": {
+    "blocking_points": ["Cannot define design success criteria without acceptance criteria"],
+    "downstream_impact": "blocked",
+    "milestone_impact": "delay"
+  },
+  "traceability": {
+    "source_artifact": "spec-001",
+    "source_file": "specs/my-feature/spec.md",
+    "source_line": 45,
+    "related_errors": []
+  },
+  "resolution_guidance": {
+    "auto_recoverable": false,
+    "recommended_action": "REWORK",
+    "fix_suggestions": [
+      "Add Acceptance Criteria section to spec.md",
+      "Define at least 3 testable acceptance criteria"
+    ],
+    "estimated_fix_effort": "15 minutes"
+  },
+  "metadata": {
+    "created_at": "2026-04-05T12:30:00Z",
+    "created_by_role": "architect",
+    "retry_count": 0
+  }
+}

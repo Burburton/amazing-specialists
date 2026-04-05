@@ -200,14 +200,29 @@ checks_performed:                # 已做的自检清单
   - string                       # 例如："实现目标对齐检查"、"改动范围检查"
 
 issues_found:                    # 发现但未解决的问题（若无必须显式写空列表）
+                                # Enhanced fields (043-error-reporter): link to error-report artifact
   - issue_id: string
+    error_report_id: string     # 关联的 error-report artifact ID（可选，043-error-reporter）
     severity: enum
-      - critical
-      - high
-      - medium
-      - low
+      - critical                # S3 - 立即阻塞
+      - high                    # S2 - 阻塞下游
+      - medium                  # S1 - 建议修复
+      - low                     # S0 - 可忽略
+    error_type: enum            # 错误类型（可选，043-error-reporter）
+      - INPUT_INVALID           # 输入缺失或无效
+      - CONSTRAINT_VIOLATION    # 违反硬约束
+      - EXECUTION_ERROR         # 执行过程错误
+      - VERIFICATION_FAILURE    # 验证失败
+      - ENVIRONMENT_ISSUE       # 环境问题
+      - DEPENDENCY_BLOCKER      # 依赖阻塞
+      - AMBIGUOUS_GOAL          # 目标模糊
+      - SCOPE_CREEP_DETECTED    # 检测到范围蔓延
     description: string
     recommendation: string
+    auto_recoverable: boolean   # 是否可自动恢复（可选，043-error-reporter）
+    traceability:               # 追溯信息（可选，043-error-reporter）
+      source_artifact: string
+      source_file: string
 
 risks:                           # 当前剩余风险（若无必须显式写"未发现明显新增风险"）
   - risk_id: string

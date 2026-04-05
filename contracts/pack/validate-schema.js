@@ -64,7 +64,10 @@ function checkType(path, value, schema) {
   // Handle union types (e.g., ["string", "null"])
   if (Array.isArray(expectedType)) {
     const actualType = getType(value);
-    if (!expectedType.includes(actualType)) {
+    // Integer should match "number" in union types
+    const actualTypes = actualType === 'integer' ? ['integer', 'number'] : [actualType];
+    const matches = expectedType.some(t => actualTypes.includes(t));
+    if (!matches) {
       return {
         path,
         message: `Type mismatch at ${path}`,
@@ -163,6 +166,7 @@ function getType(value) {
   if (value === null) return 'null';
   if (Array.isArray(value)) return 'array';
   if (typeof value === 'object') return 'object';
+  if (typeof value === 'number' && Number.isInteger(value)) return 'integer';
   return typeof value;
 }
 

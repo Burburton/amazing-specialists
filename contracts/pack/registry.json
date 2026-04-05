@@ -1,8 +1,8 @@
 {
   "pack_version": "1.0.0",
   "created_at": "2026-03-28T00:00:00Z",
-  "updated_at": "2026-03-28T00:00:00Z",
-  "total_contracts": 18,
+  "updated_at": "2026-04-05T00:00:00Z",
+  "total_contracts": 19,
   "contracts": [
     {
       "contract_id": "AC-001",
@@ -183,6 +183,16 @@
       "schema_path": "contracts/pack/security/input-validation-review-report.schema.json",
       "markdown_path": "specs/008-security-core/contracts/input-validation-review-report-contract.md",
       "description": "Focused security review for input validation with attack vectors analysis and remediation guidance"
+    },
+    {
+      "contract_id": "ERR-001",
+      "contract_name": "error-report",
+      "producer_role": "common",
+      "consumer_roles": ["OpenClaw", "execution-reporting", "architect", "developer", "tester", "reviewer", "docs", "security"],
+      "version": "1.0.0",
+      "schema_path": "contracts/pack/common/error-report.schema.json",
+      "markdown_path": "specs/043-error-reporter/contracts/error-report-contract.md",
+      "description": "Standardized error report format for 6-role execution layer, enabling accurate process decisions"
     }
   ]
 }

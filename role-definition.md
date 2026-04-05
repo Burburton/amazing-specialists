@@ -72,11 +72,14 @@ architect
 
 ## Failure Modes
 常见失败模式：
-- 输入不足：缺少 requirement 或关键约束
-- 需求冲突：spec 中存在矛盾的需求
-- 术语不清：关键术语未定义导致设计歧义
-- 上下文缺失：缺少代码上下文导致设计脱离实际
-- 约束冲突：多个约束条件相互矛盾无法同时满足
+
+| 失败模式 | Error Type | Error Code |
+|----------|------------|------------|
+| 输入不足：缺少 requirement 或关键约束 | INPUT_INVALID | ERR-ARCH-001 |
+| 需求冲突：spec 中存在矛盾的需求 | AMBIGUOUS_GOAL | ERR-ARCH-002 |
+| 术语不清：关键术语未定义导致设计歧义 | INPUT_INVALID | ERR-ARCH-003 |
+| 上下文缺失：缺少代码上下文导致设计脱离实际 | INPUT_INVALID | ERR-ARCH-004 |
+| 约束冲突：多个约束条件相互矛盾无法同时满足 | AMBIGUOUS_GOAL | ERR-ARCH-005 |
 
 ## Escalation Rules
 以下情况必须升级：
@@ -170,10 +173,13 @@ developer
 
 ## Failure Modes
 常见失败模式：
-- 依赖上下文缺失：缺少关键代码上下文
-- 设计与现状冲突：design note 与实际代码不符
-- 环境 / 工具阻塞：构建失败、依赖安装失败等
-- 范围不清：task 边界模糊导致实现方向错误
+
+| 失败模式 | Error Type | Error Code |
+|----------|------------|------------|
+| 依赖上下文缺失：缺少关键代码上下文 | INPUT_INVALID | ERR-DEV-001 |
+| 设计与现状冲突：design note 与实际代码不符 | CONSTRAINT_VIOLATION | ERR-DEV-002 |
+| 环境 / 工具阻塞：构建失败、依赖安装失败等 | ENVIRONMENT_ISSUE | ERR-DEV-003 |
+| 范围不清：task 边界模糊导致实现方向错误 | SCOPE_CREEP_DETECTED | ERR-DEV-004 |
 
 ## Escalation Rules
 以下情况必须升级：
@@ -263,11 +269,14 @@ tester
 
 ## Failure Modes
 常见失败模式：
-- 只跑 happy path，未覆盖边界
-- 不写 coverage gap
-- 失败不分类，无法判断是测试问题还是实现问题
-- 不区分 test design 和 test execution
-- 无法复现失败原因
+
+| 失败模式 | Error Type | Error Code |
+|----------|------------|------------|
+| 只跑 happy path，未覆盖边界 | VERIFICATION_FAILURE | ERR-TEST-001 |
+| 不写 coverage gap | VERIFICATION_FAILURE | ERR-TEST-001 |
+| 失败不分类，无法判断是测试问题还是实现问题 | EXECUTION_ERROR | ERR-TEST-002 |
+| 不区分 test design 和 test execution | EXECUTION_ERROR | ERR-TEST-002 |
+| 无法复现失败原因 | ENVIRONMENT_ISSUE | ERR-TEST-003 |
 
 ## Escalation Rules
 以下情况必须升级：
@@ -445,13 +454,16 @@ Reviewer 必须区分以下 finding 类型：
 
 ## Failure Modes
 常见失败模式：
-- 只说"需要优化"但不说怎么改
-- 不区分严重性，所有问题混在一起
-- 不对齐 spec/design，只看代码风格
-- 只看代码风格，不看目标达成
-- 一边 review 一边偷偷补实现
-- **只做 feature 内部检查，不做 governance baseline check（AH-006 violation）**
-- **发现 governance drift 但不报告（AH-006 violation）**
+
+| 失败模式 | Error Type | Error Code |
+|----------|------------|------------|
+| 只说"需要优化"但不说怎么改 | VERIFICATION_FAILURE | ERR-REV-001 |
+| 不区分严重性，所有问题混在一起 | VERIFICATION_FAILURE | ERR-REV-001 |
+| 不对齐 spec/design，只看代码风格 | VERIFICATION_FAILURE | ERR-REV-001 |
+| 只看代码风格，不看目标达成 | VERIFICATION_FAILURE | ERR-REV-001 |
+| 一边 review 一边偷偷补实现 | CONSTRAINT_VIOLATION | ERR-REV-002 |
+| 只做 feature 内部检查，不做 governance baseline check（AH-006 violation） | CONSTRAINT_VIOLATION | ERR-REV-002 |
+| 发现 governance drift 但不报告（AH-006 violation） | CONSTRAINT_VIOLATION | ERR-REV-002 |
 
 ## Escalation Rules
 以下情况必须升级：
@@ -633,7 +645,19 @@ architect → developer → tester → reviewer → docs
 
 ## Failure Modes
 
-### 常见失败模式（来源：007-docs-core validation/failure-mode-checklist.md）
+常见失败模式（来源：007-docs-core validation/failure-mode-checklist.md）：
+
+| 失败模式 | Error Type | Error Code |
+|----------|------------|------------|
+| Status Inflation (AP-001) | VERIFICATION_FAILURE | ERR-DOC-002 |
+| Over-Updating (AP-002) | INPUT_INVALID | ERR-DOC-001 |
+| Drift Ignorance (AP-003) | VERIFICATION_FAILURE | ERR-DOC-002 |
+| Legacy Terminology (AP-004) | INPUT_INVALID | ERR-DOC-001 |
+| Vague Changelog (AP-005) | VERIFICATION_FAILURE | ERR-DOC-002 |
+| Undocumented Changes (AP-006) | INPUT_INVALID | ERR-DOC-001 |
+| Speculation-Based Documentation (AP-007) | INPUT_INVALID | ERR-DOC-001 |
+
+### 原始失败模式检测表（保留用于详细参考）
 
 | 失败模式 | 检测方法 | 防止方法 |
 |----------|----------|----------|
@@ -775,10 +799,14 @@ security
 
 ## Failure Modes
 常见失败模式：
-- 只给"注意安全"类空话
-- 不区分严重性
-- 不说明检查范围
-- 未识别权限 / secret / 输入校验类问题
+
+| 失败模式 | Error Type | Error Code |
+|----------|------------|------------|
+| 只给"注意安全"类空话 | VERIFICATION_FAILURE | ERR-SEC-001 |
+| 不区分严重性 | VERIFICATION_FAILURE | ERR-SEC-001 |
+| 不说明检查范围 | VERIFICATION_FAILURE | ERR-SEC-001 |
+| 未识别权限 / secret / 输入校验类问题 | VERIFICATION_FAILURE | ERR-SEC-001 |
+| 依赖风险未评估 | DEPENDENCY_BLOCKER | ERR-SEC-002 |
 
 ## Escalation Rules
 以下情况必须升级：

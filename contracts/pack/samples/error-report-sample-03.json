@@ -1,0 +1,46 @@
+{
+  "artifact_id": "ERR-20260405150000-ghi789",
+  "artifact_type": "error-report",
+  "error_context": {
+    "dispatch_id": "disp-003",
+    "task_id": "task-dev-001",
+    "role": "developer",
+    "execution_phase": "execution"
+  },
+  "error_classification": {
+    "error_type": "ENVIRONMENT_ISSUE",
+    "error_subtype": "network_timeout",
+    "severity": "low"
+  },
+  "error_details": {
+    "title": "Network timeout during dependency install",
+    "description": "npm install failed due to network timeout. This is a temporary environment issue.",
+    "error_code": "ERR-DEV-003",
+    "stacktrace_or_context": "npm ERR! network timeout at https://registry.npmjs.org"
+  },
+  "impact_assessment": {
+    "blocking_points": [],
+    "downstream_impact": "none",
+    "milestone_impact": "none"
+  },
+  "traceability": {
+    "source_artifact": "",
+    "source_file": "package.json",
+    "source_line": null,
+    "related_errors": []
+  },
+  "resolution_guidance": {
+    "auto_recoverable": true,
+    "recommended_action": "RETRY",
+    "fix_suggestions": [
+      "Retry npm install",
+      "Check network connectivity"
+    ],
+    "estimated_fix_effort": "5 minutes"
+  },
+  "metadata": {
+    "created_at": "2026-04-05T15:00:00Z",
+    "created_by_role": "developer",
+    "retry_count": 0
+  }
+}

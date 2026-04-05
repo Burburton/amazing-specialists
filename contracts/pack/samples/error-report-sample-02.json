@@ -1,0 +1,46 @@
+{
+  "artifact_id": "ERR-20260405140000-def456",
+  "artifact_type": "error-report",
+  "error_context": {
+    "dispatch_id": "disp-002",
+    "task_id": "task-test-001",
+    "role": "tester",
+    "execution_phase": "verification"
+  },
+  "error_classification": {
+    "error_type": "VERIFICATION_FAILURE",
+    "error_subtype": "assertion_fail",
+    "severity": "high"
+  },
+  "error_details": {
+    "title": "Test assertion failed: login invalid credentials",
+    "description": "Expected error code 4001 for invalid credentials, but received 4000. This indicates a mismatch between spec and implementation.",
+    "error_code": "ERR-TEST-001",
+    "stacktrace_or_context": "FAIL: test_login_invalid_credentials\nAssertionError: expected 4001, got 4000\nFile: tests/test_auth.py:45"
+  },
+  "impact_assessment": {
+    "blocking_points": ["Login error code mapping is incorrect"],
+    "downstream_impact": "blocked",
+    "milestone_impact": "at_risk"
+  },
+  "traceability": {
+    "source_artifact": "test-report-001",
+    "source_file": "tests/test_auth.py",
+    "source_line": 45,
+    "related_errors": []
+  },
+  "resolution_guidance": {
+    "auto_recoverable": false,
+    "recommended_action": "REWORK",
+    "fix_suggestions": [
+      "Update INVALID_CREDENTIALS error code to 4001 in src/errors/codes.py",
+      "Re-run test to verify fix"
+    ],
+    "estimated_fix_effort": "10 minutes"
+  },
+  "metadata": {
+    "created_at": "2026-04-05T14:00:00Z",
+    "created_by_role": "tester",
+    "retry_count": 1
+  }
+}

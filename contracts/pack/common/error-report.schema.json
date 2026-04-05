@@ -1,0 +1,214 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "contracts/pack/common/error-report.schema.json",
+  "title": "Error Report Contract",
+  "description": "Standardized error report format for 6-role execution layer, enabling OpenClaw management layer to make accurate process decisions",
+  "type": "object",
+  "properties": {
+    "artifact_id": {
+      "type": "string",
+      "description": "Unique ID (format: ERR-[timestamp]-[random])",
+      "pattern": "^ERR-[0-9]+-[a-z0-9]+$"
+    },
+    "artifact_type": {
+      "type": "string",
+      "const": "error-report",
+      "description": "Fixed artifact type"
+    },
+    "error_context": {
+      "type": "object",
+      "description": "Context of where error occurred",
+      "properties": {
+        "dispatch_id": {
+          "type": "string",
+          "description": "Associated dispatch ID"
+        },
+        "task_id": {
+          "type": "string",
+          "description": "Associated task ID"
+        },
+        "role": {
+          "type": "string",
+          "enum": ["architect", "developer", "tester", "reviewer", "docs", "security"],
+          "description": "Reporting role"
+        },
+        "execution_phase": {
+          "type": "string",
+          "enum": ["preparation", "execution", "verification", "output"],
+          "description": "Execution phase when error occurred"
+        }
+      },
+      "required": ["role", "execution_phase"],
+      "additionalProperties": false
+    },
+    "error_classification": {
+      "type": "object",
+      "description": "Error type and severity classification",
+      "properties": {
+        "error_type": {
+          "type": "string",
+          "enum": [
+            "INPUT_INVALID",
+            "CONSTRAINT_VIOLATION",
+            "EXECUTION_ERROR",
+            "VERIFICATION_FAILURE",
+            "ENVIRONMENT_ISSUE",
+            "DEPENDENCY_BLOCKER",
+            "AMBIGUOUS_GOAL",
+            "SCOPE_CREEP_DETECTED"
+          ],
+          "description": "Error type from Taxonomy"
+        },
+        "error_subtype": {
+          "type": "string",
+          "description": "Subtype for refined classification"
+        },
+        "severity": {
+          "type": "string",
+          "enum": ["low", "medium", "high", "critical"],
+          "description": "Severity level (low=S0, medium=S1, high=S2, critical=S3)"
+        }
+      },
+      "required": ["error_type", "severity"],
+      "additionalProperties": false
+    },
+    "error_details": {
+      "type": "object",
+      "description": "Detailed error information",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "Error title (brief, < 100 chars)",
+          "maxLength": 100
+        },
+        "description": {
+          "type": "string",
+          "description": "Detailed description of what happened"
+        },
+        "error_code": {
+          "type": "string",
+          "description": "Error code (format: ERR-[ROLE]-[NUMBER])",
+          "pattern": "^ERR-(ARCH|DEV|TEST|REV|DOC|SEC|COM)-[0-9]+$"
+        },
+        "stacktrace_or_context": {
+          "type": "string",
+          "description": "Related logs/stacktrace/context snippet"
+        }
+      },
+      "required": ["title", "description", "error_code"],
+      "additionalProperties": false
+    },
+    "impact_assessment": {
+      "type": "object",
+      "description": "Impact on downstream and milestone",
+      "properties": {
+        "blocking_points": {
+          "type": "array",
+          "description": "List of blocking points",
+          "items": {
+            "type": "string"
+          }
+        },
+        "downstream_impact": {
+          "type": "string",
+          "enum": ["none", "minor", "blocked", "cascading"],
+          "description": "Impact on downstream tasks"
+        },
+        "milestone_impact": {
+          "type": "string",
+          "enum": ["none", "delay", "at_risk", "blocked"],
+          "description": "Impact on milestone"
+        }
+      },
+      "required": ["downstream_impact", "milestone_impact"],
+      "additionalProperties": false
+    },
+    "traceability": {
+      "type": "object",
+      "description": "Traceability to source",
+      "properties": {
+        "source_artifact": {
+          "type": "string",
+          "description": "Source artifact (e.g., test-report)"
+        },
+        "source_file": {
+          "type": "string",
+          "description": "Source file path"
+        },
+        "source_line": {
+          "type": ["number", "null"],
+          "description": "Source line number"
+        },
+        "related_errors": {
+          "type": "array",
+          "description": "Related error IDs",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "resolution_guidance": {
+      "type": "object",
+      "description": "Resolution guidance",
+      "properties": {
+        "auto_recoverable": {
+          "type": "boolean",
+          "description": "Whether auto recovery is possible"
+        },
+        "recommended_action": {
+          "type": "string",
+          "enum": ["IGNORE", "REWORK", "RETRY", "REPLAN", "ESCALATE"],
+          "description": "Recommended action"
+        },
+        "fix_suggestions": {
+          "type": "array",
+          "description": "Fix suggestions",
+          "items": {
+            "type": "string"
+          }
+        },
+        "estimated_fix_effort": {
+          "type": "string",
+          "description": "Estimated fix effort"
+        }
+      },
+      "required": ["auto_recoverable", "recommended_action"],
+      "additionalProperties": false
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Metadata",
+      "properties": {
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Creation timestamp (ISO 8601)"
+        },
+        "created_by_role": {
+          "type": "string",
+          "description": "Creating role"
+        },
+        "retry_count": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Current retry count"
+        }
+      },
+      "required": ["created_at", "created_by_role", "retry_count"],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "artifact_id",
+    "artifact_type",
+    "error_context",
+    "error_classification",
+    "error_details",
+    "impact_assessment",
+    "resolution_guidance",
+    "metadata"
+  ],
+  "additionalProperties": false
+}

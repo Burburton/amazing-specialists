@@ -30,7 +30,10 @@ export type {
   SkillId, 
   RoleMapping, 
   PlatformCapabilities, 
-  PlatformAdapter 
+  PlatformAdapter,
+  ExecutionMode,
+  ExecutionStrategy,
+  KnownIssue
 } from '../interfaces/platform-adapter.interface';
 
 // Convenience function for getting task config

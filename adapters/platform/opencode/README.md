@@ -54,31 +54,44 @@
 
 ## Known Issues
 
-### Issue 1: subagent_type parameter not supported
+### Issue 1: PAT Rejection (CRITICAL)
 
-**Problem**: Using `task(subagent_type="tester")` returns "Unknown agent: tester"
+**Problem**: Background tasks using `subagent_type` fail with Personal Access Token rejection.
 
-**Workaround**: Use `category` + `load_skills` instead:
+**Root Cause**: OpenCode's subagent spawning endpoint does not support PAT authentication.
 
-```typescript
-// ❌ Wrong
-task(subagent_type="tester", prompt="...")
-
-// ✅ Correct
-task(
-  category="unspecified-high",
-  load_skills=["tester/unit-test-design"],
-  prompt="..."
-)
-```
-
-### Issue 2: Background task may fail on first attempt
-
-**Problem**: Background tasks sometimes fail immediately without clear error
+**Impact**: 
+- 90%+ failure rate for background tasks
+- Main agent blocks waiting for failure notification
+- Parallel execution advantage lost
 
 **Workaround**: 
-1. Check task status with `background_output(task_id)`
-2. Retry if needed, or use synchronous execution (`run_in_background=false`)
+```typescript
+// ✅ Use execution strategy API
+import { getExecutionStrategy } from './adapters/platform/runtime';
+
+const strategy = getExecutionStrategy('opencode', 'explore');
+// Returns: { mode: 'synchronous', rationale: '...' }
+
+// ✅ Follow recommended mode
+if (strategy.mode === 'synchronous') {
+  task(category="unspecified-high", run_in_background=false, prompt="...");
+}
+```
+
+**Status**: Known limitation, workaround provided via Platform Adapter.
+
+### Issue 2: Background Task Instability
+
+**Problem**: Background tasks may fail on first attempt without clear error.
+
+**Impact**: Quick tasks (<5s) suffer unnecessary retry overhead.
+
+**Workaround**: 
+- Quick tasks: Use synchronous mode directly
+- Long tasks: Try background, fallback to synchronous on failure
+
+**Status**: Platform limitation, mitigated via execution strategy selection.
 
 ## Usage Examples
 

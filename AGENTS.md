@@ -264,6 +264,111 @@ import {
 
 详见 `docs/platform-adapter-guide.md`。
 
+## OpenCode平台适配策略
+
+### Background Task执行问题
+
+OpenCode平台的background task存在以下已知限制：
+
+**Issue 1: PAT Rejection**
+- 使用`task(subagent_type="...", run_in_background=true)`会触发Personal Access Token验证错误
+- Subagent spawning endpoint不支持PAT认证
+- Background task立即失败，主agent被迫等待notification处理
+
+**Issue 2: Background Task不稳定**
+- 某些task类型（explore, librarian）background模式失败率高达90%+
+- 主agent派发后需要等待失败notification，失去并行优势
+
+### 推荐执行策略
+
+**策略原则**：
+
+1. **快速任务 → Synchronous**
+   - Explore/Librarian等快速搜索任务（<5秒）使用synchronous模式
+   - 避免"PAT rejection → notification → retry"的循环
+   - 多个synchronous task可在同一message派发，串行执行但总时间可控
+
+2. **长任务 → Background with Fallback**
+   - Oracle/Deep分析等长任务（>30秒）尝试background模式
+   - 如果失败notification到达，立即切换synchronous retry
+   - 永远不要`background_output(block=true)`
+
+3. **派发后立即结束**
+   - 派发background task后，立即结束response
+   - 等待system notification触发下一turn
+   - 收到失败notification后，立即fallback
+
+**决策表**：
+
+| Task Type | Estimated Duration | Recommended Mode | Rationale |
+|-----------|-------------------|------------------|-----------|
+| explore | <5s | synchronous | Quick search, no need for background |
+| librarian | <5s | synchronous | Reference lookup, fast execution |
+| oracle | >60s | background_with_fallback | Deep analysis, worth trying background |
+| deep | >30s | background_with_fallback | Autonomous solving, long execution |
+| developer | ~20s | synchronous | Implementation, moderate duration |
+| architect | >45s | background_with_fallback | Architecture design, complex reasoning |
+| tester | ~10s | synchronous | Verification, moderate duration |
+| reviewer | ~15s | synchronous | Review, moderate duration |
+| docs | ~10s | synchronous | Documentation, moderate duration |
+| security | ~12s | synchronous | Security review, moderate duration |
+
+**代码示例**：
+
+```typescript
+import { getExecutionStrategy } from './adapters/platform/runtime';
+
+// 获取推荐执行策略
+const strategy = getExecutionStrategy('opencode', 'explore');
+
+console.log(strategy.mode);  // 'synchronous'
+console.log(strategy.rationale);  // 'Task type 'explore' typically takes 5s...'
+console.log(strategy.max_duration_estimate);  // 5
+
+// 根据策略选择执行模式
+if (strategy.mode === 'synchronous') {
+  task(category="unspecified-high", load_skills=[], run_in_background=false, prompt="...");
+} else if (strategy.mode === 'background_with_fallback') {
+  const taskId = task(category="deep", load_skills=[], run_in_background=true, prompt="...");
+  // DON'T call background_output here
+  // END RESPONSE
+  // Wait for notification → if failure, fallback to synchronous
+}
+```
+
+### Non-Blocking Execution原则
+
+**永远不要**：
+- ❌ `background_output(task_id, block=true)` - 阻塞等待
+- ❌ 派发background task后继续其他工作（依赖background结果）
+- ❌ Background失败后retry background（会再次失败）
+
+**应该**：
+- ✅ 派发background task后立即结束response
+- ✅ 等待system notification触发下一turn
+- ✅ 收到失败notification后切换synchronous fallback
+- ✅ 快速任务直接使用synchronous模式
+
+### 平台能力检查
+
+使用Platform Adapter检查background task支持度：
+
+```typescript
+import { getPlatformAdapter } from './adapters/platform/runtime';
+
+const adapter = getPlatformAdapter('opencode');
+const capabilities = adapter.getCapabilities();
+
+// 检查failure rate
+if (capabilities.background_task_failure_rate > 0.3) {
+  console.log('Background tasks unreliable, prefer synchronous');
+}
+
+// 获取平台推荐模式
+const recommended = capabilities.recommended_execution_mode;
+console.log(recommended['explore']);  // 'synchronous'
+```
+
 ## Execution Discipline
 Always summarize:
 - what was changed

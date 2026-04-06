@@ -209,6 +209,45 @@ cp adapters/platform/templates/platform-adapter.template.json adapters/platform/
 
 ---
 
+## Execution Strategy Selection
+
+### Overview
+
+Platform Adapter提供智能执行策略选择，帮助主agent避免不必要的background task失败。
+
+### Using Execution Strategy API
+
+```typescript
+import { getExecutionStrategy } from './adapters/platform/runtime';
+
+// 自动获取推荐执行模式
+const strategy = getExecutionStrategy('opencode', 'oracle');
+
+// strategy包含：
+// - mode: 'synchronous' | 'background' | 'background_with_fallback'
+// - rationale: 为什么推荐这个模式
+// - fallback_hint: 如果background失败怎么办
+// - max_duration_estimate: 预估耗时（秒）
+```
+
+### Decision Logic
+
+Runtime根据以下因素决策：
+
+1. **Platform Recommended Mode** - capabilities.json中的`recommended_execution_mode`
+2. **Failure Rate Threshold** - `background_task_failure_rate > 0.3`视为不可靠
+3. **Task Type Default** - Decision table中的默认策略
+4. **Duration Estimate** - 预估耗时影响模式选择
+
+### Best Practices
+
+1. **调用getExecutionStrategy获取策略**
+2. **根据mode选择执行方式**
+3. **遵循AGENTS.md中的Non-Blocking原则**
+4. **准备好fallback处理机制**
+
+---
+
 ## Configuration Priority
 
 ```

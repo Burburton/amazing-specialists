@@ -5,6 +5,18 @@
     "supports_background_task": true,
     "supports_parallel_agents": true,
     "max_context_length": 200000,
+    "background_task_failure_rate": 0.9,
+    "recommended_execution_mode": {
+      "explore": "synchronous",
+      "librarian": "synchronous",
+      "oracle": "background_with_fallback",
+      "developer": "synchronous",
+      "architect": "background_with_fallback",
+      "tester": "synchronous",
+      "reviewer": "synchronous",
+      "docs": "synchronous",
+      "security": "synchronous"
+    },
     "supported_categories": [
       "deep",
       "ultrabrain",
@@ -29,6 +41,24 @@
       "multimodal-looker",
       "oracle",
       "plan"
+    ],
+    "known_issues": [
+      {
+        "id": "PAT_REJECTION",
+        "description": "Background tasks using subagent_type fail with Personal Access Token rejection",
+        "severity": "high",
+        "workaround": "Use category + load_skills, or synchronous mode for quick tasks",
+        "affected_task_types": ["all"],
+        "failure_rate": 0.9
+      },
+      {
+        "id": "BACKGROUND_TASK_INSTABILITY",
+        "description": "Background tasks may fail on first attempt without clear error",
+        "severity": "medium",
+        "workaround": "Check task status, retry, or use synchronous execution",
+        "affected_task_types": ["explore", "librarian"],
+        "failure_rate": 0.3
+      }
     ]
   }
 }

@@ -41,7 +41,55 @@ export type Category =
 export type SkillId = string;
 
 /**
- * 平台已知问题
+ * 执行模式类型
+ * 
+ * - synchronous: 同步执行，适合快速任务
+ * - background: 后台执行，适合长时间任务
+ * - background_with_fallback: 尝试后台执行，失败时fallback到同步
+ */
+export type ExecutionMode = 
+  | 'synchronous' 
+  | 'background' 
+  | 'background_with_fallback';
+
+/**
+ * 执行策略
+ * 
+ * 定义任务执行的推荐策略
+ */
+export interface ExecutionStrategy {
+  /** 推荐的执行模式 */
+  mode: ExecutionMode;
+  /** 推荐理由 */
+  rationale: string;
+  /** Fallback提示（仅当mode为background_with_fallback时） */
+  fallback_hint?: string;
+  /** 预估最大执行时长（秒） */
+  max_duration_estimate?: number;
+}
+
+/**
+ * 平台已知问题（增强版）
+ * 
+ * 结构化的已知问题声明
+ */
+export interface KnownIssue {
+  /** 问题唯一标识 */
+  id: string;
+  /** 问题描述 */
+  description: string;
+  /** 严重级别 */
+  severity: 'low' | 'medium' | 'high' | 'critical';
+  /** 解决方案或 workaround */
+  workaround: string;
+  /** 受影响的任务类型 */
+  affected_task_types?: string[];
+  /** 失败率 (0.0-1.0) */
+  failure_rate?: number;
+}
+
+/**
+ * 平台已知问题（兼容旧版）
  */
 export interface PlatformIssue {
   /** 问题标识 */
@@ -62,6 +110,15 @@ export interface PlatformCapabilities {
   supports_parallel_agents: boolean;
   /** 最大上下文长度（tokens） */
   max_context_length: number;
+  
+  // 新增字段：执行策略相关
+  /** 后台任务失败率 (0.0-1.0, 越高越不可靠) */
+  background_task_failure_rate?: number;
+  /** 推荐执行模式映射 (task type → execution mode) */
+  recommended_execution_mode?: Record<string, ExecutionMode>;
+  /** 已知问题（增强版，结构化） */
+  known_issues?: KnownIssue[];
+  
   /** 其他平台特定能力 */
   [key: string]: unknown;
 }
@@ -201,6 +258,41 @@ export interface PlatformAdapter {
    * @returns 平台能力对象
    */
   getCapabilities(): PlatformCapabilities;
+  
+  /**
+   * 获取指定任务类型的执行策略
+   * 
+   * 根据平台能力和任务类型，自动推荐最优执行模式。
+   * 
+   * @param taskType - 任务类型 (explore, librarian, oracle, deep, etc.)
+   * @returns 执行策略对象
+   * 
+   * @example
+   * ```typescript
+   * const strategy = adapter.getExecutionStrategy('explore');
+   * // Returns: { mode: 'synchronous', rationale: '...' }
+   * ```
+   */
+  getExecutionStrategy(taskType: string): ExecutionStrategy;
+  
+  /**
+   * 判断指定任务类型是否应使用后台执行
+   * 
+   * 简化判断逻辑，基于 getExecutionStrategy() 的结果。
+   * 
+   * @param taskType - 任务类型
+   * @returns true 表示应使用后台执行，false 表示应使用同步执行
+   * 
+   * @example
+   * ```typescript
+   * if (adapter.shouldUseBackground('oracle')) {
+   *   // 使用后台执行
+   * } else {
+   *   // 使用同步执行
+   * }
+   * ```
+   */
+  shouldUseBackground(taskType: string): boolean;
   
   // ============ 已知问题 ============
   
